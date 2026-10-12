@@ -46,6 +46,11 @@ pid=<*> uid=<*> auid=<*> ses=<*> msg='op=PAM:<*> acct=<*>
 login success: user=<*> source=<*>
 ```
 
+Templates can also name their wildcards (`<user>` instead of `<*>`), and a `.csv` template
+file with an `EventId` column can name each template. Detector configurations can then use
+these names instead of numbers; see
+[Named EventIDs and variables](../detectors.md#named-eventids-and-variables).
+
 ## Example
 
 Load the templates and match a log:
