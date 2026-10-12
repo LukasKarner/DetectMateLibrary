@@ -587,7 +587,7 @@ class TestNewValueComboDetectorEndToEndWithRealData:
             if detector.detect(log, output_=output):
                 detected_ids.add(log["logID"])
 
-        assert detected_ids == {"1859", "1862", "1865", "1866"}
+        assert detected_ids == {"1859", "1860", "1861", "1862", "1864", "1865", "1866", "1867"}
 
     @pytest.mark.ignored
     def test_audit_log_anomalies_to_binary(self):
@@ -614,7 +614,7 @@ class TestNewValueComboDetectorEndToEndWithRealData:
             if detector2.detect(log, output_=output):
                 detected_ids.add(log["logID"])
 
-        assert detected_ids == {"1859", "1862", "1865", "1866"}
+        assert detected_ids == {"1859", "1860", "1861", "1862", "1864", "1865", "1866", "1867"}
 
     @pytest.mark.ignored
     def test_audit_log_anomalie_fed(self):
@@ -648,7 +648,7 @@ class TestNewValueComboDetectorEndToEndWithRealData:
             if detector1.detect(log, output_=output):
                 detected_ids.add(log["logID"])
 
-        assert detected_ids == {"1859", "1862", "1865", "1866"}
+        assert detected_ids == {"1859", "1860", "1861", "1862", "1864", "1865", "1866", "1867"}
 
 
 class TestNewValueComboDetectorClassificationConfigPreservation:
