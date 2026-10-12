@@ -91,14 +91,14 @@ class TestNewValueComboDetectorTraining:
             for level in ["INFO", "WARNING", "ERROR"]:
                 parser_data = schemas.ParserSchema({
                     "parserType": "test",
-                    "EventID": event,
+                    "eventID": event,
                     "template": "test template",
                     "variables": ["0", "assa"],
                     "logID": "1",
                     "parsedLogID": "1",
                     "parserID": "test_parser",
                     "log": "test log message",
-                    "logFormatVariables": {"level": level}
+                    "headerVariables": {"level": level}
                 })
                 detector.train(parser_data)
 
@@ -115,41 +115,41 @@ class TestNewValueComboDetectorDetection:
         # Train with a value
         train_data = schemas.ParserSchema({
             "parserType": "test",
-            "EventID": 1,
+            "eventID": 1,
             "template": "test template",
             "variables": ["adsasd", "asdasd"],
             "logID": "1",
             "parsedLogID": "1",
             "parserID": "test_parser",
             "log": "test log message",
-            "logFormatVariables": {"level": "INFO"}
+            "headerVariables": {"level": "INFO"}
         })
         detector.train(train_data)
 
         train_data = schemas.ParserSchema({
             "parserType": "test",
-            "EventID": 1,
+            "eventID": 1,
             "template": "test template",
             "variables": ["adsasd", "other_value"],
             "logID": "1",
             "parsedLogID": "1",
             "parserID": "test_parser",
             "log": "test log message",
-            "logFormatVariables": {"level": "CRITICAL"}
+            "headerVariables": {"level": "CRITICAL"}
         })
         detector.train(train_data)
 
         # Detect with the same value
         test_data = schemas.ParserSchema({
             "parserType": "test",
-            "EventID": 12,
+            "eventID": 12,
             "template": "test template",
             "variables": ["adsasd"],
             "logID": "2",
             "parsedLogID": "2",
             "parserID": "test_parser",
             "log": "test log message",
-            "logFormatVariables": {"level": "CRITICAL"}
+            "headerVariables": {"level": "CRITICAL"}
         })
         output = schemas.DetectorSchema()
 
@@ -164,41 +164,41 @@ class TestNewValueComboDetectorDetection:
         # Train with a value
         train_data = schemas.ParserSchema({
             "parserType": "test",
-            "EventID": 1,
+            "eventID": 1,
             "template": "test template",
             "variables": ["adsasd", "asdasd"],
             "logID": "1",
             "parsedLogID": "1",
             "parserID": "test_parser",
             "log": "test log message",
-            "logFormatVariables": {"level": "INFO"}
+            "headerVariables": {"level": "INFO"}
         })
         detector.train(train_data)
 
         train_data = schemas.ParserSchema({
             "parserType": "test",
-            "EventID": 1,
+            "eventID": 1,
             "template": "test template",
             "variables": ["adsasd", "other_value"],
             "logID": "1",
             "parsedLogID": "1",
             "parserID": "test_parser",
             "log": "test log message",
-            "logFormatVariables": {"level": "CRITICAL"}
+            "headerVariables": {"level": "CRITICAL"}
         })
         detector.train(train_data)
 
         # Detect with an unknown combination (pos 1 has a new value)
         test_data = schemas.ParserSchema({
             "parserType": "test",
-            "EventID": 1,
+            "eventID": 1,
             "template": "test template",
             "variables": ["adsasd", "new_unknown_value"],
             "logID": "2",
             "parsedLogID": "2",
             "parserID": "test_parser",
             "log": "test log message",
-            "logFormatVariables": {"level": "CRITICAL"}
+            "headerVariables": {"level": "CRITICAL"}
         })
         output = schemas.DetectorSchema()
 
@@ -255,14 +255,14 @@ class TestNewValueComboDetectorConfiguration:
         for event_id in [1, 2, 3]:
             parser_data = schemas.ParserSchema({
                 "parserType": "test",
-                "EventID": event_id,
+                "eventID": event_id,
                 "template": f"Template {event_id}",
                 "variables": ["val1", "val2", "val3"],
                 "logID": str(event_id),
                 "parsedLogID": str(event_id),
                 "parserID": "test_parser",
                 "log": "test log",
-                "logFormatVariables": {"level": "INFO"}
+                "headerVariables": {"level": "INFO"}
             })
             detector.configure(parser_data)
 
@@ -281,14 +281,14 @@ class TestNewValueComboDetectorConfiguration:
         for i in range(10):
             parser_data = schemas.ParserSchema({
                 "parserType": "test",
-                "EventID": 1,
+                "eventID": 1,
                 "template": "Template 1",
                 "variables": ["constant", f"varying_{i}", "another_constant"],
                 "logID": str(i),
                 "parsedLogID": str(i),
                 "parserID": "test_parser",
                 "log": "test log",
-                "logFormatVariables": {"level": "INFO"}
+                "headerVariables": {"level": "INFO"}
             })
             detector.configure(parser_data)
 
@@ -309,14 +309,14 @@ class TestNewValueComboDetectorConfiguration:
             for event_id in [1, 2]:
                 parser_data = schemas.ParserSchema({
                     "parserType": "test",
-                    "EventID": event_id,
+                    "eventID": event_id,
                     "template": f"Template {event_id}",
                     "variables": ["stable_val", f"var_{i % 3}", "another_stable"],
                     "logID": str(len(training_data)),
                     "parsedLogID": str(len(training_data)),
                     "parserID": "test_parser",
                     "log": "test log",
-                    "logFormatVariables": {"level": "INFO"}
+                    "headerVariables": {"level": "INFO"}
                 })
                 training_data.append(parser_data)
                 detector.configure(parser_data)
@@ -331,14 +331,14 @@ class TestNewValueComboDetectorConfiguration:
         # Step 4: Verify detector can detect anomalies
         test_data = schemas.ParserSchema({
             "parserType": "test",
-            "EventID": 1,
+            "eventID": 1,
             "template": "Template 1",
             "variables": ["stable_val", "new_value", "another_stable"],
             "logID": "999",
             "parsedLogID": "999",
             "parserID": "test_parser",
             "log": "test log",
-            "logFormatVariables": {"level": "INFO"}
+            "headerVariables": {"level": "INFO"}
         })
         output = schemas.DetectorSchema()
 
@@ -354,14 +354,14 @@ class TestNewValueComboDetectorConfiguration:
         for i in range(15):
             parser_data = schemas.ParserSchema({
                 "parserType": "test",
-                "EventID": 1,
+                "eventID": 1,
                 "template": "Multi-var template",
                 "variables": ["v1", "v2", "v3", "v4", "v5"],
                 "logID": str(i),
                 "parsedLogID": str(i),
                 "parserID": "test_parser",
                 "log": "test log",
-                "logFormatVariables": {}
+                "headerVariables": {}
             })
             detector.configure(parser_data)
 
@@ -379,14 +379,14 @@ class TestNewValueComboDetectorConfiguration:
         for i in range(10):
             parser_data = schemas.ParserSchema({
                 "parserType": "test",
-                "EventID": 1,
+                "eventID": 1,
                 "template": "Variable template",
                 "variables": [f"val_{i}_0", f"val_{i}_1"],
                 "logID": str(i),
                 "parsedLogID": str(i),
                 "parserID": "test_parser",
                 "log": "test log",
-                "logFormatVariables": {}
+                "headerVariables": {}
             })
             detector.configure(parser_data)
 
@@ -406,14 +406,14 @@ class TestNewValueComboDetectorEndToEnd:
     def _make_schema(event_id, template, variables, log_format_variables, log_id="1"):
         return schemas.ParserSchema({
             "parserType": "test",
-            "EventID": event_id,
+            "eventID": event_id,
             "template": template,
             "variables": variables,
             "logID": log_id,
             "parsedLogID": log_id,
             "parserID": "test_parser",
             "log": "test log message",
-            "logFormatVariables": log_format_variables,
+            "headerVariables": log_format_variables,
         })
 
     def test_configure_train_detect_anomalous_combo(self):
@@ -672,14 +672,14 @@ class TestNewValueComboDetectorClassificationConfigPreservation:
         for i in range(10):
             parser_data = schemas.ParserSchema({
                 "parserType": "test",
-                "EventID": 1,
+                "eventID": 1,
                 "template": "Template 1",
                 "variables": ["constant", f"varying_{i}", "another_constant"],
                 "logID": str(i),
                 "parsedLogID": str(i),
                 "parserID": "test_parser",
                 "log": "test log",
-                "logFormatVariables": {"level": "081109 203615"},
+                "headerVariables": {"level": "081109 203615"},
             })
             detector.configure(parser_data)
 
@@ -698,14 +698,14 @@ class TestNewValueComboDetectorClassificationConfigPreservation:
         for i in range(10):
             detector.configure(schemas.ParserSchema({
                 "parserType": "test",
-                "EventID": 1,
+                "eventID": 1,
                 "template": "Template 1",
                 "variables": ["constant", f"varying_{i}", "another_constant"],
                 "logID": str(i),
                 "parsedLogID": str(i),
                 "parserID": "test_parser",
                 "log": "test log",
-                "logFormatVariables": {},
+                "headerVariables": {},
             }))
         return detector
 
@@ -755,14 +755,14 @@ class TestNewValueComboDetectorClassificationCombos:
             # so pass 2 gets a ("var_0", "var_1") combo tracker to look at.
             detector.configure(schemas.ParserSchema({
                 "parserType": "test",
-                "EventID": 1,
+                "eventID": 1,
                 "template": "Template 1",
                 "variables": [f"a{i % 3}", f"b{i % 3}", "constant"],
                 "logID": str(i),
                 "parsedLogID": str(i),
                 "parserID": "test_parser",
                 "log": "test log",
-                "logFormatVariables": {"ts": str(1700000000 + i * 60)},
+                "headerVariables": {"ts": str(1700000000 + i * 60)},
             }))
         return detector
 
@@ -840,7 +840,7 @@ class TestNewValueComboDetectorConfigureSpill:
     def _record(i: int) -> schemas.ParserSchema:
         return schemas.ParserSchema({
             "parserType": "test",
-            "EventID": 1,
+            "eventID": 1,
             "template": "Template 1",
             "variables": [f"a{min(i, 3)}", f"b{min(i, 4)}", f"c{min(i, 2)}"],
             "logID": str(i),
@@ -915,14 +915,14 @@ class TestNewValueComboDetectorAllCombos:
     def _record(variables, log_format_variables=None, event_id=1, log_id="1"):
         return schemas.ParserSchema({
             "parserType": "test",
-            "EventID": event_id,
+            "eventID": event_id,
             "template": "Template 1",
             "variables": variables,
             "logID": log_id,
             "parsedLogID": log_id,
             "parserID": "test_parser",
             "log": "test log",
-            "logFormatVariables": log_format_variables or {},
+            "headerVariables": log_format_variables or {},
         })
 
     @staticmethod
@@ -962,7 +962,7 @@ class TestNewValueComboDetectorAllCombos:
         output = schemas.DetectorSchema()
         assert detector.detect(self._record(["a", "x"], {"level": "ERROR"}), output)
         assert output.score == 1.0
-        assert list(output.alertsObtain) == ["EventID 1 - ('var_0', 'level')"]
+        assert list(output.alertDetails) == ["EventID 1 - ('var_0', 'level')"]
 
     def test_every_combo_is_trained(self):
         detector = self._two_combos()
@@ -1008,7 +1008,7 @@ class TestNewValueComboDetectorAllCombos:
         """Configure a detector whose header variables reach the first pass in
         ``header_order``.
 
-        ParserSchema keeps logFormatVariables in a protobuf map, whose
+        ParserSchema keeps headerVariables in a protobuf map, whose
         iteration order changes from process to process, so the order is
         fixed here by feeding the first-pass store directly.
         """

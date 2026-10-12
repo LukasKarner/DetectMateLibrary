@@ -15,7 +15,7 @@ PARSER_SCHEMA: SchemaT = s.ParserSchema  # type: ignore
 DETECTOR_SCHEMA: SchemaT = s.DetectorSchema  # type: ignore
 AGGREGATE_SCHEMA: SchemaT = s.AggregateSchema  # type: ignore
 
-__current_version = "1.0.0"
+__current_version = "2.0.0"
 
 
 #  Exceptions ****************************************
@@ -88,7 +88,7 @@ def get_variables_names(schema: SchemaT) -> list[str]:
 def initialize(schema: SchemaT, **kwargs: Any) -> SchemaT:
     """Initialize a protobuf schema, it uses its arguments and the assigned
     id."""
-    kwargs["__version__"] = __current_version
+    kwargs["schemaVersion"] = __current_version
     return schema(**kwargs)
 
 

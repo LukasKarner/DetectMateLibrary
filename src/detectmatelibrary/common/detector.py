@@ -20,7 +20,7 @@ def _extract_timestamp(input_: List[ParserSchema] | ParserSchema) -> List[int]:
     if not isinstance(input_, list):
         input_ = [input_]
     return [
-        int(_time_handler.parse_timestamp(i["logFormatVariables"]["Time"]))
+        int(_time_handler.parse_timestamp(i["headerVariables"]["Time"]))
         for i in input_
     ]
 
@@ -84,12 +84,12 @@ class CoreDetector(CoreComponent[ParserSchema, DetectorSchema]):
         output_["detectorID"] = self.name
         output_["detectorType"] = self.config.method_type
         output_["logIDs"] = _extract_logIDs(input_)
-        output_["extractedTimestamps"] = _extract_timestamp(input_)
+        output_["logTimestamps"] = _extract_timestamp(input_)
         output_["receivedTimestamp"] = get_timestamp()
 
         if anomaly_detected := self.detect(input_=input_, output_=output_):
             output_["alertID"] = str(self.id_generator())
-            output_["detectionTimestamp"] = get_timestamp()
+            output_["detectedTimestamp"] = get_timestamp()
 
         return anomaly_detected
 

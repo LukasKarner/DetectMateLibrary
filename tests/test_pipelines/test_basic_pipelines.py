@@ -11,7 +11,7 @@ import yaml
 
 class MockupParser(CoreParser):
     def parse(self, input_, output_):
-        output_.EventID = 1
+        output_.eventID = 1
         output_.template = "hello"
         output_.variables.extend(["a", "b"])
 

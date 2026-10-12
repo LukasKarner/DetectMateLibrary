@@ -78,14 +78,14 @@ class TestNewEventDetectorTraining:
         for event in event_ids:
             parser_data = schemas.ParserSchema({
                 "parserType": "test",
-                "EventID": event,
+                "eventID": event,
                 "template": "test template",
                 "variables": ["0", "assa"],
                 "logID": "1",
                 "parsedLogID": "1",
                 "parserID": "test_parser",
                 "log": "test log message",
-                "logFormatVariables": {"level": "INFO"}
+                "headerVariables": {"level": "INFO"}
             })
             detector.train(parser_data)
 
@@ -103,28 +103,28 @@ class TestNewEventDetectorDetection:
         # Train with an event_id
         train_data = schemas.ParserSchema({
             "parserType": "test",
-            "EventID": 1,
+            "eventID": 1,
             "template": "test template",
             "variables": ["adsasd", "asdasd"],
             "logID": "1",
             "parsedLogID": "1",
             "parserID": "test_parser",
             "log": "test log message",
-            "logFormatVariables": {"level": "INFO"}
+            "headerVariables": {"level": "INFO"}
         })
         detector.train(train_data)
 
         # Detect with the same event_id
         test_data = schemas.ParserSchema({
             "parserType": "test",
-            "EventID": 1,
+            "eventID": 1,
             "template": "test template",
             "variables": ["adsasd"],
             "logID": "2",
             "parsedLogID": "2",
             "parserID": "test_parser",
             "log": "test log message",
-            "logFormatVariables": {"level": "CRITICAL"}
+            "headerVariables": {"level": "CRITICAL"}
         })
         output = schemas.DetectorSchema()
 
@@ -305,7 +305,7 @@ class TestNewEventDetectorGlobalInstances:
         for log in logs[TRAIN_UNTIL:]:
             output = schemas.DetectorSchema()
             if detector.detect(log, output_=output):
-                assert all(key.startswith("Global -") for key in output["alertsObtain"])
+                assert all(key.startswith("Global -") for key in output["alertDetails"])
                 detected_ids.add(log["logID"])
 
         assert len(detected_ids) > 0
@@ -315,7 +315,7 @@ class TestNewEventDetectorFederationCleanup:
     def test_finalize_federation_removes_the_slow_table(self, tmp_path, monkeypatch):
         monkeypatch.chdir(tmp_path)  # the slow store writes .temp/ CSVs here
         detector = NewEventDetector(config=NewEventDetectorConfig(allow_fed=True))
-        detector.train(schemas.ParserSchema({"EventID": 1, "template": "test template"}))
+        detector.train(schemas.ParserSchema({"eventID": 1, "template": "test template"}))
         assert (tmp_path / ".temp").exists()
 
         detector.finalize_federation()

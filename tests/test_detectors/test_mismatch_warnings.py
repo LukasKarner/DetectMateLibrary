@@ -21,14 +21,14 @@ def _make_parser_schema(
 ) -> schemas.ParserSchema:
     return schemas.ParserSchema({
         "parserType": "test",
-        "EventID": event_id,
+        "eventID": event_id,
         "template": "test template",
         "variables": variables,
         "logID": "1",
         "parsedLogID": "1",
         "parserID": "test_parser",
         "log": "test log message",
-        "logFormatVariables": log_format_variables,
+        "headerVariables": log_format_variables,
     })
 
 

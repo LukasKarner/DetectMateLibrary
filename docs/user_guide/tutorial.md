@@ -69,7 +69,7 @@ one.
 
 **Splitting off the prefix.** The `log_format` string tells the parser how to
 carve off the `type=`/`msg=audit(...)` prefix into
-`logFormatVariables` and hand the parser only the `<Content>` part to match
+`headerVariables` and hand the parser only the `<Content>` part to match
 against templates:
 
 ```text
@@ -93,7 +93,7 @@ proctitle=<*>
 
 A few things worth noticing while writing templates like these:
 
-- The line number is the `EventID`: line 1 (0-indexed: `0`) matches
+- The line number is the `eventID`: line 1 (0-indexed: `0`) matches
   `DAEMON_START`, line 2 (`1`) matches `CONFIG_CHANGE`, and so on, exactly as
   described in [EventID assignment](../parsers/template_matcher.md#eventid-assignment-preliminary).
 - The second template's `op=set <*> old=<*> ...` has only one wildcard where
@@ -124,7 +124,7 @@ A few things worth noticing while writing templates like these:
 > log falls back to `<Not Found>`. Write `log_format` as plain text; only the
 > `<Placeholder>` tokens are special.
 
-Running this prints, for each of the 9 logs, the `EventID` and the matched
+Running this prints, for each of the 9 logs, the `eventID` and the matched
 template. All four templates get used, and every line matches (nothing
 comes back as `<Not Found>`).
 
@@ -137,7 +137,7 @@ stream:
 - [**NewValueDetector**](../detectors/new_value.md) watches the *content* of
   specific fields and alerts when a value it hasn't been trained on shows up.
 - [**EventSequenceDetector**](../detectors/event_sequence.md) ignores field
-  content entirely and instead watches the *order* of `EventID`s, alerting
+  content entirely and instead watches the *order* of `eventID`s, alerting
   when a sequence of consecutive events wasn't part of what it was trained
   on.
 
@@ -150,8 +150,8 @@ Both detectors are configured with `data_use_training: 3`: the first 3 logs
 runs on the remaining 6; see [Configuration](../detectors.md#configuration)
 for how `data_use_training` and `events` interact. `NewValueDetector` is
 pointed at the two fields we identified while writing the templates in step
-2: the `key=value` pair inside `CONFIG_CHANGE` (`EventID: 1`, `pos: 0`) and
-the process name inside `SYSCALL` (`EventID: 2`, `pos: 22`, the `comm=` slot
+2: the `key=value` pair inside `CONFIG_CHANGE` (`eventID: 1`, `pos: 0`) and
+the process name inside `SYSCALL` (`eventID: 2`, `pos: 22`, the `comm=` slot
 counting `<*>` positions left to right in the third template line).
 
 Running the loop prints one row per log line:
@@ -243,14 +243,14 @@ Two details are easy to miss here, and both matter for production configs:
   `log_format` string breaks matching:
   `generate_logformat_regex()` already escapes literal text for you.
 * Detectors configured with an `events` block (such as `NewValueDetector`) only
-  check `EventID`s they have seen in training. If you configure an `EventID` that
+  check `eventID`s they have seen in training. If you configure an `eventID` that
   never appears in the training window (`data_use_training`), the detector stays
   silent for that event type: it does not alert on everything, and it does not
   raise an error. It does log a warning when training ends, for example
   `[NewValueDetector] EventID 5 is configured but was never observed in training data`,
   so check the log after training. This does not apply to every detector: the
   [New Event Detector](../detectors/new_event.md) exists to alert on exactly
-  those never-seen `EventID`s.
+  those never-seen `eventID`s.
 * Calling `.process()` on a detector or aggregator returns `None` when
   nothing fires, and the actual output schema (truthy) when it does, so check
   with `if result:` rather than assuming a boolean.
