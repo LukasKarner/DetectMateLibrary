@@ -454,6 +454,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#before-you-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Before you start
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#1-parse-the-logs" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -469,17 +480,6 @@
     <span class="md-ellipsis">
       
         2. Run the detector
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#common-pitfalls" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Common pitfalls
       
     </span>
   </a>
@@ -1974,6 +1974,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#before-you-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Before you start
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#1-parse-the-logs" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1989,17 +2000,6 @@
     <span class="md-ellipsis">
       
         2. Run the detector
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#common-pitfalls" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Common pitfalls
       
     </span>
   </a>
@@ -2028,12 +2028,31 @@
 <a href="https://zenodo.org/records/5789064">AIT Log Data Set V2.0</a>) and then run a
 detector to check whether the dataset contains anomalies. We use the
 <code>MatcherParser</code> and the <code>RandomDetector</code>.</p>
+<h2 id="before-you-start">Before you start</h2>
+<p>The example data ships with the source repository, not with the installed
+package: the logs are in <code>tests/test_data/audit.log</code> and the matching templates in
+<code>tests/test_data/audit_templates.txt</code>. The steps below therefore assume that you:</p>
+<ol>
+<li>
+<p>have cloned the repository and installed it (see <a href="../installation/">Installation</a>):</p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/ait-detectmate/DetectMateLibrary.git
+<span class="nb">cd</span><span class="w"> </span>DetectMateLibrary
+uv<span class="w"> </span>sync
+</code></pre></div>
+</li>
+<li>
+<p>run the code from the repository root, the folder that contains
+   <code>pyproject.toml</code>, for example with <code>uv run python quickstart.py</code>. Step 2 opens
+   its configuration file with a path relative to that folder.</p>
+</li>
+</ol>
+<p>Step 1 writes its output files to <code>local/</code> in the repository root.</p>
 <h2 id="1-parse-the-logs">1. Parse the logs</h2>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">detectmatelibrary.parsers.template_matcher</span><span class="w"> </span><span class="kn">import</span> <span class="n">MatcherParser</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">detectmatelibrary.helper.from_to</span><span class="w"> </span><span class="kn">import</span> <span class="n">From</span><span class="p">,</span> <span class="n">To</span>
 
-<span class="n">ROOT</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>  <span class="c1"># repository root; adjust if needed</span>
+<span class="n">ROOT</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span>  <span class="c1"># run this from the repository root (see "Before you start")</span>
 <span class="n">templates_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">ROOT</span> <span class="o">/</span> <span class="s2">"tests"</span> <span class="o">/</span> <span class="s2">"test_data"</span> <span class="o">/</span> <span class="s2">"audit_templates.txt"</span><span class="p">)</span>
 <span class="n">log_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">ROOT</span> <span class="o">/</span> <span class="s2">"tests"</span> <span class="o">/</span> <span class="s2">"test_data"</span> <span class="o">/</span> <span class="s2">"audit.log"</span><span class="p">)</span>
 <span class="n">log_json</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">ROOT</span> <span class="o">/</span> <span class="s2">"local"</span> <span class="o">/</span> <span class="s2">"audit_raw.json"</span><span class="p">)</span>
@@ -2054,6 +2073,10 @@ detector to check whether the dataset contains anomalies. We use the
 
 <span class="n">raw_logs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">From</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="n">log_path</span><span class="p">,</span> <span class="n">do_process</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
 <span class="n">parsed_logs</span> <span class="o">=</span> <span class="p">[</span><span class="n">parser</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">log</span><span class="p">)</span> <span class="k">for</span> <span class="n">log</span> <span class="ow">in</span> <span class="n">raw_logs</span><span class="p">]</span>
+
+<span class="c1"># To.json appends to existing files, so start from empty ones on every run</span>
+<span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="p">(</span><span class="n">log_json</span><span class="p">,</span> <span class="n">parsed_path</span><span class="p">):</span>
+    <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">missing_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="n">To</span><span class="o">.</span><span class="n">json</span><span class="p">(</span><span class="n">raw_logs</span><span class="p">,</span> <span class="n">log_json</span><span class="p">)</span>
 <span class="n">To</span><span class="o">.</span><span class="n">json</span><span class="p">(</span><span class="n">parsed_logs</span><span class="p">,</span> <span class="n">parsed_path</span><span class="p">)</span>
@@ -2076,12 +2099,6 @@ detector to check whether the dataset contains anomalies. We use the
 <span class="n">alerts</span> <span class="o">=</span> <span class="p">[</span><span class="n">detector</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">login</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">)]</span>
 <span class="nb">print</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">alert</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">alert</span> <span class="ow">in</span> <span class="n">alerts</span><span class="p">))</span>  <span class="c1"># around 10</span>
 </code></pre></div>
-<h2 id="common-pitfalls">Common pitfalls</h2>
-<ul>
-<li>When re-running the parser code, delete <code>audit_raw.json</code> and <code>audit_parsed.json</code>
-  first if you want to execute it again --&gt; otherwise output is appended to stale files.</li>
-</ul>
-<p>Go back <a href="../../">Index</a></p>
 
 
 
@@ -2105,6 +2122,46 @@ detector to check whether the dataset contains anomalies. We use the
       </main>
       
         <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../basic_knowledge/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Basic knowledge">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Basic knowledge
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../tutorial/" class="md-footer__link md-footer__link--next" aria-label="Next: Tutorial (end-to-end)">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Tutorial (end-to-end)
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
@@ -2131,7 +2188,7 @@ detector to check whether the dataset contains anomalies. We use the
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.footer"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>

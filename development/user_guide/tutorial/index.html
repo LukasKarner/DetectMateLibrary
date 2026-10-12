@@ -2068,41 +2068,41 @@
 
 
 <h1 id="tutorial-end-to-end">Tutorial (end-to-end)</h1>
-<p>A complete walkthrough of using DetectMate  --  more detailed than the
+<p>A complete walkthrough of using DetectMate, more detailed than the
 <a href="../quickstart/">Quickstart</a>. The Quickstart parses a ready-made dataset with a
 ready-made template file and runs one detector. This tutorial goes one level
 deeper:</p>
 <ul>
-<li>you parse a dataset that has no template file yet, so you write the templates
-  yourself</li>
+<li>you parse a new dataset and write its templates yourself</li>
 <li>you run two detectors that look for different kinds of anomalies and compare
   what each one finds</li>
 <li>you combine their alerts with an alert aggregator</li>
 </ul>
-<p>By the end you should have seen most of what the library can do and, more
+<p>By the end you should have seen the core workflow and, more
 importantly, understand <em>why</em> each piece behaves the way it does.</p>
 <h2 id="1-read-a-different-dataset-from-scratch">1. Read a different dataset from scratch</h2>
 <p>The Quickstart uses the <code>audit.log</code> dataset, which already ships with a
 matching <code>audit_templates.txt</code>. To actually practice building
 something, this tutorial uses a different file instead:
-<code>tests/test_data/logs.log</code>. It is still Linux <code>auditd</code> output  --  same overall
-shape as the Quickstart's dataset  --  but recorded on a different machine, and
-it comes with <strong>no template file</strong>. That is the point: before you can parse
-it, you have to look at it.</p>
+<code>docs/examples/data/tutorial_audit.log</code>. It is still Linux <code>auditd</code> output (same overall
+shape as the Quickstart's dataset), but recorded on a different machine, and
+this time <strong>you write the templates yourself</strong>. A finished template file is
+included in the repository, but only so you can check your result in step 2.
+That is the point: before you can parse a dataset, you have to look at it.</p>
 <blockquote>
-<p>Note: you likely have to edit your Path to your project root. In this code snippet we assume, that your
-notebook lives two folders below the project root. If it sits somewhere else, adjust <code>parents[...]</code> (for a
-script) or the <code>Path.cwd()</code> line (for a notebook) accordingly.</p>
+<p><strong>Note:</strong> like the Quickstart, this tutorial assumes a cloned repository and
+runs from the repository root, the folder that contains <code>pyproject.toml</code> (see
+<a href="../quickstart/#before-you-start">Before you start</a>). The code finds its files
+relative to that folder through <code>ROOT = Path.cwd()</code>. If you work in a notebook
+stored somewhere else, set <code>ROOT</code> to the path of your clone instead, for example
+<code>ROOT = Path("/home/me/DetectMateLibrary")</code>.</p>
 </blockquote>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">detectmatelibrary.helper.from_to</span><span class="w"> </span><span class="kn">import</span> <span class="n">From</span>
 
-<span class="k">try</span><span class="p">:</span>
-    <span class="n">ROOT</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
-<span class="k">except</span> <span class="ne">NameError</span><span class="p">:</span>  <span class="c1"># running inside a Jupyter notebook</span>
-    <span class="n">ROOT</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">ROOT</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span>  <span class="c1"># the repository root; see the note above this code</span>
 
-<span class="n">log_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">ROOT</span> <span class="o">/</span> <span class="s2">"tests"</span> <span class="o">/</span> <span class="s2">"test_data"</span> <span class="o">/</span> <span class="s2">"logs.log"</span><span class="p">)</span>
+<span class="n">log_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">ROOT</span> <span class="o">/</span> <span class="s2">"docs"</span> <span class="o">/</span> <span class="s2">"examples"</span> <span class="o">/</span> <span class="s2">"data"</span> <span class="o">/</span> <span class="s2">"tutorial_audit.log"</span><span class="p">)</span>
 
 <span class="c1"># do_process=False turns From.log into a pure reader: it yields raw</span>
 <span class="c1"># LogSchema objects without running them through a parser yet, so the</span>
@@ -2116,7 +2116,7 @@ script) or the <code>Path.cwd()</code> line (for a notebook) accordingly.</p>
 <p><code>From.log</code> is the same helper used in the Quickstart (see the
 <a href="../../helper/from_to/">From helper</a> docs). Passing <code>do_process=False</code>
 turns it into a plain file reader that hands back <a href="../../schemas/"><code>LogSchema</code></a>
-objects instead of running them through a parser  --  exactly what you want
+objects instead of running them through a parser, which is exactly what you want
 before you've decided how to parse the data.</p>
 <p>The file only has 9 lines, small enough to read in full:</p>
 <div class="highlight"><pre><span></span><code>type=DAEMON_START msg=audit(1757673850.240:4506): op=start ver=3.0.9 format=enriched kernel=6.6.62+rpt-rpi-2712 auid=4294967295 pid=691 uid=0 ses=4294967295 res=success...
@@ -2130,8 +2130,8 @@ type=CONFIG_CHANGE msg=audit(1757673850.283:5): op=set audit_backlog_wait_time=6
 type=SYSCALL msg=audit(1757673850.283:5): arch=c00000b7 syscall=206 success=yes exit=60 a0=3 a1=7fffc27ad8f0 a2=3c a3=0 items=0 ppid=696 pid=710 auid=4294967295 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) ses=4294967295 comm="auditctl" exe="/usr/sbin/auditctl" key=(null)...
 </code></pre></div>
 <p>Every line starts with the same prefix shape, <code>type=&lt;Type&gt; msg=audit(&lt;Time&gt;:&lt;Serial&gt;):
-&lt;Content&gt;</code>, and there are only four distinct <em>event types</em>  --  <code>DAEMON_START</code>,
-<code>CONFIG_CHANGE</code>, <code>SYSCALL</code>, and <code>PROCTITLE</code>  --  each with its own static
+&lt;Content&gt;</code>, and there are only four distinct <em>event types</em> (<code>DAEMON_START</code>,
+<code>CONFIG_CHANGE</code>, <code>SYSCALL</code>, and <code>PROCTITLE</code>), each with its own static
 template hiding behind the variable parts.</p>
 <h2 id="2-build-and-configure-your-own-parser">2. Build and configure your own parser</h2>
 <p>We reuse <code>MatcherParser</code> (the same parser class as the Quickstart, see
@@ -2146,8 +2146,11 @@ against templates:</p>
 </code></pre></div>
 <p><strong>Writing the templates.</strong> <strong>MatcherParser</strong> needs a template file as an input. For each of the four content shapes above, we
 replace the parts that change between log lines with <code>&lt;*&gt;</code>, following the
-<a href="../../parsers/template_matcher/#template-format">template format</a> rules  --  save the results in
-<code>tests/test_data/logs_templates.txt</code>:</p>
+<a href="../../parsers/template_matcher/#template-format">template format</a> rules, and save the results
+in a file of your own (for example <code>local/tutorial_templates.txt</code>, then point
+<code>templates_path</code> in the code below at it). The finished version ships as
+<code>docs/examples/data/tutorial_templates.txt</code>, which the example code uses, so you
+can compare your result against it:</p>
 <div class="highlight"><pre><span></span><code>op=start ver=&lt;*&gt; format=&lt;*&gt; kernel=&lt;*&gt; auid=&lt;*&gt; pid=&lt;*&gt; uid=&lt;*&gt; ses=&lt;*&gt; res=&lt;*&gt;
 op=set &lt;*&gt; old=&lt;*&gt; auid=&lt;*&gt; ses=&lt;*&gt; res=&lt;*&gt;
 arch=&lt;*&gt; syscall=&lt;*&gt; success=&lt;*&gt; exit=&lt;*&gt; a0=&lt;*&gt; a1=&lt;*&gt; a2=&lt;*&gt; a3=&lt;*&gt; items=&lt;*&gt; ppid=&lt;*&gt; pid=&lt;*&gt; auid=&lt;*&gt; uid=&lt;*&gt; gid=&lt;*&gt; euid=&lt;*&gt; suid=&lt;*&gt; fsuid=&lt;*&gt; egid=&lt;*&gt; sgid=&lt;*&gt; fsgid=&lt;*&gt; tty=&lt;*&gt; ses=&lt;*&gt; comm=&lt;*&gt; exe=&lt;*&gt; key=&lt;*&gt;
@@ -2155,13 +2158,13 @@ proctitle=&lt;*&gt;
 </code></pre></div>
 <p>A few things worth noticing while writing templates like these:</p>
 <ul>
-<li>The line number is the <code>EventID</code>  --  line 1 (0-indexed: <code>0</code>) matches
+<li>The line number is the <code>EventID</code>: line 1 (0-indexed: <code>0</code>) matches
   <code>DAEMON_START</code>, line 2 (<code>1</code>) matches <code>CONFIG_CHANGE</code>, and so on, exactly as
   described in <a href="../../parsers/template_matcher/#eventid-assignment-preliminary">EventID assignment</a>.</li>
 <li>The second template's <code>op=set &lt;*&gt; old=&lt;*&gt; ...</code> has only one wildcard where
   the raw text has an <code>audit_backlog_limit=8192</code>, <code>audit_failure=1</code>, or
   <code>audit_backlog_wait_time=60000</code> key/value pair. A single <code>&lt;*&gt;</code> is not
-  limited to one word  --  it happily captures the whole <code>key=value</code> chunk, so
+  limited to one word: it happily captures the whole <code>key=value</code> chunk, so
   there's no need for a wildcard per key name even though the key itself
   varies between log lines.</li>
 <li>None of the templates need to account for the trailing <code>AUID="unset"
@@ -2172,7 +2175,7 @@ proctitle=&lt;*&gt;
 <p><strong>Configuring the parser:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">detectmatelibrary.parsers.template_matcher</span><span class="w"> </span><span class="kn">import</span> <span class="n">MatcherParser</span>  <span class="c1"># noqa: E402</span>
 
-<span class="n">templates_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">ROOT</span> <span class="o">/</span> <span class="s2">"tests"</span> <span class="o">/</span> <span class="s2">"test_data"</span> <span class="o">/</span> <span class="s2">"logs_templates.txt"</span><span class="p">)</span>
+<span class="n">templates_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">ROOT</span> <span class="o">/</span> <span class="s2">"docs"</span> <span class="o">/</span> <span class="s2">"examples"</span> <span class="o">/</span> <span class="s2">"data"</span> <span class="o">/</span> <span class="s2">"tutorial_templates.txt"</span><span class="p">)</span>
 
 <span class="n">config_dict</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">"parsers"</span><span class="p">:</span> <span class="p">{</span>
@@ -2193,17 +2196,17 @@ proctitle=&lt;*&gt;
 <blockquote>
 <p><strong>Common pitfall: don't escape <code>log_format</code> yourself.</strong> The Quickstart's
 <code>log_format</code> string escapes the parentheses by hand:
-<code>r"...audit\(&lt;Time&gt;:&lt;Serial&gt;\):..."</code>. Don't copy that  --  it's wrong.
+<code>r"...audit\(&lt;Time&gt;:&lt;Serial&gt;\):..."</code>. Don't copy that; it's wrong.
 <code>generate_logformat_regex()</code> (used internally by every parser that accepts
 <code>log_format</code>) already escapes every literal character outside the
 <code>&lt;Placeholder&gt;</code> tokens, parentheses included. Escaping them yourself asks it
 to match a <strong>literal backslash</strong> followed by <code>(</code>, which never occurs in
-real log data  --  the regex then silently fails to match anything, and every
+real log data. The regex then silently fails to match anything, and every
 log falls back to <code>&lt;Not Found&gt;</code>. Write <code>log_format</code> as plain text; only the
 <code>&lt;Placeholder&gt;</code> tokens are special.</p>
 </blockquote>
 <p>Running this prints, for each of the 9 logs, the <code>EventID</code> and the matched
-template  --  all four templates get used, and every line matches (nothing
+template. All four templates get used, and every line matches (nothing
 comes back as <code>&lt;Not Found&gt;</code>).</p>
 <h2 id="3-run-several-detectors-and-compare-their-alerts">3. Run several detectors and compare their alerts</h2>
 <p>Different detectors look for different <em>kinds</em> of anomalies. To make that
@@ -2276,7 +2279,7 @@ stream:</p>
 </code></pre></div>
 <p>Both detectors are configured with <code>data_use_training: 3</code>: the first 3 logs
 (<code>DAEMON_START</code>, <code>CONFIG_CHANGE</code>, <code>SYSCALL</code>) are used to train, and detection
-runs on the remaining 6  --  see <a href="../../detectors/#configuration">Configuration</a>
+runs on the remaining 6; see <a href="../../detectors/#configuration">Configuration</a>
 for how <code>data_use_training</code> and <code>events</code> interact. <code>NewValueDetector</code> is
 pointed at the two fields we identified while writing the templates in step
 2: the <code>key=value</code> pair inside <code>CONFIG_CHANGE</code> (<code>EventID: 1</code>, <code>pos: 0</code>) and
@@ -2299,24 +2302,24 @@ counting <code>&lt;*&gt;</code> positions left to right in the third template li
 Reading the table alongside the raw data explains why each detector fires
 when it does:</p>
 <ul>
-<li><strong><code>NewValueDetector</code></strong> only fires on logs <code>#5</code> and <code>#8</code>  --  the second and
+<li><strong><code>NewValueDetector</code></strong> only fires on logs <code>#5</code> and <code>#8</code>: the second and
   third <code>CONFIG_CHANGE</code> events, whose <code>audit_failure=1</code> and
   <code>audit_backlog_wait_time=60000</code> values were never seen during training
   (only <code>audit_backlog_limit=8192</code>, from log <code>#2</code>, was). It stays silent on
   every <code>SYSCALL</code> after log <code>#3</code>, because <code>comm="auditctl"</code> is identical
-  every time  --  there is nothing <em>new</em> about it once it's been trained once.</li>
+  every time, so there is nothing <em>new</em> about it once it's been trained once.</li>
 <li><strong><code>EventSequenceDetector</code></strong> fires starting at log <code>#4</code>, and on every log
   after that except the <code>SYSCALL</code>s. With <code>fixed_window_size: 2</code>, training on
   the first 3 logs only teaches it the transitions <code>(DAEMON_START →
   CONFIG_CHANGE)</code> and <code>(CONFIG_CHANGE → SYSCALL)</code>. The transition <code>(SYSCALL →
-  PROCTITLE)</code> at log <code>#4</code> was never trained, so it alerts  --  and keeps
+  PROCTITLE)</code> at log <code>#4</code> was never trained, so it alerts, and keeps
   alerting every time that same transition recurs (<code>#7</code>), because alerts
   don't teach the detector anything; only <code>train()</code> does. <code>(PROCTITLE →
   CONFIG_CHANGE)</code> at log <code>#5</code> is equally untrained and alerts too, while
   <code>(CONFIG_CHANGE → SYSCALL)</code> at logs <code>#6</code> and <code>#9</code> was trained at log <code>#3</code>
   and stays quiet.</li>
 </ul>
-<p>Note that both detectors agree on logs <code>#5</code> and <code>#8</code>  --  the same underlying
+<p>Note that both detectors agree on logs <code>#5</code> and <code>#8</code>: the same underlying
 event looks anomalous from two independent angles: an unfamiliar value <em>and</em>
 an unfamiliar position in the sequence. That overlap is what an alert
 aggregator is for.</p>
@@ -2324,7 +2327,7 @@ aggregator is for.</p>
 <p><a href="../../alert_aggregator/">Alert aggregation</a> takes the stream of alerts coming
 out of one or more detectors and combines them into
 <a href="../../schemas/"><code>AggregateSchema</code></a> records. Here we feed every alert produced
-in step 3  --  from either detector, in the order they were emitted  --  into
+in step 3 (from either detector, in the order they were emitted) into
 <a href="../../alert_aggregators/basic_concatenation/"><code>BasicConcatAggregation</code></a>, the
 simplest aggregation strategy available:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">detectmatelibrary.alert_aggregation.basic_concat</span><span class="w"> </span><span class="kn">import</span> <span class="n">BasicConcatAggregation</span>  <span class="c1"># noqa: E402</span>
@@ -2363,10 +2366,11 @@ simplest aggregation strategy available:</p>
   produce five overlapping aggregate outputs, not three separate batches.</li>
 <li><strong><code>BasicConcatAggregation</code> does not correlate by log line.</strong> It concatenates
   whatever alerts happen to be in the window, regardless of which log they
-  refer to  --  that's why most rows above pair up alerts from <em>different</em>
+  refer to. That's why most rows above pair up alerts from <em>different</em>
   underlying logs. The two rows where both <code>logIDs</code> are identical
   (<code>['4', '4']</code> and <code>['7', '7']</code>) are the exception, and not a coincidence:
-  those are exactly the log <code>#5</code> and <code>#8</code> cases from step 3, where
+  those are exactly the log <code>#5</code> and <code>#8</code> cases from step 3 (<code>logIDs</code> count
+  from 0 while the table above counts from 1, so logID <code>4</code> is row <code>#5</code>), where
   <code>NewValueDetector</code> and <code>EventSequenceDetector</code> both alerted on the same
   event back to back, so the window happened to contain only that pair. A
   real deployment that wants alerts grouped <em>by log</em> rather than by arrival
@@ -2375,17 +2379,21 @@ simplest aggregation strategy available:</p>
 <h2 id="common-pitfalls">Common pitfalls</h2>
 <ul>
 <li>Manually escaping regex characters (like <code>(</code> and <code>)</code>) inside a
-  <code>log_format</code> string breaks matching
+  <code>log_format</code> string breaks matching:
   <code>generate_logformat_regex()</code> already escapes literal text for you.</li>
-<li>A detector's <code>detect()</code> only checks <code>EventID</code>s it has already seen through
-  <code>train()</code> at least once. If you configure a detector for an <code>EventID</code> that
-  never appears in the training window (<code>data_use_training</code>), it will stay
-  silent for that event type  --  not alert on everything, and not error either.</li>
+<li>Detectors configured with an <code>events</code> block (such as <code>NewValueDetector</code>) only
+  check <code>EventID</code>s they have seen in training. If you configure an <code>EventID</code> that
+  never appears in the training window (<code>data_use_training</code>), the detector stays
+  silent for that event type: it does not alert on everything, and it does not
+  raise an error. It does log a warning when training ends, for example
+  <code>[NewValueDetector] EventID 5 is configured but was never observed in training data</code>,
+  so check the log after training. This does not apply to every detector: the
+  <a href="../../detectors/new_event/">New Event Detector</a> exists to alert on exactly
+  those never-seen <code>EventID</code>s.</li>
 <li>Calling <code>.process()</code> on a detector or aggregator returns <code>None</code> when
-  nothing fires, and the actual output schema (truthy) when it does  --  check
+  nothing fires, and the actual output schema (truthy) when it does, so check
   with <code>if result:</code> rather than assuming a boolean.</li>
 </ul>
-<p>Go back <a href="../../">Index</a></p>
 
 
 
@@ -2409,6 +2417,46 @@ simplest aggregation strategy available:</p>
       </main>
       
         <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../quickstart/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Quickstart">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Quickstart
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../advanced/overall_architecture/" class="md-footer__link md-footer__link--next" aria-label="Next: Overall architecture">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Overall architecture
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
@@ -2435,7 +2483,7 @@ simplest aggregation strategy available:</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.footer"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>

@@ -691,10 +691,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#stack" class="md-nav__link">
+  <a href="#stack-later" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Stack
+        Stack later
       
     </span>
   </a>
@@ -1998,10 +1998,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#stack" class="md-nav__link">
+  <a href="#stack-later" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Stack
+        Stack later
       
     </span>
   </a>
@@ -2039,7 +2039,8 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">finalize_federation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""(Federation only) Liberate memory from federation"""</span>
 </code></pre></div>
-<p>The tracker detectors (subclasses of <code>base_detectors.TrackerDetector</code>: New Event, New Value, New Value Combo, Value Range, Charset, Event Sequence, Bigram Frequency, SCVS and ECVC) implement all four in <code>TrackerDetector</code>, which is the reference implementation. Set <code>allow_fed: true</code> in their <code>params</code> to enable it.</p>
+<p>The tracker detectors (subclasses of <code>base_detectors.TrackerDetector</code>: New Event, New Value, New Value Combo, Value Range, Charset, Event Sequence, SCVS and ECVC) implement all four in <code>TrackerDetector</code>, which is the reference implementation. Set <code>allow_fed: true</code> in their <code>params</code> to enable it.</p>
+<p>The Bigram Frequency detector is also a tracker detector, but it disables the binary transfer: its <code>to_binary()</code> returns empty bytes. It therefore supports <strong>Combine first</strong> only, not <strong>Stack later</strong>.</p>
 <p><code>from_binary</code> rebuilds the detector as <code>type(self)(name=..., config=...)</code>, so a <code>TrackerDetector</code> subclass must be constructible from its name and config alone; give any other constructor argument a default.</p>
 <p>There are two main ways to use federation:</p>
 <ul>
@@ -2052,7 +2053,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">struct</span>
 
 
-<span class="k">class</span><span class="w"> </span><span class="nc">NewComponent</span><span class="p">(</span><span class="n">CoreComponent</span><span class="p">):</span>  <span class="c1"># Inherent from CoreComponent</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">NewComponent</span><span class="p">(</span><span class="n">CoreComponent</span><span class="p">):</span>  <span class="c1"># Inherit from CoreComponent</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elems</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">elems</span> <span class="o">=</span> <span class="n">elems</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"FedExample"</span><span class="p">)</span>
@@ -2084,9 +2085,9 @@
 
 <span class="n">detector1</span> <span class="o">+</span> <span class="n">detector2</span> <span class="o">+</span> <span class="n">detector3</span>
 
-<span class="n">detector2</span><span class="o">.</span><span class="n">aggregate</span><span class="p">()</span>  <span class="c1"># Detector 2 is used as centralize node</span>
+<span class="n">detector2</span><span class="o">.</span><span class="n">aggregate</span><span class="p">()</span>  <span class="c1"># Detector 2 is used as central node</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Dectector 3"</span><span class="p">,</span> <span class="n">detector3</span><span class="o">.</span><span class="n">elems</span><span class="p">)</span>  <span class="c1"># All detectors have been updated</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Detector 3"</span><span class="p">,</span> <span class="n">detector3</span><span class="o">.</span><span class="n">elems</span><span class="p">)</span>  <span class="c1"># All detectors have been updated</span>
 </code></pre></div>
 <p>Example 2:</p>
 <div class="highlight"><pre><span></span><code><span class="n">detector1</span> <span class="o">=</span> <span class="n">NewComponent</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
@@ -2095,11 +2096,11 @@
 
 <span class="n">detector1</span> <span class="o">+</span> <span class="n">detector2</span> <span class="o">+</span> <span class="n">detector3</span>
 
-<span class="n">detector2</span><span class="o">.</span><span class="n">aggregate</span><span class="p">()</span>  <span class="c1"># Detector 2 is used as centralize node</span>
+<span class="n">detector2</span><span class="o">.</span><span class="n">aggregate</span><span class="p">()</span>  <span class="c1"># Detector 2 is used as central node</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Dectector 3"</span><span class="p">,</span> <span class="n">detector3</span><span class="o">.</span><span class="n">elems</span><span class="p">)</span>  <span class="c1"># All detectors have been updated</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Detector 3"</span><span class="p">,</span> <span class="n">detector3</span><span class="o">.</span><span class="n">elems</span><span class="p">)</span>  <span class="c1"># All detectors have been updated</span>
 </code></pre></div>
-<h2 id="stack">Stack</h2>
+<h2 id="stack-later">Stack later</h2>
 <p>The diagram below shows the workflow:</p>
 <p><img alt="stack" src="../img/fed_stack_later.png" /></p>
 <p>Example 1:</p>
@@ -2110,7 +2111,7 @@
 <span class="n">detector1</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">detector2</span><span class="p">,</span> <span class="n">detector3</span><span class="p">])</span>
 
 <span class="n">detector2</span><span class="o">.</span><span class="n">aggregate</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Detector 3"</span><span class="p">,</span> <span class="n">detector3</span><span class="o">.</span><span class="n">elems</span><span class="p">)</span>  <span class="c1"># It is not longer combine but stack, so it will not work</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Detector 3"</span><span class="p">,</span> <span class="n">detector3</span><span class="o">.</span><span class="n">elems</span><span class="p">)</span>  <span class="c1"># It is no longer combined but stacked, so it will not work</span>
 
 <span class="n">detector1</span><span class="o">.</span><span class="n">aggregate</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"Detector 3"</span><span class="p">,</span> <span class="n">detector3</span><span class="o">.</span><span class="n">elems</span><span class="p">)</span>  <span class="c1"># Now it will work</span>
@@ -2126,10 +2127,10 @@
 <span class="n">output</span> <span class="o">=</span> <span class="n">detector1</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="n">unstack</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># unstack = True will free memory</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">"Detector 1"</span><span class="p">,</span> <span class="n">detector1</span><span class="o">.</span><span class="n">elems</span><span class="p">)</span>  <span class="c1"># Detector 1 has been updated</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Output binary"</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>  <span class="c1"># Output that we send to other componets</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Output binary"</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>  <span class="c1"># Output that we send to other components</span>
 
 <span class="c1"># We update detector 3 now</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Detector 3"</span><span class="p">,</span> <span class="n">detector3</span><span class="o">.</span><span class="n">elems</span><span class="p">)</span>  <span class="c1"># Now detector 3 is not in the share memory so it will not work</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Detector 3"</span><span class="p">,</span> <span class="n">detector3</span><span class="o">.</span><span class="n">elems</span><span class="p">)</span>  <span class="c1"># Now detector 3 is not in the shared memory, so it will not work</span>
 <span class="n">detector3</span> <span class="o">=</span> <span class="n">detector3</span><span class="o">.</span><span class="n">from_binary</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"Detector 3"</span><span class="p">,</span> <span class="n">detector3</span><span class="o">.</span><span class="n">elems</span><span class="p">)</span>  <span class="c1"># Now it will work</span>
 </code></pre></div>
@@ -2157,6 +2158,46 @@
       
         <footer class="md-footer">
   
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../schemas/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Schemas">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Schemas
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../parsers/" class="md-footer__link md-footer__link--next" aria-label="Next: Parsers">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Parsers
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
       <div class="md-copyright">
@@ -2182,7 +2223,7 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.footer"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>

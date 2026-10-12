@@ -711,7 +711,7 @@
   <a href="#coreparser-minimal-api" class="md-nav__link">
     <span class="md-ellipsis">
       
-        CoreParser -- minimal API
+        CoreParser: minimal API
       
     </span>
   </a>
@@ -722,7 +722,7 @@
   <a href="#parserschema-what-to-populate" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ParserSchema -- what to populate
+        ParserSchema: what to populate
       
     </span>
   </a>
@@ -733,7 +733,7 @@
   <a href="#creating-a-new-parser-step-by-step" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Creating a new parser -- step by step
+        Creating a new parser: step by step
       
     </span>
   </a>
@@ -2040,7 +2040,7 @@
   <a href="#coreparser-minimal-api" class="md-nav__link">
     <span class="md-ellipsis">
       
-        CoreParser -- minimal API
+        CoreParser: minimal API
       
     </span>
   </a>
@@ -2051,7 +2051,7 @@
   <a href="#parserschema-what-to-populate" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ParserSchema -- what to populate
+        ParserSchema: what to populate
       
     </span>
   </a>
@@ -2062,7 +2062,7 @@
   <a href="#creating-a-new-parser-step-by-step" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Creating a new parser -- step by step
+        Creating a new parser: step by step
       
     </span>
   </a>
@@ -2155,7 +2155,7 @@
 <li><code>CoreParser.run()</code> handles lifecycle and calls <code>parse()</code> for each input; implement pure parsing logic inside <code>parse()</code> where possible.</li>
 <li>Use a typed <code>Config</code> class (subclass of <code>CoreParserConfig</code>) to hold runtime parameters.</li>
 </ul>
-<h2 id="coreparser-minimal-api">CoreParser  --  minimal API</h2>
+<h2 id="coreparser-minimal-api">CoreParser: minimal API</h2>
 <p>Recommended signatures and behavior:</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">CoreParser</span><span class="p">:</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_</span><span class="p">:</span> <span class="n">schemas</span><span class="o">.</span><span class="n">LogSchema</span><span class="p">,</span> <span class="n">output_</span><span class="p">:</span> <span class="n">schemas</span><span class="o">.</span><span class="n">ParserSchema</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
@@ -2163,25 +2163,35 @@
 <span class="sd">        Return True when a parsed output was produced, False otherwise.</span>
 <span class="sd">        """</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_</span><span class="p">:</span> <span class="n">schemas</span><span class="o">.</span><span class="n">LogSchema</span><span class="p">,</span> <span class="n">output_</span><span class="p">:</span> <span class="n">schemas</span><span class="o">.</span><span class="n">ParserSchema</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_</span><span class="p">:</span> <span class="n">schemas</span><span class="o">.</span><span class="n">LogSchema</span><span class="p">,</span> <span class="n">output_</span><span class="p">:</span> <span class="n">schemas</span><span class="o">.</span><span class="n">ParserSchema</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Implement parsing here.</span>
-<span class="sd">        - Fill required output_ fields (see ParserSchema table below).</span>
-<span class="sd">        - Return True if parsing succeeded and output_ contains a result.</span>
+<span class="sd">        - Fill the required output_ fields (see "ParserSchema: what to populate" below).</span>
+<span class="sd">        - Return True, or None, to emit output_ as the parsed log.</span>
+<span class="sd">        - Return False to drop the log: process() then returns None for it.</span>
 <span class="sd">        """</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">schemas</span><span class="o">.</span><span class="n">LogSchema</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_</span><span class="p">:</span> <span class="n">schemas</span><span class="o">.</span><span class="n">LogSchema</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Optional: train internal models. Can be a no-op for stateless parsers."""</span>
 </code></pre></div>
-<h2 id="parserschema-what-to-populate">ParserSchema  --  what to populate</h2>
-<p>Minimum fields commonly expected by downstream components:</p>
+<h2 id="parserschema-what-to-populate">ParserSchema: what to populate</h2>
+<p><code>parse()</code> only has to fill the fields that describe the match:</p>
 <ul>
-<li><code>EventID</code> (int)  --  identifier for the matched template/event</li>
-<li><code>template</code> (string)  --  event template text</li>
-<li><code>variables</code> (repeated string)  --  extracted parameters (extend the list)</li>
-<li><code>parsedLogID</code> / <code>logID</code>  --  identifiers linking raw and parsed records</li>
-<li><code>parsedTimestamp</code> / <code>receivedTimestamp</code>  --  timestamps</li>
+<li><code>EventID</code> (int): identifier for the matched template/event</li>
+<li><code>template</code> (string): event template text</li>
+<li><code>variables</code> (repeated string): extracted parameters (extend the list)</li>
 </ul>
-<h2 id="creating-a-new-parser-step-by-step">Creating a new parser  --  step by step</h2>
+<p><code>CoreParser.run()</code>, which calls <code>parse()</code>, fills in everything else for you:</p>
+<ul>
+<li><code>parserID</code>, <code>parserType</code>: the parser's name and <code>method_type</code></li>
+<li><code>parsedLogID</code>: a new unique ID for the parsed record</li>
+<li><code>logID</code>, <code>log</code>: copied from the input <code>LogSchema</code></li>
+<li><code>logFormatVariables</code>: the header fields extracted with <code>log_format</code></li>
+<li><code>receivedTimestamp</code>, <code>parsedTimestamp</code>: set just before and just after
+  <code>parse()</code> runs</li>
+</ul>
+<p>Don't set these in <code>parse()</code>: <code>run()</code> writes <code>parsedTimestamp</code> after <code>parse()</code>
+returns, so a value set there is overwritten.</p>
+<h2 id="creating-a-new-parser-step-by-step">Creating a new parser: step by step</h2>
 <ol>
 <li>Create a Config class inheriting <code>CoreParserConfig</code>.</li>
 <li>Create parser class inheriting <code>CoreParser</code>.</li>
@@ -2190,9 +2200,10 @@
 </ol>
 <p>Example:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># filepath: src/detectmatelibrary/parsers/my_parser.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">detectmatelibrary.common.parser</span><span class="w"> </span><span class="kn">import</span> <span class="n">CoreParser</span><span class="p">,</span> <span class="n">CoreParserConfig</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">detectmatelibrary</span><span class="w"> </span><span class="kn">import</span> <span class="n">schemas</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">MyParserConfig</span><span class="p">(</span><span class="n">CoreParserConfig</span><span class="p">):</span>
@@ -2218,7 +2229,6 @@
         <span class="n">output_</span><span class="p">[</span><span class="s2">"EventID"</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="n">output_</span><span class="p">[</span><span class="s2">"template"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">" "</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">"&lt;*&gt;"</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">))</span>
         <span class="n">output_</span><span class="p">[</span><span class="s2">"variables"</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
-        <span class="n">output_</span><span class="p">[</span><span class="s2">"parsedTimestamp"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
         <span class="k">return</span> <span class="kc">True</span>
 </code></pre></div>
 <h2 id="testing-parsers">Testing parsers</h2>
@@ -2245,7 +2255,7 @@
 <li><a href="auto_parser/">Auto parser</a>: The auto parser uses a brute-force strategy: it iterates through every log-type record in the internal dataset and chooses the regex and templates that best matches the provided logs.</li>
 </ul>
 <h3 id="common-parameters-all-parsers">Common parameters (all parsers)</h3>
-<p>There are some parameters, that <strong>every</strong> parser inhertis from <code>CoreParserrConfig</code>/<code>CoreConfig</code>/<code>BasicConfig</code>, regardless of what it does. The other parameters, that are <strong>specific</strong> for the respective parser, are explained right at the parsers documentation page, later on.</p>
+<p>There are some parameters, that <strong>every</strong> parser inherits from <code>CoreParserConfig</code>/<code>CoreConfig</code>/<code>BasicConfig</code>, regardless of what it does. The other parameters, that are <strong>specific</strong> for the respective parser, are explained right at the parsers documentation page, later on.</p>
 <!-- Start common_arguments -->
 <details class="note" open="open">
 <summary>Top level</summary>
@@ -2356,6 +2366,46 @@
       
         <footer class="md-footer">
   
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../federation/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Federation">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Federation
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../detectors/" class="md-footer__link md-footer__link--next" aria-label="Next: Detectors">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Detectors
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
       <div class="md-copyright">
@@ -2381,7 +2431,7 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.footer"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>

@@ -2171,7 +2171,7 @@ and can be installed as part of the <code>dev</code> extras. To ensure pre-commi
     <span class="p">)</span>
 </code></pre></div>
 <p>The <code>set_configuration()</code> method queries the tracker results and writes the
-final <code>events</code> block. It touches nothing else on the config  --  everything the
+final <code>events</code> block. It touches nothing else on the config: everything the
 operator set under <code>params</code> or <code>auto_config_params</code> must survive untouched, so
 <code>set_configuration</code> never rebuilds the config from scratch:</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">set_configuration</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -2185,8 +2185,8 @@ operator set under <code>params</code> or <code>auto_config_params</code> must s
 </code></pre></div>
 <h3 id="why-auto_config_params-lives-on-basicconfig">Why <code>auto_config_params</code> lives on <code>BasicConfig</code></h3>
 <p>Both <code>auto_config</code> and <code>Component.configure()</code> are declared on the shared base,
-so <code>auto_config_params</code> is declared there too  --  on <code>BasicConfig</code>, beside
-<code>auto_config</code>  --  rather than on the detector config alone. Detectors are the only
+so <code>auto_config_params</code> is declared there too (on <code>BasicConfig</code>, beside
+<code>auto_config</code>) rather than on the detector config alone. Detectors are the only
 component type with a real configure phase today, so they are the only ones that
 narrow the block with fields; parsers and alert aggregators inherit it empty, and
 an empty block is omitted from the serialized config, so their YAML is unaffected.
@@ -2199,7 +2199,7 @@ files under <code>docs/examples/</code>, mirrored by category (<code>docs/exampl
 <code>docs/examples/detectors/</code>), and are pulled into the Markdown pages via
 <a href="https://facelessuser.github.io/pymdown-extensions/extensions/snippets/"><code>pymdownx.snippets</code></a>.
 This way every snippet in the docs is an actual <code>.py</code> file that gets executed by
-the test suite, so a broken example fails CI instead of silently shipping.</p>
+the test suite in CI, so a broken example fails CI instead of silently shipping.</p>
 <p><strong>1. Add the snippet file.</strong> Put your example under <code>docs/examples/&lt;category&gt;/</code>.
 By convention the filename matches its documentation page (<code>charset.md</code> →
 <code>docs/examples/detectors/charset.py</code>). Wrap the part you want to show in section
@@ -2218,15 +2218,16 @@ markers:</p>
 <p>You can also include the whole file by dropping the <code>:section</code> suffix
 (<code>--8&lt;-- "docs/examples/parsers/template_tree_matcher.py"</code>), but section markers
 are the norm. Because <code>check_paths: true</code> is set, the build aborts if the file or
-marker doesn't exist  --  a missing snippet is caught at build time.</p>
+marker doesn't exist, so a missing snippet is caught at build time.</p>
 <p><strong>3. Make sure it's testable.</strong> The test (<code>tests/test_docs/test_doc_examples.py</code>)
 globs every <code>.py</code> under <code>docs/examples/</code> and runs each one as a script via
 <code>runpy.run_path(..., run_name="__main__")</code>. There is no plugin and no assert
 requirement: a snippet passes as long as it runs standalone without raising. If
 your example needs something unavailable in CI (e.g. an API key), comment out
-those calls rather than letting them fail. Run the snippet tests together with
-the rest of the suite:</p>
-<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>--dev<span class="w"> </span>pytest
+those calls rather than letting them fail. The test is marked <code>ignored</code>, so a
+plain <code>pytest</code> run skips it; pass <code>--run-ignored</code> (as CI does) to include it:</p>
+<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>--dev<span class="w"> </span>pytest<span class="w"> </span>--run-ignored<span class="w">                    </span><span class="c1"># whole suite, snippets included</span>
+uv<span class="w"> </span>run<span class="w"> </span>--dev<span class="w"> </span>pytest<span class="w"> </span>tests/test_docs<span class="w"> </span>--run-ignored<span class="w">    </span><span class="c1"># snippets only</span>
 </code></pre></div>
 <p><strong>4. Component pages: a YAML file, and generated argument tables.</strong> Each parser and
 detector page shows a configuration file next to its example
@@ -2245,8 +2246,8 @@ repo root:</p>
 <p>For a live local preview while editing:</p>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>--dev<span class="w"> </span>mkdocs<span class="w"> </span>serve
 </code></pre></div>
-<p><code>mkdocs</code> comes in transitively via <code>mike</code> in the <code>dev</code> group, so <code>--dev</code> is
-required. There is no <code>--strict</code> mode configured; the hard check on the docs is
+<p><code>mkdocs</code> comes in via <code>mkdocs-material</code> (a direct dependency of the <code>dev</code> group),
+so <code>--dev</code> is required. There is no <code>--strict</code> mode configured; the hard check on the docs is
 <code>check_paths: true</code> from <code>pymdownx.snippets</code>, which fails the build on a missing
 snippet or marker.</p>
 
@@ -2273,6 +2274,46 @@ snippet or marker.</p>
       
         <footer class="md-footer">
   
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../contribution/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Contributing">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Contributing
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../release/" class="md-footer__link md-footer__link--next" aria-label="Next: Release Process">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Release Process
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
       <div class="md-copyright">
@@ -2298,7 +2339,7 @@ snippet or marker.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.footer"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>

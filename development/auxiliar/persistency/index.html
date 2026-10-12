@@ -2327,18 +2327,18 @@ kept.</p>
   raw rows. Very storage heavy and <em>not recommended</em> for production-ready detectors.</li>
 <li><strong>Tracker backends</strong> (<code>EventStabilityTracker</code>) keep only derived features
   (e.g. "this variable has been constant for the last 10k events") that are relevant for the detector. Use these
-  when you only need a summary or a subset of the log's information, not the raw history  --  they cost a fraction of
+  when you only need a summary or a subset of the log's information, not the raw history: they cost a fraction of
   the memory.</li>
 </ul>
 <p>All backends implement the same four-method contract: <code>add_data</code>, <code>get_data</code>,
 <code>dump</code>, <code>load</code>. That contract is what <code>EventPersistency</code> and
-<code>PersistencySaver</code> rely on  --  anything you add later only has to follow it.</p>
+<code>PersistencySaver</code> rely on, so anything you add later only has to follow it.</p>
 <h3 id="3-saver-lifecycle-persistencysaver">3. Saver lifecycle (<code>PersistencySaver</code>)</h3>
 <p><code>EventPersistency</code> itself is in-memory. To survive a process restart, the
 state has to be written somewhere. <code>PersistencySaver</code> wraps an
 <code>EventPersistency</code> and:</p>
 <ul>
-<li>writes to disk (or any <code>fsspec</code> URI) on two triggers  --  a wall-clock interval
+<li>writes to disk (or any <code>fsspec</code> URI) on two triggers: a wall-clock interval
   and an event-count threshold;</li>
 <li>optionally <code>auto_load</code>s previously saved state during construction;</li>
 <li>exposes <code>start()</code> / <code>stop()</code> so the background timer can be torn down
@@ -2410,7 +2410,7 @@ events, query state.</p>
 </tr>
 </tbody>
 </table>
-<p>All three are re-exported from the top of the package  --  <code>persistency.X</code> is the
+<p>All three are re-exported from the top of the package: <code>persistency.X</code> is the
 canonical import; the deeply nested submodules are an implementation detail.</p>
 <h3 id="persisting-to-disk">Persisting to disk</h3>
 <div class="highlight"><pre><span></span><code><span class="n">saver</span> <span class="o">=</span> <span class="n">persistency</span><span class="o">.</span><span class="n">PersistencySaver</span><span class="p">(</span>
@@ -2429,7 +2429,7 @@ canonical import; the deeply nested submodules are an implementation detail.</p>
 </code></pre></div>
 <p><code>PersistencySaver.save()</code> is thread-safe, and <code>stop()</code> is idempotent. The two
 save triggers (<code>save_interval_seconds</code> and <code>events_until_save</code>) are
-independent  --  whichever fires first wins.</p>
+independent: whichever fires first wins.</p>
 <p>If writing to storage fails (unwritable path, full disk, lost credentials),
 <code>save()</code> and <code>stop()</code> raise <code>persistency.PersistencySaveError</code>, and
 <code>events_since_save</code> keeps counting the unsaved events. Saves fired by the two
@@ -2444,17 +2444,17 @@ another <code>events_until_save</code> events before retrying.</p>
 <span class="c1"># ep is now pre-populated from disk</span>
 </code></pre></div>
 <p>If <code>auto_load=True</code> and no saved state exists, the constructor raises
-<code>persistency.PersistencyLoadError</code> immediately  --  fail-fast rather than
+<code>persistency.PersistencyLoadError</code> immediately: it fails fast rather than
 silently starting empty.</p>
 <h4 id="exporting-and-importing-state-on-demand">Exporting and importing state on demand</h4>
-<p>For one-shot transfers  --  e.g. moving trained state to a new environment, or
-taking a manual snapshot  --  use the standalone functions directly:</p>
+<p>For one-shot transfers (e.g. moving trained state to a new environment, or
+taking a manual snapshot), use the standalone functions directly:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">detectmatelibrary.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">persistency</span>
 
 <span class="c1"># Export to a file URI</span>
 <span class="n">persistency</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">ep</span><span class="p">,</span> <span class="s2">"./snapshots/trained-state"</span><span class="p">)</span>
 
-<span class="c1"># Export to bytes (no disk I/O  --  useful when sending state over a network API)</span>
+<span class="c1"># Export to bytes (no disk I/O; useful when sending state over a network API)</span>
 <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="n">persistency</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">ep</span><span class="p">)</span>
 
 <span class="c1"># Import from a file URI</span>
@@ -2474,7 +2474,7 @@ clears any existing state in <code>ep</code> before loading.</p>
 when a saver is active.</p>
 <h4 id="detector-level-export-and-import">Detector-level export and import</h4>
 <p>When working through a detector (the typical path for DetectMateService), use
-the methods on the detector object directly  --  no need to access
+the methods on the detector object directly, with no need to access
 <code>EventPersistency</code> internals:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Export to a file URI</span>
 <span class="n">detector</span><span class="o">.</span><span class="n">export_state</span><span class="p">(</span><span class="s2">"./snapshots/my-detector"</span><span class="p">)</span>
@@ -2557,6 +2557,46 @@ attribute or assign it before the call.</p>
       
         <footer class="md-footer">
   
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../../helper/from_to/" class="md-footer__link md-footer__link--prev" aria-label="Previous: FromTo">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                FromTo
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../input_buffer/" class="md-footer__link md-footer__link--next" aria-label="Next: Data buffer">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Data buffer
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
       <div class="md-copyright">
@@ -2582,7 +2622,7 @@ attribute or assign it before the call.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.footer"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>

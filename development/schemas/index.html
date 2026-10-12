@@ -663,15 +663,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#schema-clases" class="md-nav__link">
+  <a href="#schema-classes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Schema Clases
+        Schema Classes
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Schema Clases">
+    <nav class="md-nav" aria-label="Schema Classes">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -724,15 +724,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#tutorial" class="md-nav__link">
+  <a href="#examples" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Tutorial
+        Examples
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Tutorial">
+    <nav class="md-nav" aria-label="Examples">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2098,15 +2098,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#schema-clases" class="md-nav__link">
+  <a href="#schema-classes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Schema Clases
+        Schema Classes
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Schema Clases">
+    <nav class="md-nav" aria-label="Schema Classes">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2159,15 +2159,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#tutorial" class="md-nav__link">
+  <a href="#examples" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Tutorial
+        Examples
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Tutorial">
+    <nav class="md-nav" aria-label="Examples">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2254,7 +2254,6 @@
 
     <span class="k">def</span><span class="w"> </span><span class="nf">init_schema</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Initialize the schema instance and set attributes."""</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">var_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">var_names</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">is_field_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Check if a field is a list."""</span>
@@ -2265,16 +2264,25 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Serialize the schema instance to bytes."""</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">deserialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span> <span class="o">|</span> <span class="n">op</span><span class="o">.</span><span class="n">IncorrectSchema</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Deserialize bytes to populate the schema instance."""</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">deserialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Deserialize bytes to populate the schema instance.</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">check_is_same</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span> <span class="o">|</span> <span class="n">op</span><span class="o">.</span><span class="n">IncorrectSchema</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Check if another schema instance is of the same schema type."""</span>
+<span class="sd">        Raises NotSupportedSchema if the bytes cannot be parsed.</span>
+<span class="sd">        """</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">check_is_same</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Check if another schema instance is of the same schema type.</span>
+
+<span class="sd">        Raises IncorrectSchema if it is not.</span>
+<span class="sd">        """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Check equality between two schema instances."""</span>
 </code></pre></div>
-<h2 id="schema-clases">Schema Clases</h2>
+<p>The exceptions these methods raise can be imported from <code>detectmatelibrary.schemas</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">detectmatelibrary.schemas</span><span class="w"> </span><span class="kn">import</span> <span class="n">IncorrectSchema</span><span class="p">,</span> <span class="n">NotSupportedSchema</span>
+</code></pre></div>
+<h2 id="schema-classes">Schema Classes</h2>
 <p>Below are the primary schema classes and their main fields. All fields are optional at the Protobuf level; components should document which fields they require.</p>
 <h3 id="logschema">LogSchema</h3>
 <p>Represents a raw log message.</p>
@@ -2369,12 +2377,12 @@
 </tr>
 <tr>
 <td>receivedTimestamp</td>
-<td>int32</td>
+<td>int64</td>
 <td>Timestamp when log was received.</td>
 </tr>
 <tr>
 <td>parsedTimestamp</td>
-<td>int32</td>
+<td>int64</td>
 <td>Timestamp when parsing completed.</td>
 </tr>
 </tbody>
@@ -2408,7 +2416,7 @@
 </tr>
 <tr>
 <td>detectionTimestamp</td>
-<td>int32</td>
+<td>int64</td>
 <td>When the alert was produced.</td>
 </tr>
 <tr>
@@ -2423,7 +2431,7 @@
 </tr>
 <tr>
 <td>extractedTimestamps</td>
-<td>repeated int32</td>
+<td>repeated int64</td>
 <td>Timestamps extracted from logs.</td>
 </tr>
 <tr>
@@ -2433,7 +2441,7 @@
 </tr>
 <tr>
 <td>receivedTimestamp</td>
-<td>int32</td>
+<td>int64</td>
 <td>When inputs were received by detector.</td>
 </tr>
 <tr>
@@ -2462,17 +2470,17 @@
 </tr>
 <tr>
 <td>detectorTypes</td>
-<td>string</td>
+<td>repeated string</td>
 <td>List of type/name of detectors.</td>
 </tr>
 <tr>
 <td>alertIDs</td>
-<td>string</td>
-<td>repeated list of unique alert identifier.</td>
+<td>repeated string</td>
+<td>List of unique alert identifiers.</td>
 </tr>
 <tr>
 <td>outputTimestamp</td>
-<td>int32</td>
+<td>int64</td>
 <td>When the aggregation was produced.</td>
 </tr>
 <tr>
@@ -2482,7 +2490,7 @@
 </tr>
 <tr>
 <td>extractedTimestamps</td>
-<td>repeated int32</td>
+<td>repeated int64</td>
 <td>Timestamps extracted from logs.</td>
 </tr>
 <tr>
@@ -2497,8 +2505,8 @@
 </tr>
 </tbody>
 </table>
-<h2 id="tutorial">Tutorial</h2>
-<p>Small tutorials of the different schemas.</p>
+<h2 id="examples">Examples</h2>
+<p>Short examples of working with the schemas.</p>
 <h3 id="initialize-a-schema">Initialize a schema</h3>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">detectmatelibrary</span><span class="w"> </span><span class="kn">import</span> <span class="n">schemas</span>
 
@@ -2529,7 +2537,6 @@
 <span class="n">new_log_schema</span><span class="o">.</span><span class="n">deserialize</span><span class="p">(</span><span class="n">serialized</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">new_log_schema</span> <span class="o">==</span> <span class="n">log_schema</span><span class="p">)</span>  <span class="c1"># True</span>
 </code></pre></div>
-<p>Go back <a href="../">Index</a></p>
 
 
 
@@ -2553,6 +2560,46 @@
       </main>
       
         <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../advanced/overall_architecture/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Overall architecture">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Overall architecture
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../federation/" class="md-footer__link md-footer__link--next" aria-label="Next: Federation">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Federation
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
@@ -2579,7 +2626,7 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.footer"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>

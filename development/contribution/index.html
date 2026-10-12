@@ -1943,10 +1943,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#8-update-your-local-main-branch" class="md-nav__link">
+  <a href="#8-update-your-local-development-branch" class="md-nav__link">
     <span class="md-ellipsis">
       
-        8. Update your local main branch
+        8. Update your local development branch
       
     </span>
   </a>
@@ -1954,10 +1954,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#9-update-your-main-branch-in-your-github-repository" class="md-nav__link">
+  <a href="#9-update-the-development-branch-in-your-github-repository" class="md-nav__link">
     <span class="md-ellipsis">
       
-        9. Update your main branch in your github-repository
+        9. Update the development branch in your GitHub repository
       
     </span>
   </a>
@@ -2168,10 +2168,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#8-update-your-local-main-branch" class="md-nav__link">
+  <a href="#8-update-your-local-development-branch" class="md-nav__link">
     <span class="md-ellipsis">
       
-        8. Update your local main branch
+        8. Update your local development branch
       
     </span>
   </a>
@@ -2179,10 +2179,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#9-update-your-main-branch-in-your-github-repository" class="md-nav__link">
+  <a href="#9-update-the-development-branch-in-your-github-repository" class="md-nav__link">
     <span class="md-ellipsis">
       
-        9. Update your main branch in your github-repository
+        9. Update the development branch in your GitHub repository
       
     </span>
   </a>
@@ -2222,7 +2222,7 @@ at least the following information in a bug report:</p>
 <ol>
 <li>Description of the bug. Describe the problem clearly.</li>
 <li>Steps to reproduce. With the following configuration, go to.., click.., see error</li>
-<li>Expected behavoir. What should happen?</li>
+<li>Expected behavior. What should happen?</li>
 <li>Environment. What was the environment for the test(version, browser, etc..)</li>
 </ol>
 <p><em>Please don't include any private/sensitive information in your issue! For reporting security-related issues, see <a href="https://github.com/ait-detectmate/DetectMateLibrary/blob/main/SECURITY.md">SECURITY.md</a></em></p>
@@ -2239,12 +2239,12 @@ at least the following information in a bug report:</p>
 <p>If the <code>development</code> branch is deleted, a GitHub Action automatically recreates it from <code>main</code>.</p>
 </div>
 <h3 id="3-create-a-feature-branch">3. Create a feature branch</h3>
-<p>Every single workpackage should be developed in it's own feature-branch. Use a name that describes the feature:</p>
+<p>Every single workpackage should be developed in its own feature-branch. Use a name that describes the feature:</p>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>DetectMateLibrary
 git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>feature-some_important_work
 </code></pre></div>
 <h3 id="4-develop-your-feature-and-improvements-in-the-feature-branch">4. Develop your feature and improvements in the feature-branch</h3>
-<p>Please make sure that you commit only improvements that are related to the workpage you created the feature-branch for.</p>
+<p>Please make sure that you commit only improvements that are related to the workpackage you created the feature-branch for.</p>
 <h3 id="5-fetch-and-merge-from-the-upstream">5. Fetch and merge from the upstream</h3>
 <p>If your work on this feature-branch is done, make sure that you are in sync with the branch of the upstream:</p>
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>remote<span class="w"> </span>add<span class="w"> </span>upstream<span class="w"> </span>git@github.com:ait-detectmate/DetectMateLibrary.git
@@ -2277,18 +2277,18 @@ git<span class="w"> </span>pull<span class="w"> </span>upstream<span class="w"> 
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>rebase<span class="w"> </span>-i<span class="w"> </span>HEAD~2
 </code></pre></div>
 <p>Delete your local feature-branch after the pull-request was merged into the development branch.</p>
-<h3 id="8-update-your-local-main-branch">8. Update your local main branch</h3>
+<h3 id="8-update-your-local-development-branch">8. Update your local development branch</h3>
 <p>Update your local development branch:</p>
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>fetch<span class="w"> </span>upstream<span class="w"> </span>development
-git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>development
+git<span class="w"> </span>checkout<span class="w"> </span>development
 git<span class="w"> </span>rebase<span class="w"> </span>upstream/development
 </code></pre></div>
 <p>Additional infos:</p>
 <ul>
 <li><a href="https://www.atlassian.com/git/tutorials/merging-vs-rebasing">https://www.atlassian.com/git/tutorials/merging-vs-rebasing</a></li>
 </ul>
-<h3 id="9-update-your-main-branch-in-your-github-repository">9. Update your main branch in your github-repository</h3>
-<p>Please make sure that you updated your local development branch as described in section 8. above. After that push the changes to your github-repository to keep it up2date:</p>
+<h3 id="9-update-the-development-branch-in-your-github-repository">9. Update the development branch in your GitHub repository</h3>
+<p>Please make sure that you updated your local development branch as described in section 8. above. After that push the changes to your github-repository to keep it up to date:</p>
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>push
 </code></pre></div>
 
@@ -2315,6 +2315,46 @@ git<span class="w"> </span>rebase<span class="w"> </span>upstream/development
       
         <footer class="md-footer">
   
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../other/log_formats/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Log Formats">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Log Formats
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../development/" class="md-footer__link md-footer__link--next" aria-label="Next: Development">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Development
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
       <div class="md-copyright">
@@ -2340,7 +2380,7 @@ git<span class="w"> </span>rebase<span class="w"> </span>upstream/development
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.footer"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>

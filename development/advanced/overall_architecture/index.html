@@ -2065,7 +2065,7 @@
 <p>Each arrow represents a stream of Schema objects. Components are designed to run in the same process for lightweight setups or as separate services for scalable deployments.</p>
 <p><img alt="Components flow" src="../../img/diagrams_structure.png" /></p>
 <h2 id="components-architecture">Components architecture</h2>
-<p>All components inherit from a <code>CoreComponent</code> class. This class provides all the essential functionality required for DetectMate to operate (see UML diagram below). Every <code>Detector</code> must inherit from <code>CoreDetector</code>, every <code>AlertAggregator</code> must inherit from <code>CoreAlertAggregation</code> and every <code>Parser</code> must inherit from <code>CoreParser</code> to ensure compatibility with DetectMate.</p>
+<p>All components inherit from a <code>CoreComponent</code> class. This class provides all the essential functionality required for DetectMate to operate (see UML diagram below). Every <code>Detector</code> must inherit from <code>CoreDetector</code>, every <code>AlertAggregator</code> must inherit from <code>CoreAlertAggregator</code> and every <code>Parser</code> must inherit from <code>CoreParser</code> to ensure compatibility with DetectMate.</p>
 <p>Each component's arguments must be stored in its corresponding configuration class. These config classes follow the same design pattern as their components and must inherit from <code>CoreConfig</code>.</p>
 <p><img alt="Architecture" src="../../img/uml_structure.png" /></p>
 <h2 id="components-methods">Components methods</h2>
@@ -2159,7 +2159,6 @@
 <span class="w">        </span><span class="sd">"""(Federation only) fill it to be compatible with federation ops."""</span>
         <span class="k">pass</span>
 </code></pre></div>
-<p>Go back <a href="../../">Index</a></p>
 
 
 
@@ -2183,6 +2182,46 @@
       </main>
       
         <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../../user_guide/tutorial/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Tutorial (end-to-end)">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Tutorial (end-to-end)
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../schemas/" class="md-footer__link md-footer__link--next" aria-label="Next: Schemas">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Schemas
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
@@ -2209,7 +2248,7 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.footer"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>

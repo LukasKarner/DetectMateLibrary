@@ -445,6 +445,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="What is a parsed log?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-is-an-eventid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is an EventID?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -1982,6 +1999,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="What is a parsed log?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-is-an-eventid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is an EventID?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -2002,11 +2036,13 @@
 
 
 <h1 id="basic-knowledge">Basic knowledge</h1>
-<p>Before you continue we have to give some insights on the rudimental topics of log anomaly detection.</p>
+<p>This page introduces the basic concepts you need before using DetectMate for log anomaly detection.</p>
 <h2 id="what-is-a-log">What is a log?</h2>
 <p>Logs are messages produced by logging statements in code that describe events or
 states during execution. For example:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">"</span><span class="si">%(message)s</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># show INFO messages, without a prefix</span>
 
 <span class="n">var1</span> <span class="o">=</span> <span class="s2">"DetectMate getting started"</span>
 <span class="n">var2</span> <span class="o">=</span> <span class="s2">"what is a log"</span>
@@ -2037,19 +2073,19 @@ happened, how important it is, which machine sent it) rather than the message
 itself. Think of it like the sender and date stamped on an envelope: useful to
 know, but not the letter inside.
 For example:</p>
-<div class="highlight"><pre><span></span><code>INFO [18-05-2005] hello I am a log about DetectMate getting started
+<div class="highlight"><pre><span></span><code>INFO [18-05-2005] hello I am a log about DetectMate getting started and about what is a log
 </code></pre></div>
 <p>This line has three parts:</p>
 <ul>
 <li>
-<p><strong><code>INFO</code> -- the category of the message (the "log level").</strong> Some other
-messages from the programm could be for example <code>DEBUG</code> (fine-grained detail for developers) or <code>WARNING</code> (something looks off, but it´s not a failure yet). So this part just gives you a hint how important this logging statement is.</p>
+<p><strong><code>INFO</code>: the category of the message (the "log level").</strong> Some other
+messages from the program could be for example <code>DEBUG</code> (fine-grained detail for developers) or <code>WARNING</code> (something looks off, but it's not a failure yet). So this part just gives you a hint how important this logging statement is.</p>
 </li>
 <li>
-<p><strong><code>[18-05-2005]</code> -- the timestamp:</strong> when the message was written.</p>
+<p><strong><code>[18-05-2005]</code>: the timestamp,</strong> i.e. when the message was written.</p>
 </li>
 <li>
-<p><strong><code>hello I am a log...</code> -- the actual text:</strong> what the program wants to tell you.</p>
+<p><strong><code>hello I am a log...</code>: the actual text,</strong> i.e. what the program wants to tell you.</p>
 </li>
 </ul>
 <p>The log level sits at the very front because it acts as a filter: in real systems thousands of lines pile up every second, so you can say e.g. "only show me <code>WARNING</code> and worse." That way both humans and machines can instantly decide whether a line is relevant.</p>
@@ -2061,8 +2097,8 @@ log is split at the right points and each part is labelled with what it is
 <strong><code>log_format</code></strong>. It names the fields in the order they appear in the raw line,
 so the parser knows which chunk is the log level, which is the timestamp, and
 which is the actual message content.</p>
-<p>The term <code>log_format</code>is regularly used in the literature. Such as in the
-<strong>Drain-Parser</strong>, <strong>LogParser</strong>, and many more use it frequently.</p>
+<p>The term <code>log_format</code> is common in the log-parsing literature and is used by
+tools such as the <strong>Drain parser</strong> and <strong>LogParser</strong>, among many others.</p>
 <p>Based on the example above:</p>
 <pre><code>log_format: &lt;Level&gt; [&lt;Time&gt;] &lt;Content&gt;
 template:   hello I am a log about &lt;*&gt; and about &lt;*&gt;
@@ -2077,22 +2113,47 @@ template:   hello I am a log about &lt;*&gt; and about &lt;*&gt;
 </thead>
 <tbody>
 <tr>
-<td>Template</td>
+<td><code>EventID</code></td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>template</code></td>
 <td><code>hello I am a log about &lt;*&gt; and about &lt;*&gt;</code></td>
 </tr>
 <tr>
-<td>Variables</td>
+<td><code>variables</code></td>
 <td><code>["DetectMate getting started", "what is a log"]</code></td>
 </tr>
 <tr>
-<td>LogFormatVariables</td>
-<td><code>{"Level": "INFO", "Time": "18-05-2005"}</code></td>
+<td><code>logFormatVariables</code></td>
+<td><code>{"Level": "INFO", "Time": "18-05-2005", "Content": "hello I am a log about DetectMate getting started and about what is a log"}</code></td>
 </tr>
 </tbody>
 </table>
 <p>Parsed logs expose structured data that downstream detection components use for
 anomaly detection.</p>
-<p>Go back <a href="../../">Index</a></p>
+<h3 id="what-is-an-eventid">What is an EventID?</h3>
+<p>Every distinct template is a different <em>kind</em> of event, and the parser gives
+each one a number: the <strong><code>EventID</code></strong>. All lines that match the same template get
+the same <code>EventID</code>, so <code>User alice logged in from 192.168.0.5</code> and
+<code>User bob logged in from 10.0.0.2</code> share one <code>EventID</code>, while a
+<code>User bob logged out</code> line would get another.</p>
+<p>How the number is chosen depends on the parser. With the
+<a href="../../parsers/template_matcher/">Template Matcher</a>, it is the position of the
+matching template in your template file, counting from <code>0</code>: the first template is
+<code>EventID 0</code>, the second <code>EventID 1</code>, and so on. In the table above the template
+file contains just one template, so the line gets <code>EventID 0</code>. A line that
+matches no template gets <code>EventID -1</code> and the template <code>&lt;Not Found&gt;</code>.</p>
+<p>The <code>EventID</code> is what detectors build on:</p>
+<ul>
+<li>Detectors that watch variable values are configured per <code>EventID</code>: their
+  <code>events</code> block says which variables to monitor for which kind of event (see
+  <a href="../../detectors/#configuration">Detectors</a>).</li>
+<li>Some detectors look at nothing but the <code>EventID</code>, for example the
+  <a href="../../detectors/new_event/">New Event Detector</a> (an <code>EventID</code> never seen
+  before) and the <a href="../../detectors/event_sequence/">Event Sequence Detector</a> (an
+  unusual order of <code>EventID</code>s).</li>
+</ul>
 
 
 
@@ -2116,6 +2177,46 @@ anomaly detection.</p>
       </main>
       
         <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../installation/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Installation">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Installation
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../quickstart/" class="md-footer__link md-footer__link--next" aria-label="Next: Quickstart">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Quickstart
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
@@ -2142,7 +2243,7 @@ anomaly detection.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.footer"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
