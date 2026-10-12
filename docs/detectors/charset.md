@@ -1,6 +1,6 @@
 # Charset Detector
 
-The Charset Detector raises alerts when previously unseen characters appear in configured fields. It is useful to detect novelty, configuration drift, or the appearance of new actors in the environment.
+The Charset Detector raises alerts when previously unseen characters appear in configured fields. It is useful to detect malformed or injected values in fields with a predictable format, for example shell characters such as `;` in a user name.
 
 ## In/out
 
