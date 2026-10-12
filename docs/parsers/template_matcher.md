@@ -16,11 +16,11 @@ Input and output schemas in the pipeline
 The template matcher is a lightweight, fast parser intended for logs that follow stable textual templates with variable fields. Templates use the token `<*>` to mark wildcard slots. The matcher:
 
 - Preprocesses logs and templates (remove spaces, punctuation, lowercase) based on config.
-- Finds the first template that matches and extracts all wildcard parameters in order.
+- Tries the templates in order of how often each has matched so far, uses the first one that matches, and extracts all wildcard parameters in order. If templates overlap, the same log can therefore get a different `EventID` over time.
 - Populates ParserSchema fields: `EventID`, `template`, `variables`,  `logID`, and related fields.
 - **`EventID` is the 0-indexed line number of the matched template** in the template file (first line → `EventID: 0`, second line → `EventID: 1`, etc.).
 
-This parser is deterministic and designed for high-throughput use when templates are known in advance.
+This parser is designed for high-throughput use when templates are known in advance.
 
 ## EventID assignment (preliminary)
 
