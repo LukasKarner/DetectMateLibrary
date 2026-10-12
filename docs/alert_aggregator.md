@@ -54,15 +54,13 @@ alerts in the window:
 - `detectorIDs`, `detectorTypes`, `alertIDs`: one entry per alert
 - `logIDs`, `extractedTimestamps`: the entries of all alerts, combined into one list
 
-After `aggregate_alerts()` returns `True`, `run()` also sets `outputTimestamp`. So
-`aggregate_alerts()` only has to set `description` and `alertsObtain`.
+After `aggregate_alerts()` returns `True`, `run()` also sets `outputTimestamp`. So the only
+fields left for `aggregate_alerts()` to fill are `description` and `alertsObtain`.
 
 !!! warning "The alerts' details are not carried over"
-    `run()` copies only IDs and timestamps. The `description` and `alertsObtain` of the incoming
-    alerts, which hold the actual alert messages, are **not** copied into the aggregate, and
-    `AggregateSchema` has no `score` field at all. If your aggregator needs this information, read it
-    from `input_` in `aggregate_alerts()` and write it into `output_["description"]` or
-    `output_["alertsObtain"]` yourself.
+    `run()` copies only the fields listed above. Everything else in the incoming alerts is dropped
+    unless your `aggregate_alerts()` keeps it, including their `detectionTimestamp` and
+    `receivedTimestamp`.
 
 ## Available alert aggregators
 
