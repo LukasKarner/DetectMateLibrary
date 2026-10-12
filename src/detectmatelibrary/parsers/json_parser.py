@@ -74,6 +74,9 @@ class JsonParser(CoreParser):
             )
             self.content_parser = MatcherParser(config=content_parser_config)
             config = cfg_dict
+        else:
+            # a config object cannot define the content parser: use one without templates
+            self.content_parser = MatcherParser()
         super().__init__(name=name, config=config)
         self.config: JsonParserConfig
 
@@ -86,7 +89,7 @@ class JsonParser(CoreParser):
         timestamp = self.time_extractor.extract(obj=log, delete=True)
         content = self.content_extractor.extract(obj=log, delete=True)
 
-        parsed = {"EventTemplate": "", "Params": [], "EventId": 0}
+        parsed = {"EventTemplate": "<Not Found>", "Params": [], "EventId": -1}
         # if the json also contains a message field, parse it for template and parameters
         if content:
             log_ = schemas.LogSchema({"log": content})
