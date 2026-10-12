@@ -53,7 +53,7 @@ Linux auditd log. Produced by the kernel audit subsystem; records system calls, 
 type=USER_ACCT msg=audit(1642723741.072:375): pid=10125 uid=0 auid=4294967295 ses=4294967295 msg='op=PAM:accounting acct="root" exe="/usr/sbin/cron" hostname=? addr=? terminal=cron res=success'
 ```
 
-**`log_format`:** `type=<Type> msg=audit(<Time>): <Content>`
+**`log_format`:** `type=<Type> msg=audit(<Time>:<Serial>): <Content>`
 
 **Variable noise patterns:** Numeric field values (`=\d+`), IP addresses (`(\d+\.){3}\d+`).
 
