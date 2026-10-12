@@ -19,7 +19,7 @@ Input and output schemas in the pipeline
 
 ## Description
 
-This detector maintains a lightweight set of observed characters per monitored field and emits an alert when a character not present in the set is seen for the first time (subject to configuration).
+This detector keeps the set of characters observed during training for each monitored field and emits an alert whenever a value contains a character that is not in the set. Alerts don't add the character to the set, so the same unseen character raises an alert every time it appears.
 
 ## Example
 

@@ -19,7 +19,7 @@ Input and output schemas in the pipeline
 
 ## Description
 
-This detector maintains a lightweight set of observed values per monitored field and emits an alert when a value not present in the set is seen for the first time (subject to configuration).
+This detector keeps the set of values observed during training for each monitored field and emits an alert whenever a value that is not in the set appears. Alerts don't add the value to the set, so the same unseen value raises an alert every time it appears.
 
 ## Example
 

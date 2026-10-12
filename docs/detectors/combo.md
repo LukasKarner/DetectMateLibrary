@@ -19,7 +19,7 @@ Input and output schemas in the pipeline
 
 ## Description
 
-This detector maintains a lightweight set of observed combination of values per monitored fields and emits an alert when a combination is not present in the set seen for the first time (subject to configuration).
+This detector keeps the set of value combinations observed during training for each group of monitored fields and emits an alert whenever a combination that is not in the set appears. Alerts don't add the combination to the set, so the same unseen combination raises an alert every time it appears.
 
 A combination needs at least two variables in the same instance: with a single variable the detector behaves like the [New Value Detector](new_value.md).
 

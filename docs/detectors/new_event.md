@@ -19,7 +19,7 @@ Input and output schemas in the pipeline
 
 ## Description
 
-This detector maintains a lightweight set of observed event IDs and emits an alert when an event ID not present in the set is seen for the first time (subject to configuration).
+This detector keeps the set of event IDs observed during training and emits an alert whenever an event ID that is not in the set appears. Alerts don't add the event ID to the set, so the same unseen event ID raises an alert every time it appears.
 
 ## Example
 
