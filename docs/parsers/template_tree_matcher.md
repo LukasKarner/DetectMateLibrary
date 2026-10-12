@@ -13,7 +13,8 @@ Input and output schemas in the pipeline
 | **Input**  | [LogSchema](../schemas.md) | Unstructured log   |
 | **Output** | [ParserSchema](../schemas.md) | Structured log   |
 
-WARNING: This parser is not yet in a stable release and may behave differently across platforms or hardware.
+!!! warning "Not yet stable"
+    This parser is not yet in a stable release and may behave differently across platforms or hardware.
 
 ## Template format
 
