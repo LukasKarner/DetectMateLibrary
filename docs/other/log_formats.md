@@ -85,7 +85,8 @@ Apache httpd access log (Combined Log Format). Each line is fully structured, so
 
 **`log_format`:** `<IP> - - [<Time>] "<RequestType> <Request> <Version>" <Status> <ResponseSize> "<Referer>" "<UserAgent>"`
 
-> All fields land directly in `logFormatVariables`. Use `header_variables` in your detector config to track e.g. `Status`, `IP`, or `RequestType`.
+!!! note
+    All fields land directly in `logFormatVariables`. Use `header_variables` in your detector config to track e.g. `Status`, `IP`, or `RequestType`.
 
 ---
 
@@ -245,7 +246,8 @@ Jun 14 15:16:02 combo sshd(pam_unix)[19939]: authentication failure; logname= ui
 
 **`log_format`:** `<Month> <Date> <Time> <Level> <Component>([<PID>])?: <Content>`
 
-> Note: `<Level>` captures the **hostname** in standard syslog (the field name follows benchmark convention).
+!!! note
+    `<Level>` captures the **hostname** in standard syslog (the field name follows benchmark convention).
 
 **Variable noise patterns:** IP addresses (`(\d+\.){3}\d+`), embedded timestamps (`\d{2}:\d{2}:\d{2}`).
 

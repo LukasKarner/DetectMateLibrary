@@ -73,4 +73,5 @@ All parameters this parser accepts, grouped by the YAML block they go in. **Scop
     | `time_format` | string, null | None | shared | fitting description yet to find |
 <!-- End arguments -->
 
-Note: this matcher removes non-alphanumeric characters from logs and templates before matching, except for the `<*>` token. Ensure your templates are compatible with that normalization.
+!!! note
+    This matcher removes non-alphanumeric characters from logs and templates before matching, except for the `<*>` token. Ensure your templates are compatible with that normalization.
