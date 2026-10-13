@@ -2138,6 +2138,7 @@
 <h2 id="description">Description</h2>
 <p>This detector maintains a lightweight set of observed combination of values per monitored fields and emits an alert when a combination is not present in the set seen for the first time (subject to configuration).</p>
 <p>A combination needs at least two variables in the same instance: with a single variable the detector behaves like the <a href="../new_value/">New Value Detector</a>.</p>
+<p>Each instance of an event is one combination. An event with several instances monitors every one of them on its own, and auto-configuration writes one instance per selected combination. A log that lacks one of an instance's variables is ignored for that instance.</p>
 <h2 id="example">Example</h2>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">detectmatelibrary</span><span class="w"> </span><span class="kn">import</span> <span class="n">schemas</span>
