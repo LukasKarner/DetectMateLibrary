@@ -5,11 +5,16 @@ from detectmatelibrary.common.alert_aggregator import (
 from detectmatelibrary.schemas import DetectorSchema, AggregateSchema
 
 from typing import Any, Optional
+from pydantic import Field
 
 
 class BasicConcatAggregationConfig(CoreAlertAggregatorConfig):
-    method_type: str = "basic_concat_aggregator"
-    buffer_size: int = 3
+    method_type: str = Field(
+        default="basic_concat_aggregator", description="Indicates what type of method it is."
+    )
+    buffer_size: int = Field(
+        default=3, description="Buffer size use in the aggregation."
+    )
 
 
 class BasicConcatAggregation(CoreAlertAggregator):

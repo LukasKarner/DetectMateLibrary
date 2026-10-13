@@ -6,8 +6,9 @@ from detectmatelibrary.utils.aux import get_timestamp
 
 from detectmatelibrary.schemas import DetectorSchema, AggregateSchema
 
-from typing import Any, Optional
 from typing_extensions import override
+from typing import Any, Optional
+from pydantic import Field
 
 
 def _extract_field(
@@ -31,8 +32,8 @@ def _extract_list_field(input_: list[DetectorSchema] | DetectorSchema, field: st
 
 
 class CoreAlertAggregatorConfig(CoreConfig):
-    component_type: str = "alert_aggregators"
-    method_type: str = "core_alert_aggregator"
+    component_type: str = Field(default="alert_aggregators", description="<$IGNORE$>")
+    method_type: str = Field(default="core_alert_aggregator", description="<$IGNORE$>")
 
 
 class CoreAlertAggregator(CoreComponent):
