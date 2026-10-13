@@ -17,7 +17,7 @@ def _extract_field(
     if not isinstance(input_, list):
         input_ = [input_]
 
-    return [str(i[field]) for i in input_]
+    return list(set([str(i[field]) for i in input_]))
 
 
 def _extract_list_field(input_: list[DetectorSchema] | DetectorSchema, field: str) -> list[str]:
@@ -28,7 +28,7 @@ def _extract_list_field(input_: list[DetectorSchema] | DetectorSchema, field: st
     for i in input_:
         final.extend(i[field])
 
-    return final
+    return list(set(final))
 
 
 class CoreAlertAggregatorConfig(CoreConfig):
