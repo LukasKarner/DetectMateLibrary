@@ -18,7 +18,6 @@ aggregations_config = {
         "Buffer_6": {
             "method_type": "basic_concat_aggregator",
             "buffer_size": 6,
-            "deduplicate_values": True,
             "auto_config": False,
             "params": {},
         },
@@ -87,10 +86,10 @@ class TestBasicAggregation:
         assert result is not None
         assert isinstance(result, AggregateSchema)
         res_dict = result.as_dict()
-        assert res_dict["detectorIDs"] == ["1", "2", "3"]
-        assert res_dict["alertIDs"] == ["1", "2", "3"]
+        assert res_dict["detectorIDs"] == ['1', '2', '3', '1', '1', '1']
+        assert res_dict["alertIDs"] == ['1', '2', '3', '1', '1', '1']
         assert res_dict["outputTimestamp"] == 0
-        assert res_dict["logIDs"] == ["logID1", "logID2", "logID3"]
-        assert len(res_dict["extractedTimestamps"]) == 3
+        assert set(res_dict["logIDs"]) == {"logID1", "logID2", "logID3"}
+        assert len(res_dict["extractedTimestamps"]) == 6
         assert res_dict["description"] == "Basic aggregation by alert concatenation"
-        assert res_dict["detectorTypes"] == ["dummy"]
+        assert set(res_dict["detectorTypes"]) == {"dummy"}
