@@ -20,7 +20,7 @@ from detectmatelibrary.constants import GLOBAL_EVENT_ID
 from detectmatelibrary.tools.logging import logger
 
 from typing_extensions import override
-from typing import Any, Dict
+from typing import Any, Dict, List
 from pydantic import Field
 
 
@@ -114,8 +114,9 @@ class VariableDetector(TrackerDetector, VariableHooks):
     """Abstract base for detectors that learn a per-variable model from
     configured log variables and flag anomalous values at detection time.
 
-    Subclasses override the hooks in ``VariableHooks`` and, for tracker
-    construction kwargs, ``_event_data_kwargs`` / ``_auto_conf_kwargs``.
+    Subclasses override the hooks in ``VariableHooks``, ``_event_variables``
+    and, for tracker construction kwargs, ``_event_data_kwargs`` /
+    ``_auto_conf_kwargs``.
     The five lifecycle methods (train/detect/configure/post_train/
     set_configuration) live here and are shared by all subclasses.
     """
@@ -142,9 +143,18 @@ class VariableDetector(TrackerDetector, VariableHooks):
 
     # ---- lifecycle ----------------------------------------------------------
 
+    def _event_variables(self, input_: ParserSchema) -> List[Dict[str, Any]]:
+        """The configured variables of the input's event, one dict per group
+        that is trained and checked on its own.
+
+        The default is a single group. A subclass that monitors each
+        instance of an event separately returns one group per instance.
+        """
+        return [get_configured_variables(input_, self.config.events)]
+
     def train(self, input_: ParserSchema) -> None:  # type: ignore
-        variables = get_configured_variables(input_, self.config.events)
-        self._ingest(input_, self._prepare_variables(variables, "training"), input_["EventID"])
+        for variables in self._event_variables(input_):
+            self._ingest(input_, self._prepare_variables(variables, "training"), input_["EventID"])
         if self.config.global_instances:
             global_vars = get_global_variables(input_, self.config.global_instances)
             if global_vars:
@@ -157,9 +167,9 @@ class VariableDetector(TrackerDetector, VariableHooks):
         current_event_id = input_["EventID"]
 
         if current_event_id in known_events:
-            variables = self._prepare_variables(
-                get_configured_variables(input_, self.config.events), "detection"
-            )
+            variables: Dict[str, Any] = {}
+            for group in self._event_variables(input_):
+                variables.update(self._prepare_variables(group, "detection"))
             event_tracker = known_events[current_event_id]
             overall_score += self._check_event(
                 alerts, current_event_id, event_tracker, variables, is_global=False
