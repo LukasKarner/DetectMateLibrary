@@ -587,7 +587,7 @@ class TestNewValueComboDetectorEndToEndWithRealData:
             if detector.detect(log, output_=output):
                 detected_ids.add(log["logID"])
 
-        assert detected_ids == {"1859", "1862", "1865", "1866"}
+        assert detected_ids == {"1859", "1860", "1861", "1862", "1864", "1865", "1866", "1867"}
 
     @pytest.mark.ignored
     def test_audit_log_anomalies_to_binary(self):
@@ -614,7 +614,7 @@ class TestNewValueComboDetectorEndToEndWithRealData:
             if detector2.detect(log, output_=output):
                 detected_ids.add(log["logID"])
 
-        assert detected_ids == {"1859", "1862", "1865", "1866"}
+        assert detected_ids == {"1859", "1860", "1861", "1862", "1864", "1865", "1866", "1867"}
 
     @pytest.mark.ignored
     def test_audit_log_anomalie_fed(self):
@@ -648,7 +648,7 @@ class TestNewValueComboDetectorEndToEndWithRealData:
             if detector1.detect(log, output_=output):
                 detected_ids.add(log["logID"])
 
-        assert detected_ids == {"1859", "1862", "1865", "1866"}
+        assert detected_ids == {"1859", "1860", "1861", "1862", "1864", "1865", "1866", "1867"}
 
 
 class TestNewValueComboDetectorClassificationConfigPreservation:
@@ -904,3 +904,137 @@ class TestNewValueComboDetectorConfigureSpill:
         assert trained == ([str(i) for i in range(26)] if replay else ["25"])
         assert list(processed.buffer_train) == list(processed.inputs) == []
         assert list(tmp_path.iterdir()) == []
+
+
+class TestNewValueComboDetectorAllCombos:
+    """Every instance of an event is its own combination: all of them are
+    trained and checked, and the generated config does not depend on the order
+    the variables arrive in."""
+
+    @staticmethod
+    def _record(variables, log_format_variables=None, event_id=1, log_id="1"):
+        return schemas.ParserSchema({
+            "parserType": "test",
+            "EventID": event_id,
+            "template": "Template 1",
+            "variables": variables,
+            "logID": log_id,
+            "parsedLogID": log_id,
+            "parserID": "test_parser",
+            "log": "test log",
+            "logFormatVariables": log_format_variables or {},
+        })
+
+    @staticmethod
+    def _two_combos(allow_fed=False):
+        return NewValueComboDetector(name="TwoCombos", config={
+            "detectors": {
+                "TwoCombos": {
+                    "method_type": "new_value_combo_detector",
+                    "auto_config": False,
+                    "params": {"allow_fed": allow_fed},
+                    "events": {
+                        1: {
+                            "first": {
+                                "params": {},
+                                "variables": [
+                                    {"pos": 0, "name": "var_0", "params": {}},
+                                    {"pos": 1, "name": "var_1", "params": {}},
+                                ],
+                            },
+                            "second": {
+                                "params": {},
+                                "variables": [{"pos": 0, "name": "var_0", "params": {}}],
+                                "header_variables": [{"pos": "level", "params": {}}],
+                            },
+                        }
+                    },
+                }
+            }
+        })
+
+    def test_unseen_value_pair_in_a_later_combo_alerts(self):
+        detector = self._two_combos()
+        detector.train(self._record(["a", "x"], {"level": "INFO"}))
+        detector.train(self._record(["b", "y"], {"level": "ERROR"}))
+
+        # ("a", "x") is known to the first combo; ("a", "ERROR") is new to the second
+        output = schemas.DetectorSchema()
+        assert detector.detect(self._record(["a", "x"], {"level": "ERROR"}), output)
+        assert output.score == 1.0
+        assert list(output.alertsObtain) == ["EventID 1 - ('var_0', 'level')"]
+
+    def test_every_combo_is_trained(self):
+        detector = self._two_combos()
+        detector.train(self._record(["a", "x"], {"level": "INFO"}))
+
+        trackers = detector.persistency.get_events_data()[1].get_data()
+        assert list(trackers) == [("var_0", "var_1"), ("var_0", "level")]
+        assert not detector.detect(
+            self._record(["a", "x"], {"level": "INFO"}), schemas.DetectorSchema()
+        )
+
+    def test_combo_with_a_missing_variable_is_skipped(self):
+        detector = self._two_combos()
+        detector.train(self._record(["a", "x"], {"level": "INFO"}))
+        # no `level`: the second combo is incomplete and must not be learned in part
+        detector.train(self._record(["b", "y"]))
+
+        trackers = detector.persistency.get_events_data()[1].get_data()
+        assert list(trackers) == [("var_0", "var_1"), ("var_0", "level")]
+        assert trackers[("var_0", "level")].unique_set == {("a", "INFO")}
+
+        output = schemas.DetectorSchema()
+        assert not detector.detect(self._record(["b", "y"]), output)
+        assert not detector.detect(self._record(["new"]), output)
+
+    def test_every_combo_survives_federation(self, tmp_path, monkeypatch):
+        monkeypatch.chdir(tmp_path)  # the federation table is written under the cwd
+        detector = self._two_combos(allow_fed=True)
+        detector.train(self._record(["a", "x"], {"level": "INFO"}))
+        detector.train(self._record(["b", "y"], {"level": "ERROR"}))
+
+        received = self._two_combos(allow_fed=True).from_binary(detector.to_binary())
+
+        trackers = received.persistency.get_events_data()[1].get_data()
+        assert trackers[("var_0", "var_1")].unique_set == {("a", "x"), ("b", "y")}
+        assert trackers[("var_0", "level")].unique_set == {("a", "INFO"), ("b", "ERROR")}
+        assert received.detect(
+            self._record(["a", "x"], {"level": "ERROR"}), schemas.DetectorSchema()
+        )
+
+    @staticmethod
+    def _configured(header_order):
+        """Configure a detector whose header variables reach the first pass in
+        ``header_order``.
+
+        ParserSchema keeps logFormatVariables in a protobuf map, whose
+        iteration order changes from process to process, so the order is
+        fixed here by feeding the first-pass store directly.
+        """
+        detector = NewValueComboDetector(name="Ordered")
+        for i in range(12):
+            headers = {"user": f"u{i % 3}", "ip": f"p{i % 3}", "method": f"m{i % 3}"}
+            record = TestNewValueComboDetectorAllCombos._record(
+                [f"a{i % 3}"], headers, log_id=str(i)
+            )
+            detector.inputs.add(record)
+            detector.auto_conf_persistency.ingest_event(
+                event_id=1,
+                event_template="Template 1",
+                variables=record["variables"],
+                named_variables={name: headers[name] for name in header_order},
+            )
+        detector.set_configuration(max_combo_size=2)
+        return detector
+
+    def test_generated_config_ignores_the_variable_order(self):
+        forward = self._configured(["user", "ip", "method"])
+        backward = self._configured(["method", "ip", "user"])
+
+        expected = [
+            "Ordered_var_0_ip", "Ordered_var_0_method", "Ordered_var_0_user",
+            "Ordered_ip_method", "Ordered_ip_user", "Ordered_method_user",
+        ]
+        assert list(forward.config.events[1].instances) == expected
+        assert list(backward.config.events[1].instances) == expected
