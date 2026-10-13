@@ -53,7 +53,8 @@ class Counter:
 
 class LogIDCountAggegationConfig(CoreAlertAggregatorConfig):
     method_type: str = "logid_count_aggregator"
-    max_count: int = 3
+    max_count: int = 4
+    max_memory: int = 5000
 
 
 class LogIDCountAggegation(CoreAlertAggregator):
@@ -65,14 +66,26 @@ class LogIDCountAggegation(CoreAlertAggregator):
         if isinstance(config, dict):
             config = LogIDCountAggegationConfig.from_dict(config, name)
 
-        super().__init__(name=name, config=config, buffer_mode=BufferMode.NO_BUF)
+        super().__init__(name=name, config=config, buffer_mode=BufferMode.NO_BUF, buffer_size=None)
         self.config: LogIDCountAggegationConfig
 
-        self.counter = Counter(max_count=self.config.max_count)
+        self.counter = Counter(
+            max_count=self.config.max_count, overall_size=self.config.max_memory
+        )
 
     def aggregate_alerts(
         self, input_: DetectorSchema, output_: AggregateSchema  # type: ignore
     ) -> bool:
 
-        output_["description"] = "Basic aggregation by alert concatenation"
-        return True
+        alert_logs = []
+        for logID in input_["logIDs"]:
+            if self.counter.add_and_check(logID):
+                alert_logs.append(logID)
+
+        if (aggreated_alerts := len(alert_logs) > 0):
+            output_["description"] = (
+                "LogID count how many times a log was count as alert."
+                f"Logs that pass the limit count: {", ".join(alert_logs)}"
+            )
+            
+        return aggreated_alerts
