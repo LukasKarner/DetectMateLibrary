@@ -207,13 +207,13 @@ The detectors that keep their model in persistency stores ([New Event](detectors
 
     | Field | Type | Default | Description |
     |---|---|---|---|
-    | `persist` | object, null | None | Periodic state saving (path, interval_seconds, events_until_save, auto_load, storage_options). None disables it. See [Saving state (persist)](detectors.md#saving-state-persist). |
+    | `persist` | object, null | None | Periodic state saving (path, interval_seconds, events_until_save, auto_load, storage_options). None disables it. See Saving state (persist) on the Detectors page. |
 
 ???+ note "params"
 
     | Field | Type | Default | Description |
     |---|---|---|---|
-    | `allow_fed` | boolean | False | Builds the stores needed to take part in [federation](federation.md). |
+    | `allow_fed` | boolean | False | Builds the stores needed to take part in federation. |
 <!-- End tracker_arguments -->
 
 ### Per-variable model detectors
