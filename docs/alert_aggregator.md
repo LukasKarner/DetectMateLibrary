@@ -73,7 +73,7 @@ The alert aggregator are numbered from simplest to most complex, and the sidebar
 | 01 | [LogID Count Aggregator](alert_aggregators/logid_count.md) | Count the amount of times a logID is in alerts. |
 
 
-### Common parameters (all alerg aggregators)
+### Common parameters (all alert aggregators)
 
 There are some parameters, that **every** alert aggregator inherits from `CoreAlertAggregatorConfig`/`CoreConfigCoreAlertAggregator`/`BasicConfig`, regardless of what it does. The other parameters, that are **specific** for the respective detector, are explained right at the detectors documentation page, later on.
 
