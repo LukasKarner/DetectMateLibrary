@@ -7,6 +7,7 @@ from detectmatelibrary.utils.data_buffer import BufferMode
 
 from typing import Any, Optional
 from functools import lru_cache
+from pydantic import Field
 import polars as pl
 
 
@@ -52,9 +53,13 @@ class Counter:
 
 
 class LogIDCountAggegationConfig(CoreAlertAggregatorConfig):
-    method_type: str = "logid_count_aggregator"
-    max_count: int = 4
-    max_memory: int = 5000
+    method_type: str = Field(
+        default="logid_count_aggregator", description="Indicates what type of method it is."
+    )
+    max_count: int = Field(default=4, description="Max count of alerts in a specific logID.")
+    max_memory: int = Field(
+        default=5000, description="Max number of logIDs store in the count memory."
+    )
 
 
 class LogIDCountAggegation(CoreAlertAggregator):
@@ -87,5 +92,5 @@ class LogIDCountAggegation(CoreAlertAggregator):
                 "LogID count how many times a log was count as alert."
                 f"Logs that pass the limit count: {", ".join(alert_logs)}"
             )
-            
+
         return aggreated_alerts
