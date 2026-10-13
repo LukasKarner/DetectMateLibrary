@@ -20,6 +20,8 @@ class Counter:
         self._df = self._df.insert_column(2, pl.zeros(overall_size, dtype=pl.Boolean).alias("WasAlert"))
         self._df = self._df.with_row_index(name="Index")
 
+        self._cached_search = lru_cache(maxsize=overall_size)(self.__get_idx)
+
         self.idx = 0
 
     def __is_new_alert(self, idx: int) -> bool:
@@ -28,7 +30,6 @@ class Counter:
             return True
         return False
 
-    @lru_cache(maxsize=32)
     def __get_idx(self, logId: str) -> int:
         indices = self._df.filter(pl.col("LogID") == logId).select("Index").to_series()
 
@@ -38,16 +39,15 @@ class Counter:
             )
             self._df = self._df.update(new_row, on="Index")
             idx = self.idx
-            self.idx += 1
+            self.idx = self.idx + 1 if self.idx < self._df.shape[0] - 1 else 0
         else:
             idx = indices[0]
 
         return idx
 
     def add_and_check(self, logId: str) -> bool:
-        idx = self.__get_idx(logId)
+        idx = self._cached_search(logId)
         self._df[idx, "Count"] += 1
-
         return self.__is_new_alert(idx)
 
 
