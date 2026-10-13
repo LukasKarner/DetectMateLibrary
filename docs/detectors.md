@@ -179,7 +179,7 @@ Some parameters are inherited by **every** detector from `CoreDetectorConfig`/`C
 
     | Field | Type | Default | Description |
     |---|---|---|---|
-    | `auto_config` | boolean | True | Runs the configuration step before the training process. Has no effect unless data_use_configure is set. |
+    | `auto_config` | boolean | True | Runs the configuration step before the training process. |
     | `events` | object | {} | Events configuration dict keyed by event_id. |
     | `global` | object | {} | Instances monitoring event-independent header variables (e.g. hostname, level), keyed by instance name. Written as `global` in YAML. |
 
@@ -188,8 +188,8 @@ Some parameters are inherited by **every** detector from `CoreDetectorConfig`/`C
     | Field | Type | Default | Description |
     |---|---|---|---|
     | `start_id` | integer | 10 | Number used to start the unique ID generator. |
-    | `data_use_training` | integer, null | None | Number of logs used for training. None skips training. |
-    | `data_use_configure` | integer, null | None | Number of logs used for the configuration step. None skips it. |
+    | `data_use_training` | integer, null | None | Data used for training, if None, training is not done. |
+    | `data_use_configure` | integer, null | None | Data used for configuration, if None, configuration is not done. |
     | `use_config_data_as_training` | boolean | True | Combine the configured data in the training process if True. |
     | `train_buffer_max_records` | integer | 100000 | Configure records kept in memory for training (use_config_data_as_training) before the buffer spills to Parquet files on disk, in parts of this many records. |
     | `train_buffer_dir` | string, null | None | Local directory for the spilled training buffer. None uses the system temp directory (TMPDIR). Each spill goes to a private detectmate-train-* directory, removed after training reads it; a killed process leaves it behind. |
