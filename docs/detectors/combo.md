@@ -1,6 +1,6 @@
 # New Value Combo Detector
 
-The New Value Combo Detector raises alerts when previously unseen combinations of values appear in configured fields (for example new user names, IP addresses, or process names). It is useful to detect novelty, configuration drift, or the appearance of new actors in the environment.
+The New Value Combo Detector raises alerts when previously unseen combinations of values appear in configured fields (for example a known user logging in from a known IP address they have never used before). It is useful to detect unusual pairings of otherwise familiar values, which the [New Value Detector](new_value.md) would miss.
 
 ## In/out
 
@@ -22,6 +22,8 @@ Input and output schemas in the pipeline
 This detector maintains a lightweight set of observed combination of values per monitored fields and emits an alert when a combination is not present in the set seen for the first time (subject to configuration).
 
 A combination needs at least two variables in the same instance: with a single variable the detector behaves like the [New Value Detector](new_value.md).
+
+Each instance of an event is one combination. An event with several instances monitors every one of them on its own, and auto-configuration writes one instance per selected combination. A log that lacks one of an instance's variables is ignored for that instance.
 
 ## Example
 
@@ -65,7 +67,10 @@ All parameters this detector accepts, grouped by the YAML block they go in. **Sc
     | `data_use_training` | integer, null | None | shared | Data used for training, if None, training is not done. |
     | `data_use_configure` | integer, null | None | shared | Data used for configuration, if None, configuration is not done. |
     | `use_config_data_as_training` | boolean | True | shared | Combine the configured data in the training process if True. |
+    | `train_buffer_max_records` | integer | 100000 | shared | Configure records kept in memory for training (use_config_data_as_training) before the buffer spills to Parquet files on disk, in parts of this many records. |
+    | `train_buffer_dir` | string, null | None | shared | Local directory for the spilled training buffer. None uses the system temp directory (TMPDIR). Each spill goes to a private detectmate-train-* directory, removed after training reads it; a killed process leaves it behind. |
     | `parser` | string | PARSER | shared | Name of the parser used. |
+    | `allow_fed` | boolean | False | shared | Allow to do the federation |
 
 ??? note "auto_config_params (read only while auto_config is true)"
 

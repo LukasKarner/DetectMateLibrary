@@ -46,21 +46,19 @@ uv run --dev pytest
 
 The user-facing side of auto-configuration is described in the [Detectors overview](detectors.md#auto-configuration-optional). This section covers what a detector has to implement to support it.
 
-A detector that supports auto-configuration typically creates a separate `EventPersistency` instance for this purpose (but doesn't have to):
+A detector that supports auto-configuration subclasses `base_detectors.TrackerDetector`, which builds two stores: `self.persistency` for training and detection, and a separate `self.auto_conf_persistency` for auto-configuration. Detectors never build stores from `utils.persistency` themselves:
 
 ```python
-class MyDetector(CoreDetector):
-    def __init__(self, ...):
-        super().__init__(...)
+from detectmatelibrary.base_detectors import TrackerDetector, TrackerDetectorConfig
 
-        # main persistency for training / detection
-        self.persistency = EventPersistency(
-            event_data_class=EventStabilityTracker,
-        )
-        # separate persistency for auto-configuration
-        self.auto_conf_persistency = EventPersistency(
-            event_data_class=EventStabilityTracker,
-        )
+
+class MyDetectorConfig(TrackerDetectorConfig):
+    method_type: str = "my_detector"
+
+
+class MyDetector(TrackerDetector):
+    def __init__(self, name="MyDetector", config=MyDetectorConfig()):
+        super().__init__(name=name, config=config)
 ```
 
 The `configure()` method ingests all available variables (not just configured ones) so the tracker can assess each one:
@@ -76,7 +74,7 @@ def configure(self, input_):
 ```
 
 The `set_configuration()` method queries the tracker results and writes the
-final `events` block. It touches nothing else on the config  --  everything the
+final `events` block. It touches nothing else on the config: everything the
 operator set under `params` or `auto_config_params` must survive untouched, so
 `set_configuration` never rebuilds the config from scratch:
 
@@ -94,8 +92,8 @@ def set_configuration(self):
 ### Why `auto_config_params` lives on `BasicConfig`
 
 Both `auto_config` and `Component.configure()` are declared on the shared base,
-so `auto_config_params` is declared there too  --  on `BasicConfig`, beside
-`auto_config`  --  rather than on the detector config alone. Detectors are the only
+so `auto_config_params` is declared there too (on `BasicConfig`, beside
+`auto_config`) rather than on the detector config alone. Detectors are the only
 component type with a real configure phase today, so they are the only ones that
 narrow the block with fields; parsers and alert aggregators inherit it empty, and
 an empty block is omitted from the serialized config, so their YAML is unaffected.
@@ -111,7 +109,7 @@ files under `docs/examples/`, mirrored by category (`docs/examples/parsers/`,
 `docs/examples/detectors/`), and are pulled into the Markdown pages via
 [`pymdownx.snippets`](https://facelessuser.github.io/pymdown-extensions/extensions/snippets/).
 This way every snippet in the docs is an actual `.py` file that gets executed by
-the test suite, so a broken example fails CI instead of silently shipping.
+the test suite in CI, so a broken example fails CI instead of silently shipping.
 
 **1. Add the snippet file.** Put your example under `docs/examples/<category>/`.
 By convention the filename matches its documentation page (`charset.md` →
@@ -137,18 +135,19 @@ from detectmatelibrary.parsers.logbatcher import LogBatcherParser, LogBatcherPar
 You can also include the whole file by dropping the `:section` suffix
 (`--8<-- "docs/examples/parsers/template_tree_matcher.py"`), but section markers
 are the norm. Because `check_paths: true` is set, the build aborts if the file or
-marker doesn't exist  --  a missing snippet is caught at build time.
+marker doesn't exist, so a missing snippet is caught at build time.
 
 **3. Make sure it's testable.** The test (`tests/test_docs/test_doc_examples.py`)
 globs every `.py` under `docs/examples/` and runs each one as a script via
 `runpy.run_path(..., run_name="__main__")`. There is no plugin and no assert
 requirement: a snippet passes as long as it runs standalone without raising. If
 your example needs something unavailable in CI (e.g. an API key), comment out
-those calls rather than letting them fail. Run the snippet tests together with
-the rest of the suite:
+those calls rather than letting them fail. The test is marked `ignored`, so a
+plain `pytest` run skips it; pass `--run-ignored` (as CI does) to include it:
 
 ```bash
-uv run --dev pytest
+uv run --dev pytest --run-ignored                    # whole suite, snippets included
+uv run --dev pytest tests/test_docs --run-ignored    # snippets only
 ```
 
 **4. Component pages: a YAML file, and generated argument tables.** Each parser and
@@ -179,7 +178,7 @@ For a live local preview while editing:
 uv run --dev mkdocs serve
 ```
 
-`mkdocs` comes in transitively via `mike` in the `dev` group, so `--dev` is
-required. There is no `--strict` mode configured; the hard check on the docs is
+`mkdocs` comes in via `mkdocs-material` (a direct dependency of the `dev` group),
+so `--dev` is required. There is no `--strict` mode configured; the hard check on the docs is
 `check_paths: true` from `pymdownx.snippets`, which fails the build on a missing
 snippet or marker.

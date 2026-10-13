@@ -1,6 +1,6 @@
 # Value Range Detector
 
-The Value Range Detector raises alerts when numerical values outside of known ranges appear in configured fields. It is useful to detect unexpected changes, configuration drift, or the appearance of new actors in the environment.
+The Value Range Detector raises alerts when numerical values outside of known ranges appear in configured fields. It is useful to detect unexpected changes in quantities such as sizes, counts, or durations.
 
 ## In/out
 
@@ -19,7 +19,7 @@ Input and output schemas in the pipeline
 
 ## Description
 
-This detector maintains a lightweight set of observed values per monitored field and emits an alert when a value outside the learned range is seen (subject to configuration).
+This detector keeps only the minimum and maximum value seen during training for each monitored field, so its memory use stays constant however many values it sees. It emits an alert when a value falls outside that range (subject to configuration).
 
 ## Example
 
@@ -64,7 +64,10 @@ All parameters this detector accepts, grouped by the YAML block they go in. **Sc
     | `data_use_training` | integer, null | None | shared | Data used for training, if None, training is not done. |
     | `data_use_configure` | integer, null | None | shared | Data used for configuration, if None, configuration is not done. |
     | `use_config_data_as_training` | boolean | True | shared | Combine the configured data in the training process if True. |
+    | `train_buffer_max_records` | integer | 100000 | shared | Configure records kept in memory for training (use_config_data_as_training) before the buffer spills to Parquet files on disk, in parts of this many records. |
+    | `train_buffer_dir` | string, null | None | shared | Local directory for the spilled training buffer. None uses the system temp directory (TMPDIR). Each spill goes to a private detectmate-train-* directory, removed after training reads it; a killed process leaves it behind. |
     | `parser` | string | PARSER | shared | Name of the parser used. |
+    | `allow_fed` | boolean | False | shared | Allow to do the federation |
 
 ??? note "auto_config_params (read only while auto_config is true)"
 

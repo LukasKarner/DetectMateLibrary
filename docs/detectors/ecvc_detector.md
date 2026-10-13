@@ -15,13 +15,13 @@ Input and output schemas in the pipeline
 
 | Learns from training data | Auto-configuration | Needs `events` | Federation |
 |---|---|---|---|
-| ✅ | ❌ | ❌ | ✅ (binary not available) |
+| ✅ | ❌ | ❌ | ✅ |
 
 ## Description
 
 A count vector is formed by counting the number of appearances of each event ID in a sequence of a specific window size.
 
-Count vectors learned during training are stored via [persistency](../auxiliar/persistency.md), so a trained model can be saved and restored with a `persist:` block. A count vector is only comparable within the window it was counted over, so restoring state at a different `window_size` logs a warning  --  the restored vectors cannot match and every window would alert.
+Count vectors learned during training are stored via [persistency](../auxiliar/persistency.md), so a trained model can be saved and restored with a `persist:` block. A count vector is only comparable within the window it was counted over, so restoring state at a different `window_size` logs a warning, because the restored vectors cannot match and every window would alert.
 
 ## Example
 
@@ -69,5 +69,8 @@ All parameters this detector accepts, grouped by the YAML block they go in. **Sc
     | `data_use_training` | integer, null | None | shared | Data used for training, if None, training is not done. |
     | `data_use_configure` | integer, null | None | shared | Data used for configuration, if None, configuration is not done. |
     | `use_config_data_as_training` | boolean | True | shared | Combine the configured data in the training process if True. |
+    | `train_buffer_max_records` | integer | 100000 | shared | Configure records kept in memory for training (use_config_data_as_training) before the buffer spills to Parquet files on disk, in parts of this many records. |
+    | `train_buffer_dir` | string, null | None | shared | Local directory for the spilled training buffer. None uses the system temp directory (TMPDIR). Each spill goes to a private detectmate-train-* directory, removed after training reads it; a killed process leaves it behind. |
     | `parser` | string | PARSER | shared | Name of the parser used. |
+    | `allow_fed` | boolean | False | shared | Allow to do the federation |
 <!-- End arguments -->

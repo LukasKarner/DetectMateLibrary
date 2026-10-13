@@ -283,3 +283,64 @@ def get_configured_variables(
                 result[name] = input_["logFormatVariables"][name]
 
     return result
+
+
+def get_instance_variables(
+        input_: ParserSchema,
+        log_variables: EventsConfig | dict[str, Any],
+) -> Dict[str, Dict[str, Any]]:
+    """Extract the configured variables of every instance of the input's event.
+
+    get_configured_variables reads only the event's first instance; this reads
+    all of them. An instance is left out when the input lacks one of its
+    variables.
+
+    Args:
+        input_: Parser schema containing variables and logFormatVariables
+        log_variables: Config specifying which variables to extract per EventID
+
+    Returns:
+        Dict mapping instance name to that instance's variable names and values
+    """
+    event_id = input_["EventID"]
+    event_config = log_variables[event_id] if event_id in log_variables else None
+    result: Dict[str, Dict[str, Any]] = {}
+
+    for instance_id, instance in getattr(event_config, "instances", {}).items():
+        values: Dict[str, Any] = {}
+        complete = True
+        for pos, var in instance.variables.items():
+            if isinstance(pos, int) and pos < len(input_["variables"]):
+                values[var.name] = input_["variables"][pos]
+            else:
+                complete = False
+        for name in instance.header_variables:
+            if name in input_["logFormatVariables"]:
+                values[name] = input_["logFormatVariables"][name]
+            else:
+                complete = False
+        if complete and values:
+            result[instance_id] = values
+
+    return result
+
+
+def get_global_variables(
+        input_: ParserSchema,
+        global_instances: Dict[str, _EventInstance],
+) -> Dict[str, Any]:
+    """Extract header variables from event-ID-independent instances.
+
+    Args:
+        input_: Parser schema containing logFormatVariables
+        global_instances: Dict of instance_name -> _EventInstance configs
+
+    Returns:
+        Dict mapping variable names to their values from the input
+    """
+    result: Dict[str, Any] = {}
+    for instance in global_instances.values():
+        for name in instance.header_variables:
+            if name in input_["logFormatVariables"]:
+                result[name] = input_["logFormatVariables"][name]
+    return result
