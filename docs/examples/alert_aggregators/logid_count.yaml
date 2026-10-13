@@ -1,5 +1,5 @@
 alert_aggregators:
-    BasicConcatAggregator:
+    LogIDCountAggregator:
         method_type: "logid_count_aggregator"
         max_count: 2
         max_memory: 5000

@@ -26,7 +26,7 @@ def generate_schema(log_id: str | list[str]) -> schemas.DetectorSchema:
     })
 
 
-alert_aggregator = LogIDCountAggegation("LogIDCountAggegation", config)
+alert_aggregator = LogIDCountAggegation("LogIDCountAggregator", config=config)
 
 print(alert_aggregator.process(generate_schema("a")) is None)  # True
 print(alert_aggregator.process(generate_schema("b")) is None)  # True
