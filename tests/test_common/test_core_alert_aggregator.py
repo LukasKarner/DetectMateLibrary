@@ -107,7 +107,7 @@ class TestCoreAlertAggregator:
     def test_process_input_schema_not_serialized(self) -> None:
         alert_aggregator = MockupAlertAggregator(name="TestAAG", config=MockupConfig())
         expected_result = schemas.AggregateSchema({
-            "schemaVersion": "2.0.0",
+            "__version__": "2.0.0",
             "detectorIDs": ["1"],
             "detectorTypes": ["dummy"],
             "alertIDs": ["2"],
@@ -124,7 +124,7 @@ class TestCoreAlertAggregator:
     def test_process_input_schema_not_serialized_window_3(self) -> None:
         alert_aggregator = MockupAlertAggregator(name="TestDetector", config=MockupConfig(), buffer_size=3)
         expected_result = schemas.AggregateSchema({
-            "schemaVersion": "2.0.0",
+            "__version__": "2.0.0",
             "detectorIDs": ["1", "1", "1"],
             "detectorTypes": ["dummy", "dummy", "dummy"],
             "alertIDs": ["2", "2", "2"],
@@ -147,7 +147,7 @@ class TestCoreAlertAggregator:
             name="TestDetector", config=MockupConfig(), buffer_size=3
         )
         expected_result = schemas.AggregateSchema({
-            "schemaVersion": "2.0.0",
+            "__version__": "2.0.0",
             "detectorIDs": ["1", "1", "1"],
             "detectorTypes": ["dummy", "dummy", "dummy"],
             "alertIDs": ["2", "2", "2"],

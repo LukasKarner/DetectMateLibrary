@@ -5,6 +5,7 @@ messages serialized with schema 1.0.0 still deserialize, and the old
 names fail loudly instead of being ignored.
 """
 from detectmatelibrary.detectors.new_value_detector import NewValueDetector
+from detectmatelibrary._testutils.dummy_detector import DummyDetector
 from detectmatelibrary._testutils.dummy_parser import DummyParser
 from detectmatelibrary.helper.from_to import From
 from detectmatelibrary.schemas import (
@@ -18,22 +19,22 @@ import pytest
 
 # Field name -> field number. The numbers are the wire format and must not change.
 EXPECTED_FIELDS = {
-    "Schema": {"schemaVersion": 1},
+    "Schema": {"__version__": 1},
     "LogSchema": {
-        "schemaVersion": 1, "logID": 2, "log": 3, "logSource": 4, "hostname": 5,
+        "__version__": 1, "logID": 2, "log": 3, "logSource": 4, "hostname": 5,
     },
     "ParserSchema": {
-        "schemaVersion": 1, "parserType": 2, "parserID": 3, "eventID": 4, "template": 5,
+        "__version__": 1, "parserType": 2, "parserID": 3, "eventID": 4, "template": 5,
         "variables": 6, "parsedLogID": 7, "logID": 8, "log": 9, "headerVariables": 10,
         "receivedTimestamp": 11, "parsedTimestamp": 12,
     },
     "DetectorSchema": {
-        "schemaVersion": 1, "detectorID": 2, "detectorType": 3, "alertID": 4,
+        "__version__": 1, "detectorID": 2, "detectorType": 3, "alertID": 4,
         "detectedTimestamp": 5, "logIDs": 6, "score": 8, "logTimestamps": 9,
         "description": 10, "receivedTimestamp": 11, "alertDetails": 12,
     },
     "AggregateSchema": {
-        "schemaVersion": 1, "detectorIDs": 2, "detectorTypes": 3, "alertIDs": 4,
+        "__version__": 1, "detectorIDs": 2, "detectorTypes": 3, "alertIDs": 4,
         "aggregatedTimestamp": 5, "logIDs": 6, "logTimestamps": 9, "description": 10,
         "alertDetails": 12,
     },
@@ -43,15 +44,11 @@ SCHEMA_CLASSES = [LogSchema, ParserSchema, DetectorSchema, AggregateSchema]
 
 # Every old field name, on each schema that had it.
 OLD_FIELDS = [
-    (LogSchema, "__version__"),
-    (ParserSchema, "__version__"),
     (ParserSchema, "EventID"),
     (ParserSchema, "logFormatVariables"),
-    (DetectorSchema, "__version__"),
     (DetectorSchema, "alertsObtain"),
     (DetectorSchema, "extractedTimestamps"),
     (DetectorSchema, "detectionTimestamp"),
-    (AggregateSchema, "__version__"),
     (AggregateSchema, "alertsObtain"),
     (AggregateSchema, "extractedTimestamps"),
     (AggregateSchema, "outputTimestamp"),
@@ -124,8 +121,8 @@ class TestFieldNames:
     def test_new_instance_reports_version_2(self, schema_class):
         schema = schema_class()
 
-        assert schema.schemaVersion == "2.0.0"
-        assert schema["schemaVersion"] == "2.0.0"
+        assert schema.__version__ == "2.0.0"
+        assert schema["__version__"] == "2.0.0"
 
 
 @pytest.mark.parametrize("schema_class, old_name", OLD_FIELDS)
@@ -152,7 +149,7 @@ class TestSchemaV1Bytes:
         schema = LogSchema()
         schema.deserialize(V1_LOG)
 
-        assert schema.schemaVersion == "1.0.0"
+        assert schema.__version__ == "1.0.0"
         assert schema.logID == "3"
         assert schema.log == "user alice logged in"
         assert schema.logSource == "auth.log"
@@ -162,7 +159,7 @@ class TestSchemaV1Bytes:
         schema = ParserSchema()
         schema.deserialize(V1_PARSER)
 
-        assert schema.schemaVersion == "1.0.0"
+        assert schema.__version__ == "1.0.0"
         assert schema.parserType == "matcher"
         assert schema.parserID == "parser-a"
         assert schema.eventID == 7
@@ -179,7 +176,7 @@ class TestSchemaV1Bytes:
         schema = DetectorSchema()
         schema.deserialize(V1_DETECTOR)
 
-        assert schema.schemaVersion == "1.0.0"
+        assert schema.__version__ == "1.0.0"
         assert schema.detectorID == "det-a"
         assert schema.detectorType == "new_value"
         assert schema.alertID == "5"
@@ -195,7 +192,7 @@ class TestSchemaV1Bytes:
         schema = AggregateSchema()
         schema.deserialize(V1_AGGREGATE)
 
-        assert schema.schemaVersion == "1.0.0"
+        assert schema.__version__ == "1.0.0"
         assert list(schema.detectorIDs) == ["det-a"]
         assert list(schema.detectorTypes) == ["new_value"]
         assert list(schema.alertIDs) == ["5"]
@@ -209,14 +206,14 @@ class TestSchemaV1Bytes:
 class TestStoredJson:
     def test_old_names_are_rejected(self, tmp_path):
         path = tmp_path / "old.json"
-        path.write_text(json.dumps({"0": {"__version__": "1.0.0", "logID": "3", "log": "a log"}}))
+        path.write_text(json.dumps({"0": {"__version__": "1.0.0", "EventID": 7, "logID": "3"}}))
 
-        with pytest.raises(ValueError, match="__version__"):
-            next(From.json(DummyParser(), str(path), do_process=False))
+        with pytest.raises(ValueError, match="EventID"):
+            next(From.json(DummyDetector(), str(path), do_process=False))
 
     def test_new_names_load(self, tmp_path):
         path = tmp_path / "new.json"
-        path.write_text(json.dumps({"0": {"schemaVersion": "2.0.0", "logID": "3", "log": "a log"}}))
+        path.write_text(json.dumps({"0": {"__version__": "2.0.0", "logID": "3", "log": "a log"}}))
 
         schema = next(From.json(DummyParser(), str(path), do_process=False))
 

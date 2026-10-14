@@ -1,11 +1,11 @@
 syntax = "proto3";
 
 message Schema {
-    string schemaVersion = 1;
+    string __version__ = 1;
 }
 
 message LogSchema {
-    optional string schemaVersion = 1;
+    optional string __version__ = 1;
     optional string logID = 2;
     optional string log = 3;
     optional string logSource = 4;
@@ -13,7 +13,7 @@ message LogSchema {
 }
 
 message ParserSchema {
-    optional string schemaVersion = 1;
+    optional string __version__ = 1;
     optional string parserType = 2;
     optional string parserID = 3;
     optional int32 eventID = 4;
@@ -28,7 +28,7 @@ message ParserSchema {
 }
 
 message DetectorSchema {
-    optional string schemaVersion = 1;
+    optional string __version__ = 1;
     optional string detectorID = 2;
     optional string detectorType = 3;
     optional string alertID = 4;
@@ -42,7 +42,7 @@ message DetectorSchema {
 }
 
 message AggregateSchema {
-    optional string schemaVersion = 1;
+    optional string __version__ = 1;
     repeated string detectorIDs = 2;
     repeated string detectorTypes = 3;
     repeated string alertIDs = 4;

@@ -129,7 +129,7 @@ class TestCoreDetector:
     def test_process_input_schema_not_serialized(self) -> None:
         detector = MockupDetector(name="TestDetector", config=MockupConfig())
         expected_result = schemas.DetectorSchema({
-            "schemaVersion": "2.0.0",
+            "__version__": "2.0.0",
             "detectorID": "TestDetector",
             "detectorType": "core_detector",
             "alertID": "TestDetector_10",
@@ -147,7 +147,7 @@ class TestCoreDetector:
     def test_process_input_schema_not_serialized_window_3(self) -> None:
         detector = MockupDetector_window(name="TestDetector", config=MockupConfig())
         expected_result = schemas.DetectorSchema({
-            "schemaVersion": "2.0.0",
+            "__version__": "2.0.0",
             "detectorID": "TestDetector",
             "detectorType": "core_detector",
             "alertID": "TestDetector_10",
@@ -169,7 +169,7 @@ class TestCoreDetector:
     def test_process_input_schema_not_serialized_buffer_3(self) -> None:
         detector = MockupDetector_window(name="TestDetector01", config=MockupConfig())
         expected_result = schemas.DetectorSchema({
-            "schemaVersion": "2.0.0",
+            "__version__": "2.0.0",
             "detectorID": "TestDetector01",
             "detectorType": "core_detector",
             "alertID": "TestDetector01_10",

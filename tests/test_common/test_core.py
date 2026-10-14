@@ -43,7 +43,7 @@ default_args = {
 
 def _make_log(i: int) -> schemas.LogSchema:
     return schemas.LogSchema({
-        "schemaVersion": "2.0.0",
+        "__version__": "2.0.0",
         "logID": str(i),
         "logSource": "test",
         "hostname": "test_hostname"
@@ -241,7 +241,7 @@ class TestCoreComponent:
         for i in range(10):
             component.process(
                 schemas.LogSchema({
-                    "schemaVersion": "2.0.0",
+                    "__version__": "2.0.0",
                     "logID": str(i),
                     "logSource": "test",
                     "hostname": "test_hostname"
@@ -251,7 +251,7 @@ class TestCoreComponent:
         assert len(component.train_data) == component.fitlogic.train_state.data_used
         for i, log in enumerate(component.train_data):
             expected = schemas.LogSchema({
-                "schemaVersion": "2.0.0",
+                "__version__": "2.0.0",
                 "logID": str(i),
                 "logSource": "test",
                 "hostname": "test_hostname"
@@ -267,7 +267,7 @@ class TestCoreComponent:
         for i in range(10):
             component.process(
                 schemas.LogSchema({
-                    "schemaVersion": "2.0.0",
+                    "__version__": "2.0.0",
                     "logID": str(i),
                     "logSource": "test",
                     "hostname": "test_hostname"
@@ -278,7 +278,7 @@ class TestCoreComponent:
         assert len(component.train_data) == total
         for i, log in enumerate(component.train_data):
             expected = schemas.LogSchema({
-                "schemaVersion": "2.0.0",
+                "__version__": "2.0.0",
                 "logID": str(i),
                 "logSource": "test",
                 "hostname": "test_hostname"
@@ -293,7 +293,7 @@ class TestCoreComponent:
                 component.update_state("stop_training")
             component.process(
                 schemas.LogSchema({
-                    "schemaVersion": "2.0.0",
+                    "__version__": "2.0.0",
                     "logID": str(i),
                     "logSource": "test",
                     "hostname": "test_hostname"
@@ -309,7 +309,7 @@ class TestCoreComponent:
         for i in range(10):
             component.process(
                 schemas.LogSchema({
-                    "schemaVersion": "2.0.0",
+                    "__version__": "2.0.0",
                     "logID": str(i),
                     "logSource": "test",
                     "hostname": "test_hostname"

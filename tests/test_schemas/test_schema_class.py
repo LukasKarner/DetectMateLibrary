@@ -13,7 +13,7 @@ class TestSchemaVariables:
         schema_var = SchemaVariables(schema_class=PARSER_SCHEMA)
 
         assert schema_var.schema_class == PARSER_SCHEMA
-        assert schema_var.get_schema().schemaVersion == "2.0.0"
+        assert schema_var.get_schema().__version__ == "2.0.0"
 
     def test_init_with_kwargs(self):
         values = {
@@ -67,7 +67,7 @@ class TestBaseSchema:
         base_schema = BaseSchema()
 
         assert base_schema.schema_class == BASE_SCHEMA
-        assert base_schema.get_schema().schemaVersion == "2.0.0"
+        assert base_schema.get_schema().__version__ == "2.0.0"
 
     def test_all_initialize(self):
         LogSchema()
@@ -151,7 +151,7 @@ class TestBaseSchema:
     def test_as_dict(self):
         detector_schema = DetectorSchema()
         assert detector_schema.as_dict() == {
-            "schemaVersion": "2.0.0",
+            "__version__": "2.0.0",
             "detectorID": detector_schema.detectorID,
             "detectorType": detector_schema.detectorType,
             "alertID": detector_schema.alertID,

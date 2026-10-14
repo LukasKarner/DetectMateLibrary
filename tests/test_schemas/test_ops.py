@@ -7,7 +7,7 @@ class TestCaseSchemas:
     def test_initialize_basic(self):
         schema = op_schemas.initialize(op_schemas.BASE_SCHEMA, **{})
 
-        assert schema.schemaVersion == "2.0.0"
+        assert schema.__version__ == "2.0.0"
 
     def test_initialize_log_schema(self) -> None:
         values = {
@@ -15,7 +15,7 @@ class TestCaseSchemas:
         }
         schema = op_schemas.initialize(op_schemas.LOG_SCHEMA, **values)
 
-        assert schema.schemaVersion == "2.0.0"
+        assert schema.__version__ == "2.0.0"
         assert schema.logID == "1"
         assert schema.log == "test"
         assert schema.logSource == "example"
@@ -35,7 +35,7 @@ class TestCaseSchemas:
         }
         schema = op_schemas.initialize(op_schemas.PARSER_SCHEMA, **values)
 
-        assert schema.schemaVersion == "2.0.0"
+        assert schema.__version__ == "2.0.0"
         assert schema.eventID == 5
         assert schema.template == "test template"
         assert schema.variables == ["a", "b"]
@@ -57,7 +57,7 @@ class TestCaseSchemas:
         }
         schema = op_schemas.initialize(op_schemas.DETECTOR_SCHEMA, **values)
 
-        assert schema.schemaVersion == "2.0.0"
+        assert schema.__version__ == "2.0.0"
         assert schema.detectorID == "test id"
         assert schema.detectorType == "type test"
         assert schema.alertID == "1"
@@ -79,7 +79,7 @@ class TestCaseSchemas:
         }
         schema = op_schemas.initialize(op_schemas.AGGREGATE_SCHEMA, **values)
 
-        assert schema.schemaVersion == "2.0.0"
+        assert schema.__version__ == "2.0.0"
         assert schema.detectorIDs == ["test id", "another id"]
         assert schema.detectorTypes == ["type test", "another type"]
         assert schema.alertIDs == ["1", "2"]
@@ -118,7 +118,7 @@ class TestCaseSchemas:
 
         new_schema = op_schemas.deserialize(op_schemas.LOG_SCHEMA, bschema)
 
-        assert new_schema.schemaVersion == "2.0.0"
+        assert new_schema.__version__ == "2.0.0"
         assert new_schema.logID == "1"
         assert new_schema.log == "test"
         assert new_schema.logSource == "example"
@@ -147,7 +147,7 @@ class TestCaseSchemas:
         }
         schema = op_schemas.initialize(op_schemas.LOG_SCHEMA, **values)
         vars = op_schemas.get_variables_names(schema)
-        expected_vars = ["logID", "log", "logSource", "hostname", "schemaVersion"]
+        expected_vars = ["logID", "log", "logSource", "hostname", "__version__"]
 
         assert set(vars) == set(expected_vars), f"{vars}"
         assert len(vars) == len(expected_vars), f"{vars}"

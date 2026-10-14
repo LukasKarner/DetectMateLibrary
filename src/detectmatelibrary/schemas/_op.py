@@ -88,7 +88,7 @@ def get_variables_names(schema: SchemaT) -> list[str]:
 def initialize(schema: SchemaT, **kwargs: Any) -> SchemaT:
     """Initialize a protobuf schema, it uses its arguments and the assigned
     id."""
-    kwargs["schemaVersion"] = __current_version
+    kwargs["__version__"] = __current_version
     return schema(**kwargs)
 
 

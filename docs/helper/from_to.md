@@ -103,14 +103,14 @@ Example JSON save file format:
         "hostname": "",
         "log": "pid=<*> uid=<*> auid=<*> ses=<*> msg='op=<*> acct=<*> exe=<*> hostname=<*> addr=<*> terminal=<*> res=<*>'",
         "logSource": "",
-        "schemaVersion": "2.0.0"
+        "__version__": "2.0.0"
     },
     "1": {
         "logID": "1",
         "hostname": "",
         "log": "pid=<*> uid=<*> auid=<*> ses=<*> msg='unit=<*> comm=<*> exe=<*> hostname=<*> addr=<*> terminal=<*> res=<*>'",
         "logSource": "",
-        "schemaVersion": "2.0.0"
+        "__version__": "2.0.0"
     }
 }
 ```
@@ -236,14 +236,14 @@ Example input data:
         "hostname": "",
         "log": "pid=<*> uid=<*> auid=<*> ses=<*> msg='op=<*> acct=<*> exe=<*> hostname=<*> addr=<*> terminal=<*> res=<*>'",
         "logSource": "",
-        "schemaVersion": "2.0.0"
+        "__version__": "2.0.0"
     },
     "1": {
         "logID": "1",
         "hostname": "",
         "log": "pid=<*> uid=<*> auid=<*> ses=<*> msg='unit=<*> comm=<*> exe=<*> hostname=<*> addr=<*> terminal=<*> res=<*>'",
         "logSource": "",
-        "schemaVersion": "2.0.0"
+        "__version__": "2.0.0"
     }
 }
 ```
@@ -267,7 +267,7 @@ Example output data after parsing:
         ],
         "receivedTimestamp": 1771336089,
         "logID": "0",
-        "schemaVersion": "2.0.0",
+        "__version__": "2.0.0",
         "parsedLogID": "10"
     },
     "1": {
@@ -285,7 +285,7 @@ Example output data after parsing:
         ],
         "receivedTimestamp": 1771336089,
         "logID": "1",
-        "schemaVersion": "2.0.0",
+        "__version__": "2.0.0",
         "parsedLogID": "11"
     }
 }

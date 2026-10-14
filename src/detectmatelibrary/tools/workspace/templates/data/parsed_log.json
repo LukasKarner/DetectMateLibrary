@@ -10,7 +10,7 @@
             "Time": "1642723741.072",
             "Content": "pid=10125 uid=0 auid=4294967295 ses=4294967295 msg='op=PAM:accounting acct=\"root\" exe=\"/usr/sbin/cron\" hostname=? addr=? terminal=cron res=success'"
         },
-        "schemaVersion": "2.0.0",
+        "__version__": "2.0.0",
         "receivedTimestamp": 1772027171,
         "variables": [
             "10125",
@@ -41,7 +41,7 @@
             "Time": "1642723741.072",
             "Content": "pid=10125 uid=0 auid=4294967295 ses=4294967295 msg='op=PAM:setcred acct=\"root\" exe=\"/usr/sbin/cron\" hostname=? addr=? terminal=cron res=success'"
         },
-        "schemaVersion": "2.0.0",
+        "__version__": "2.0.0",
         "receivedTimestamp": 1772027171,
         "variables": [
             "10125",
@@ -72,7 +72,7 @@
             "Time": "1642723741.076",
             "Content": "pid=10125 uid=0 old-auid=4294967295 auid=0 tty=(none) old-ses=4294967295 ses=65 res=1"
         },
-        "schemaVersion": "2.0.0",
+        "__version__": "2.0.0",
         "receivedTimestamp": 1772027171,
         "variables": [
             "10125",
@@ -100,7 +100,7 @@
             "Time": "1642723741.080",
             "Content": "pid=10125 uid=0 auid=0 ses=65 msg='op=PAM:session_open acct=\"root\" exe=\"/usr/sbin/cron\" hostname=? addr=? terminal=cron res=success'"
         },
-        "schemaVersion": "2.0.0",
+        "__version__": "2.0.0",
         "receivedTimestamp": 1772027171,
         "variables": [
             "10125",
@@ -131,7 +131,7 @@
             "Time": "1642723741.084",
             "Content": "pid=10125 uid=0 auid=0 ses=65 msg='op=PAM:setcred acct=\"root\" exe=\"/usr/sbin/cron\" hostname=? addr=? terminal=cron res=success'"
         },
-        "schemaVersion": "2.0.0",
+        "__version__": "2.0.0",
         "receivedTimestamp": 1772027171,
         "variables": [
             "10125",
@@ -162,7 +162,7 @@
             "Time": "1642723741.084",
             "Content": "pid=10125 uid=0 auid=0 ses=65 msg='op=PAM:session_close acct=\"root\" exe=\"/usr/sbin/cron\" hostname=? addr=? terminal=cron res=success'"
         },
-        "schemaVersion": "2.0.0",
+        "__version__": "2.0.0",
         "receivedTimestamp": 1772027171,
         "variables": [
             "10125",
@@ -193,7 +193,7 @@
             "Time": "1642723752.624",
             "Content": "pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=phpsessionclean comm=\"systemd\" exe=\"/lib/systemd/systemd\" hostname=? addr=? terminal=? res=success'"
         },
-        "schemaVersion": "2.0.0",
+        "__version__": "2.0.0",
         "receivedTimestamp": 1772027171,
         "variables": [
             "1",
@@ -224,7 +224,7 @@
             "Time": "1642723752.624",
             "Content": "pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=phpsessionclean comm=\"systemd\" exe=\"/lib/systemd/systemd\" hostname=? addr=? terminal=? res=success'"
         },
-        "schemaVersion": "2.0.0",
+        "__version__": "2.0.0",
         "receivedTimestamp": 1772027171,
         "variables": [
             "1",
@@ -255,7 +255,7 @@
             "Time": "1642724221.094",
             "Content": "pid=10197 uid=0 auid=4294967295 ses=4294967295 msg='op=PAM:accounting acct=\"root\" exe=\"/usr/sbin/cron\" hostname=? addr=? terminal=cron res=success'"
         },
-        "schemaVersion": "2.0.0",
+        "__version__": "2.0.0",
         "receivedTimestamp": 1772027171,
         "variables": [
             "10197",
@@ -286,7 +286,7 @@
             "Time": "1642724221.098",
             "Content": "pid=10197 uid=0 auid=4294967295 ses=4294967295 msg='op=PAM:setcred acct=\"root\" exe=\"/usr/sbin/cron\" hostname=? addr=? terminal=cron res=success'"
         },
-        "schemaVersion": "2.0.0",
+        "__version__": "2.0.0",
         "receivedTimestamp": 1772027171,
         "variables": [
             "10197",
@@ -317,7 +317,7 @@
             "Time": "1642724221.098",
             "Content": "pid=10197 uid=0 old-auid=4294967295 auid=0 tty=(none) old-ses=4294967295 ses=66 res=1"
         },
-        "schemaVersion": "2.0.0",
+        "__version__": "2.0.0",
         "receivedTimestamp": 1772027171,
         "variables": [
             "10197",
@@ -345,7 +345,7 @@
             "Time": "1642724221.102",
             "Content": "pid=10197 uid=0 auid=0 ses=66 msg='op=PAM:session_open acct=\"root\" exe=\"/usr/sbin/cron\" hostname=? addr=? terminal=cron res=success'"
         },
-        "schemaVersion": "2.0.0",
+        "__version__": "2.0.0",
         "receivedTimestamp": 1772027171,
         "variables": [
             "10197",

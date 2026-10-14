@@ -89,7 +89,7 @@ class TestCoreParser:
     def test_process_correct_input_schema_not_serialize(self) -> None:
         parser = MockupParser(name="TestParser", config=MockupConfig())
         expected_result = schemas.ParserSchema({
-            "schemaVersion": "2.0.0",
+            "__version__": "2.0.0",
             "parserType": "core_parser",
             "parserID": "TestParser",
             "eventID": 1,
