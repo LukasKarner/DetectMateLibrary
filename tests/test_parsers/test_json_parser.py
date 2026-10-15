@@ -63,13 +63,13 @@ class TestJsonParser:
         # When no message field, no template is found
         assert output.template == "<Not Found>"
         assert len(output.variables) == 0
-        assert output.EventID == -1
+        assert output.eventID == -1
 
         # But other fields should be present
-        assert "level" in output.logFormatVariables
-        assert output.logFormatVariables["level"] == "ERROR"
-        assert "error_code" in output.logFormatVariables
-        assert output.logFormatVariables["error_code"] == "404"
+        assert "level" in output.headerVariables
+        assert output.headerVariables["level"] == "ERROR"
+        assert "error_code" in output.headerVariables
+        assert output.headerVariables["error_code"] == "404"
 
     def test_parse_nested_json(self):
         """Test parsing nested JSON structure."""
@@ -96,11 +96,11 @@ class TestJsonParser:
         parser.parse(input_log, output)
 
         # Check flattened structure
-        assert "request.method" in output.logFormatVariables
-        assert output.logFormatVariables["request.method"] == "GET"
-        assert "request.path" in output.logFormatVariables
-        assert output.logFormatVariables["request.path"] == "/api/users"
-        assert "request.headers.content-type" in output.logFormatVariables
+        assert "request.method" in output.headerVariables
+        assert output.headerVariables["request.method"] == "GET"
+        assert "request.path" in output.headerVariables
+        assert output.headerVariables["request.path"] == "/api/users"
+        assert "request.headers.content-type" in output.headerVariables
 
     def test_parse_json_with_array(self):
         """Test parsing JSON with arrays."""
@@ -121,10 +121,10 @@ class TestJsonParser:
         parser.parse(input_log, output)
 
         # Check array is flattened
-        assert "events.0" in output.logFormatVariables
-        assert output.logFormatVariables["events.0"] == "login"
-        assert "events.2" in output.logFormatVariables
-        assert output.logFormatVariables["events.2"] == "logout"
+        assert "events.0" in output.headerVariables
+        assert output.headerVariables["events.0"] == "login"
+        assert "events.2" in output.headerVariables
+        assert output.headerVariables["events.2"] == "logout"
 
     def test_parse_with_content_parser(self):
         """Test parsing with MatcherParser for message field."""
@@ -162,7 +162,7 @@ class TestJsonParser:
         # The content parser should have parsed the message
         assert output.template != ""
         assert len(output.variables) > 0
-        assert "level" in output.logFormatVariables
+        assert "level" in output.headerVariables
 
     def test_parse_message_with_config_object(self):
         """A message parsed with a config object matches no template."""
@@ -183,7 +183,7 @@ class TestJsonParser:
         parser.parse(input_log, output)
 
         assert output.template == "<Not Found>"
-        assert output.EventID == -1
+        assert output.eventID == -1
 
     def test_no_message_differs_from_first_template(self):
         """Logs without message do not share the first template's EventID."""
@@ -211,7 +211,7 @@ class TestJsonParser:
         for json_log in json_logs:
             output = schemas.ParserSchema()
             parser.parse(schemas.LogSchema({"logID": "1", "log": json.dumps(json_log)}), output)
-            event_ids.append(output.EventID)
+            event_ids.append(output.eventID)
 
         assert event_ids == [0, -1]
 
@@ -233,11 +233,11 @@ class TestJsonParser:
         output = schemas.ParserSchema()
         parser.parse(input_log, output)
 
-        # Timestamp should be extracted and Time should be in logFormatVariables
-        assert "Time" in output.logFormatVariables
-        assert "severity" in output.logFormatVariables
+        # Timestamp should be extracted and Time should be in headerVariables
+        assert "Time" in output.headerVariables
+        assert "severity" in output.headerVariables
         # timestamp key should not appear in flattened dict (deleted after extraction)
-        assert "timestamp" not in output.logFormatVariables
+        assert "timestamp" not in output.headerVariables
 
     def test_process_method(self):
         """Test the full process method."""
@@ -258,6 +258,6 @@ class TestJsonParser:
         result = parser.process(input_log)
 
         assert isinstance(result, schemas.ParserSchema)
-        assert "Time" in result.logFormatVariables
-        assert "status" in result.logFormatVariables
-        assert result.logFormatVariables["status"] == "ok"
+        assert "Time" in result.headerVariables
+        assert "status" in result.headerVariables
+        assert result.headerVariables["status"] == "ok"

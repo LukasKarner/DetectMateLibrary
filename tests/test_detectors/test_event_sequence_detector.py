@@ -50,14 +50,14 @@ config = {
 def _make_schema(event_id, template="test template", log_id="1", log_format_variables=None):
     return schemas.ParserSchema({
         "parserType": "test",
-        "EventID": event_id,
+        "eventID": event_id,
         "template": template,
         "variables": ["adsasd", "asdasd"],
         "logID": log_id,
         "parsedLogID": log_id,
         "parserID": "test_parser",
         "log": "test log message",
-        "logFormatVariables": log_format_variables or {"level": "INFO"}
+        "headerVariables": log_format_variables or {"level": "INFO"}
     })
 
 
@@ -141,7 +141,7 @@ class TestEventSequenceDetectorDetection:
 
         assert result
         assert output.score == 1.0
-        assert any("Sequence" in key for key in output["alertsObtain"])
+        assert any("Sequence" in key for key in output["alertDetails"])
 
     def test_detect_below_window_length_no_alert(self):
         detector = EventSequenceDetector(config=config, name="MultipleDetector")

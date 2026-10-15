@@ -131,14 +131,14 @@ class TestBigramFrequencyDetectorTraining:
             for level in ["INFO", "WARNING", "ERROR"]:
                 parser_data = schemas.ParserSchema({
                     "parserType": "test",
-                    "EventID": event,
+                    "eventID": event,
                     "template": "test template",
                     "variables": ["0", "assa"],
                     "logID": "1",
                     "parsedLogID": "1",
                     "parserID": "test_parser",
                     "log": "test log message",
-                    "logFormatVariables": {"level": level}
+                    "headerVariables": {"level": level}
                 })
                 detector.train(parser_data)
 
@@ -163,28 +163,28 @@ class TestBigramFrequencyDetectorDetection:
         # Train with a value
         train_data = schemas.ParserSchema({
             "parserType": "test",
-            "EventID": 1,
+            "eventID": 1,
             "template": "test template",
             "variables": ["adsasd", "asdasd"],
             "logID": "1",
             "parsedLogID": "1",
             "parserID": "test_parser",
             "log": "test log message",
-            "logFormatVariables": {"level": "INFO"}
+            "headerVariables": {"level": "INFO"}
         })
         detector.train(train_data)
 
         # Detect with the same value
         test_data = schemas.ParserSchema({
             "parserType": "test",
-            "EventID": 12,
+            "eventID": 12,
             "template": "test template",
             "variables": ["adsasd"],
             "logID": "2",
             "parsedLogID": "2",
             "parserID": "test_parser",
             "log": "test log message",
-            "logFormatVariables": {"level": "CRITICAL"}
+            "headerVariables": {"level": "CRITICAL"}
         })
         output = schemas.DetectorSchema()
 
@@ -199,28 +199,28 @@ class TestBigramFrequencyDetectorDetection:
         # Train with a value
         train_data = schemas.ParserSchema({
             "parserType": "test",
-            "EventID": 1,
+            "eventID": 1,
             "template": "test template",
             "variables": ["adsasd", "asdasd"],
             "logID": "1",
             "parsedLogID": "1",
             "parserID": "test_parser",
             "log": "test log message",
-            "logFormatVariables": {"level": "INFO"}
+            "headerVariables": {"level": "INFO"}
         })
         detector.train(train_data)
 
         # Detect with the same value
         test_data = schemas.ParserSchema({
             "parserType": "test",
-            "EventID": 1,
+            "eventID": 1,
             "template": "test template",
             "variables": ["adsasd", "asdasd"],
             "logID": "2",
             "parsedLogID": "2",
             "parserID": "test_parser",
             "log": "test log message",
-            "logFormatVariables": {"level": "CRITICAL"}
+            "headerVariables": {"level": "CRITICAL"}
         })
         output = schemas.DetectorSchema()
 
@@ -391,7 +391,7 @@ class TestBigramFrequencyDetectorGlobalInstances:
         for log in logs[TRAIN_UNTIL:]:
             output = schemas.DetectorSchema()
             if detector.detect(log, output_=output):
-                assert all(key.startswith("Global -") for key in output["alertsObtain"])
+                assert all(key.startswith("Global -") for key in output["alertDetails"])
                 detected_ids.add(log["logID"])
 
         assert len(detected_ids) > 0
@@ -419,14 +419,14 @@ class TestBigramFrequencyDetectorSetConfigurationPersist:
 def _parser_data(event_id, level, var_value):
     return schemas.ParserSchema({
         "parserType": "test",
-        "EventID": event_id,
+        "eventID": event_id,
         "template": "test template",
         "variables": ["0", var_value],
         "logID": "1",
         "parsedLogID": "1",
         "parserID": "test_parser",
         "log": "test log message",
-        "logFormatVariables": {"level": level},
+        "headerVariables": {"level": level},
     })
 
 
@@ -480,14 +480,14 @@ class TestBigramFrequencyDetectorDetectFixes:
         # Detect with a parser line that lacks the 'test' variable
         test_data = schemas.ParserSchema({
             "parserType": "test",
-            "EventID": 1,
+            "eventID": 1,
             "template": "test template",
             "variables": ["0"],  # only pos 0 — no value at pos 1
             "logID": "2",
             "parsedLogID": "2",
             "parserID": "test_parser",
             "log": "test log message",
-            "logFormatVariables": {"level": "INFO"},
+            "headerVariables": {"level": "INFO"},
         })
         output = schemas.DetectorSchema()
         # Must not raise TypeError
@@ -627,14 +627,14 @@ class TestBigramFrequencyDetectorPerVarIsolation:
         detector = BigramFrequencyDetector(config=cfg, name="TwoVarDetector")
         parser_data = schemas.ParserSchema({
             "parserType": "test",
-            "EventID": 1,
+            "eventID": 1,
             "template": "test template",
             "variables": ["abc", "xyz"],
             "logID": "1",
             "parsedLogID": "1",
             "parserID": "test_parser",
             "log": "test log message",
-            "logFormatVariables": {},
+            "headerVariables": {},
         })
         detector.train(parser_data)
 

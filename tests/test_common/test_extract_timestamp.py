@@ -8,14 +8,14 @@ class TestCoreDetector:
         formats."""
         dummy_schema = {
             "parserType": "a",
-            "EventID": 0,
+            "eventID": 0,
             "template": "asd",
             "variables": [""],
             "logID": "0",
             "parsedLogID": "22",
             "parserID": "test",
             "log": "This is a parsed log.",
-            "logFormatVariables": {"Time": "12121"},
+            "headerVariables": {"Time": "12121"},
         }
         # Compute expected value for timezone-naive formats at runtime
         EXPECTED_UTC = 1772633880
@@ -50,7 +50,7 @@ class TestCoreDetector:
             ("Wednesday, March 4, 2026 14:18:00", EXPECTED_UTC),
         ]
         for time_str, expected in test_cases:
-            schema = schemas.ParserSchema({**dummy_schema, "logFormatVariables": {"Time": time_str}})
+            schema = schemas.ParserSchema({**dummy_schema, "headerVariables": {"Time": time_str}})
             result = _extract_timestamp(schema)
             assert result == [expected], (
                 f"Format '{time_str}': expected [{expected}], got {result}"
@@ -60,12 +60,12 @@ class TestCoreDetector:
         """Issue #271: a microsecond epoch folded only once landed in
         milliseconds and overflowed the int32 timestamp fields."""
         schema = schemas.DetectorSchema({
-            "extractedTimestamps": _extract_timestamp(
-                schemas.ParserSchema({"logFormatVariables": {"Time": "1643114452000000"}})
+            "logTimestamps": _extract_timestamp(
+                schemas.ParserSchema({"headerVariables": {"Time": "1643114452000000"}})
             ),
         })
         assert str(schema)  # rebuilds the protobuf -- used to raise ValueError
-        assert schema["extractedTimestamps"] == [1643114452]
+        assert schema["logTimestamps"] == [1643114452]
 
     def test_timestamp_fields_hold_more_than_int32(self) -> None:
         """Timestamps are int64, so they survive 2038 (and a stray ms
@@ -73,9 +73,9 @@ class TestCoreDetector:
         for schema, field, value in [
             (schemas.ParserSchema(), "receivedTimestamp", 2**31),
             (schemas.ParserSchema(), "parsedTimestamp", 2**31),
-            (schemas.DetectorSchema(), "detectionTimestamp", 2**31),
+            (schemas.DetectorSchema(), "detectedTimestamp", 2**31),
             (schemas.DetectorSchema(), "receivedTimestamp", 1643114452000),
-            (schemas.AggregateSchema(), "outputTimestamp", 2**31),
+            (schemas.AggregateSchema(), "aggregatedTimestamp", 2**31),
         ]:
             schema[field] = value
             assert getattr(schema.get_schema(), field) == value

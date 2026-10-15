@@ -2,7 +2,7 @@
 
 This catalog covers 18 common log formats and provides ready-to-use `log_format` patterns for the DetectMate parsers, such as the [MatcherParser](../parsers/template_matcher.md).
 
-**Key concept:** `log_format` splits a raw log line into structured header fields that become entries in `ParserSchema.logFormatVariables`. The special `<Content>` token captures the variable message body, which is then matched against your template file to produce `EventID` and `variables`. Formats without `<Content>` are fully structured, so no template file is needed.
+**Key concept:** `log_format` splits a raw log line into structured header fields that become entries in `ParserSchema.headerVariables`. The special `<Content>` token captures the variable message body, which is then matched against your template file to produce `eventID` and `variables`. Formats without `<Content>` are fully structured, so no template file is needed.
 
 **Generic configuration:**
 
@@ -85,7 +85,7 @@ Apache httpd access log (Combined Log Format). Each line is fully structured, so
 
 **`log_format`:** `<IP> - - [<Time>] "<RequestType> <Request> <Version>" <Status> <ResponseSize> "<Referer>" "<UserAgent>"`
 
-> All fields land directly in `logFormatVariables`. Use `header_variables` in your detector config to track e.g. `Status`, `IP`, or `RequestType`.
+> All fields land directly in `headerVariables`. Use `header_variables` in your detector config to track e.g. `Status`, `IP`, or `RequestType`.
 
 ---
 

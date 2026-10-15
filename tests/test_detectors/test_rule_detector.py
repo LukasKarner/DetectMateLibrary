@@ -6,12 +6,12 @@ import pytest
 
 class TestCaseRules:
     def test_template_not_found(self) -> None:
-        parsed_log = schemas.ParserSchema({"EventID": -1})
+        parsed_log = schemas.ParserSchema({"eventID": -1})
         alert, msg = rd.template_not_found(parsed_log)
         assert alert
         assert "No template found by parser" == msg
 
-        parsed_log = schemas.ParserSchema({"EventID": 2})
+        parsed_log = schemas.ParserSchema({"eventID": 2})
         alert, _ = rd.template_not_found(parsed_log)
         assert not alert
 
@@ -44,14 +44,14 @@ class TestCaseRules:
 
     def test_error_log(self) -> None:
         parsed_log = schemas.ParserSchema(
-            {"logFormatVariables": {"Level": "Error"}}
+            {"headerVariables": {"Level": "Error"}}
         )
         alert, msg = rd.error_log(parsed_log)
         assert alert
         assert "Error found" == msg
 
         parsed_log = schemas.ParserSchema(
-            {"logFormatVariables": {"Level": "Info"}}
+            {"headerVariables": {"Level": "Info"}}
         )
         alert, _ = rd.error_log(parsed_log)
         assert not alert
@@ -69,13 +69,13 @@ class TestCaseRuleDetector:
 
         alert1 = rule_detector.process(schemas.ParserSchema(
             {
-                "EventID": -1,
+                "eventID": -1,
                 "log": "fail exception",
-                "logFormatVariables": {"Level": "Error"}
+                "headerVariables": {"Level": "Error"}
             }
         ))
         assert alert1 is not None
-        assert alert1["alertsObtain"] == {
+        assert alert1["alertDetails"] == {
             "R001 - TemplateNotFound": "No template found by parser",
             "R003 - CheckForExceptions": "Found word 'exception' in the logs",
             "R004 - ErrorLevelFound": "Error found",
@@ -89,15 +89,15 @@ class TestCaseRuleDetector:
 
         alert1 = rule_detector.process(schemas.ParserSchema(
             {
-                "EventID": -1,
+                "eventID": -1,
                 "log": "fail exception",
-                "logFormatVariables": {"Level": "Error"}
+                "headerVariables": {"Level": "Error"}
             }
         ).serialize())
         assert alert1 is not None
 
         (alert := schemas.DetectorSchema()).deserialize(alert1)
-        assert alert["alertsObtain"] == {
+        assert alert["alertDetails"] == {
             "R001 - TemplateNotFound": "No template found by parser",
             "R003 - CheckForExceptions": "Found word 'exception' in the logs",
             "R004 - ErrorLevelFound": "Error found",
@@ -126,13 +126,13 @@ class TestCaseRuleDetector:
 
         alert1 = rule_detector.process(schemas.ParserSchema(
             {
-                "EventID": -1,
+                "eventID": -1,
                 "log": "fail exception",
-                "logFormatVariables": {"Level": "Error"}
+                "headerVariables": {"Level": "Error"}
             }
         ))
         assert alert1 is not None
-        assert alert1["alertsObtain"] == {
+        assert alert1["alertDetails"] == {
             "R001 - TemplateNotFound": "No template found by parser",
         }
         assert alert1["score"] == 1

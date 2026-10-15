@@ -51,14 +51,14 @@ class TestRandomDetectorEdgeCases:
         detector = RandomDetector(name="TestDetector", config=deepcopy(config))
         parser_data = schemas.ParserSchema({
             "parserType": "test",
-            "EventID": 1,
+            "eventID": 1,
             "template": "test template",
             "variables": ["var1"],
             "logID": "1",
             "parsedLogID": "1",
             "parserID": "test_parser",
             "log": "test log message",
-            "logFormatVariables": {"timestamp": "123456"}
+            "headerVariables": {"timestamp": "123456"}
         })
         detector_output = schemas.DetectorSchema()
 

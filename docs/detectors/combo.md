@@ -23,6 +23,8 @@ This detector maintains a lightweight set of observed combination of values per 
 
 A combination needs at least two variables in the same instance: with a single variable the detector behaves like the [New Value Detector](new_value.md).
 
+Each instance of an event is one combination. An event with several instances monitors every one of them on its own, and auto-configuration writes one instance per selected combination. A log that lacks one of an instance's variables is ignored for that instance.
+
 ## Example
 
 ```python

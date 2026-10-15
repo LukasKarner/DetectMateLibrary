@@ -96,15 +96,15 @@ class JsonParser(CoreParser):
             parsed_content = self.content_parser.process(log_)
             parsed["EventTemplate"] = parsed_content["template"]  # type: ignore
             parsed["Params"] = parsed_content["variables"]  # type: ignore
-            parsed["EventId"] = parsed_content["EventID"]  # type: ignore
+            parsed["EventId"] = parsed_content["eventID"]  # type: ignore
 
         log_flat = flatten_dict(log)
-        output_["logFormatVariables"].clear()  # ensure it's empty before updating
-        output_["logFormatVariables"].update({k: str(v) for k, v in log_flat.items()})
+        output_["headerVariables"].clear()  # ensure it's empty before updating
+        output_["headerVariables"].update({k: str(v) for k, v in log_flat.items()})
         time = self.time_format_handler.parse_timestamp(
             str(timestamp), self.config.time_format
         )
-        output_["logFormatVariables"].update({"Time": time})
+        output_["headerVariables"].update({"Time": time})
         output_["template"] = parsed["EventTemplate"]
         output_["variables"].extend(parsed["Params"])
-        output_["EventID"] = parsed["EventId"]
+        output_["eventID"] = parsed["EventId"]

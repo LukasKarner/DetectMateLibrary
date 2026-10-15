@@ -73,7 +73,7 @@ class CoreParser(CoreComponent):
         output_["parserType"] = self.config.method_type
         output_["logID"] = input_["logID"]
         output_["log"] = input_["log"]
-        output_["logFormatVariables"].update(var)
+        output_["headerVariables"].update(var)
         input_["log"] = content
 
         output_["receivedTimestamp"] = get_timestamp()
