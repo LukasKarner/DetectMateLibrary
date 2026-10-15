@@ -256,13 +256,13 @@ def get_configured_variables(
     """Extract variables from input based on what's defined in the config.
 
     Args:
-        input_: Parser schema containing variables and logFormatVariables
+        input_: Parser schema containing variables and headerVariables
         log_variables: Config specifying which variables to extract per EventID
 
     Returns:
         Dict mapping variable names to their values from the input
     """
-    event_id = input_["EventID"]
+    event_id = input_["eventID"]
     result: Dict[str, Any] = {}
 
     # Get the config for this event
@@ -279,8 +279,48 @@ def get_configured_variables(
     # Extract header/log format variables by name
     if hasattr(event_config, "header_variables"):
         for name in event_config.header_variables:
-            if name in input_["logFormatVariables"]:
-                result[name] = input_["logFormatVariables"][name]
+            if name in input_["headerVariables"]:
+                result[name] = input_["headerVariables"][name]
+
+    return result
+
+
+def get_instance_variables(
+        input_: ParserSchema,
+        log_variables: EventsConfig | dict[str, Any],
+) -> Dict[str, Dict[str, Any]]:
+    """Extract the configured variables of every instance of the input's event.
+
+    get_configured_variables reads only the event's first instance; this reads
+    all of them. An instance is left out when the input lacks one of its
+    variables.
+
+    Args:
+        input_: Parser schema containing variables and headerVariables
+        log_variables: Config specifying which variables to extract per EventID
+
+    Returns:
+        Dict mapping instance name to that instance's variable names and values
+    """
+    event_id = input_["eventID"]
+    event_config = log_variables[event_id] if event_id in log_variables else None
+    result: Dict[str, Dict[str, Any]] = {}
+
+    for instance_id, instance in getattr(event_config, "instances", {}).items():
+        values: Dict[str, Any] = {}
+        complete = True
+        for pos, var in instance.variables.items():
+            if isinstance(pos, int) and pos < len(input_["variables"]):
+                values[var.name] = input_["variables"][pos]
+            else:
+                complete = False
+        for name in instance.header_variables:
+            if name in input_["headerVariables"]:
+                values[name] = input_["headerVariables"][name]
+            else:
+                complete = False
+        if complete and values:
+            result[instance_id] = values
 
     return result
 
@@ -292,7 +332,7 @@ def get_global_variables(
     """Extract header variables from event-ID-independent instances.
 
     Args:
-        input_: Parser schema containing logFormatVariables
+        input_: Parser schema containing headerVariables
         global_instances: Dict of instance_name -> _EventInstance configs
 
     Returns:
@@ -301,6 +341,6 @@ def get_global_variables(
     result: Dict[str, Any] = {}
     for instance in global_instances.values():
         for name in instance.header_variables:
-            if name in input_["logFormatVariables"]:
-                result[name] = input_["logFormatVariables"][name]
+            if name in input_["headerVariables"]:
+                result[name] = input_["headerVariables"][name]
     return result

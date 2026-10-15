@@ -52,13 +52,13 @@ dummy_schema = {
     "detectorID": "1",
     "detectorType": "dummy",
     "alertID": "2",
-    "detectionTimestamp": 0,
+    "detectedTimestamp": 0,
     "logIDs": ["logID1"],
     "score": 0.2,
-    "extractedTimestamps": [-1],
+    "logTimestamps": [-1],
     "description": "hello there",
     "receivedTimestamp": 1,
-    "alertsObtain": {"99 problems": "but logs aint one"}
+    "alertDetails": {"99 problems": "but logs aint one"}
 }
 
 
@@ -107,15 +107,15 @@ class TestCoreAlertAggregator:
     def test_process_input_schema_not_serialized(self) -> None:
         alert_aggregator = MockupAlertAggregator(name="TestAAG", config=MockupConfig())
         expected_result = schemas.AggregateSchema({
-            "__version__": "1.0.0",
+            "__version__": "2.0.0",
             "detectorIDs": ["1"],
             "detectorTypes": ["dummy"],
             "alertIDs": ["2"],
-            "outputTimestamp": 0,
+            "aggregatedTimestamp": 0,
             "logIDs": ["logID1"],
             "description": "Mockup aggregator",
-            "extractedTimestamps": [-1],
-            "alertsObtain": {}
+            "logTimestamps": [-1],
+            "alertDetails": {}
         })
         data = schemas.DetectorSchema(dummy_schema)
         result = alert_aggregator.process(data)
@@ -124,15 +124,15 @@ class TestCoreAlertAggregator:
     def test_process_input_schema_not_serialized_window_3(self) -> None:
         alert_aggregator = MockupAlertAggregator(name="TestDetector", config=MockupConfig(), buffer_size=3)
         expected_result = schemas.AggregateSchema({
-            "__version__": "1.0.0",
+            "__version__": "2.0.0",
             "detectorIDs": ["1", "1", "1"],
             "detectorTypes": ["dummy", "dummy", "dummy"],
             "alertIDs": ["2", "2", "2"],
-            "outputTimestamp": 0,
+            "aggregatedTimestamp": 0,
             "logIDs": ["logID1", "logID1", "logID1"],
             "description": "Mockup aggregator",
-            "extractedTimestamps": [-1, -1, -1],
-            "alertsObtain": {}
+            "logTimestamps": [-1, -1, -1],
+            "alertDetails": {}
         })
         data = schemas.DetectorSchema(dummy_schema)
 
@@ -147,15 +147,15 @@ class TestCoreAlertAggregator:
             name="TestDetector", config=MockupConfig(), buffer_size=3
         )
         expected_result = schemas.AggregateSchema({
-            "__version__": "1.0.0",
+            "__version__": "2.0.0",
             "detectorIDs": ["1", "1", "1"],
             "detectorTypes": ["dummy", "dummy", "dummy"],
             "alertIDs": ["2", "2", "2"],
-            "outputTimestamp": 0,
+            "aggregatedTimestamp": 0,
             "logIDs": ["logID1", "logID1", "logID1"],
             "description": "Mockup aggregator",
-            "extractedTimestamps": [-1, -1, -1],
-            "alertsObtain": {}
+            "logTimestamps": [-1, -1, -1],
+            "alertDetails": {}
         })
         data = schemas.DetectorSchema(dummy_schema)
 

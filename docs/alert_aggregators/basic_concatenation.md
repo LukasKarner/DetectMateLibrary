@@ -53,6 +53,7 @@ All parameters this alert aggregator accepts, grouped by the YAML block they go 
     | Field | Type | Default | Scope | Description |
     |---|---|---|---|---|
     | `buffer_size` | integer | 3 | specific | Number of most recent alerts aggregated together (size of the sliding window). |
+    | `deduplicate_values` | boolean | False | specific | Drop repeated entries from the aggregated ID, type and timestamp lists, keeping the first of each. |
     | `start_id` | integer | 10 | shared | Number used to start the unique ID generator. |
     | `data_use_training` | integer, null | None | shared | Number of logs used for training. None skips training. |
     | `data_use_configure` | integer, null | None | shared | Number of logs used for the configuration step. None skips it. |

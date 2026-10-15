@@ -66,7 +66,7 @@ class TestLogBatcherParserParse:
 
         result = parser.process(log_schema)
 
-        assert isinstance(result["EventID"], int)
+        assert isinstance(result["eventID"], int)
 
     def test_second_call_hits_cache(self):
         """Second identical log must not trigger a new LLM call."""

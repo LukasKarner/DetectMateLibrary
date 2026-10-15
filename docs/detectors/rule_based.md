@@ -19,7 +19,7 @@ Input and output schemas in the pipeline
 
 ## Description
 
-The detector analyzes parsed logs one by one and checks which rules are triggered. When alerts are produced, the triggered rules and their messages are recorded in the `alertsObtain` field of the output schema. The `score` field contains the number of rules that triggered.
+The detector analyzes parsed logs one by one and checks which rules are triggered. When alerts are produced, the triggered rules and their messages are recorded in the `alertDetails` field of the output schema. The `score` field contains the number of rules that triggered.
 
 ### Available rules
 

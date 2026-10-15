@@ -52,14 +52,14 @@ Before calling `aggregate_alerts()`, `CoreAlertAggregator.run()` collects these 
 alerts in the window:
 
 - `detectorIDs`, `detectorTypes`, `alertIDs`: one entry per alert
-- `logIDs`, `extractedTimestamps`: the entries of all alerts, combined into one list
+- `logIDs`, `logTimestamps`: the entries of all alerts, combined into one list
 
-After `aggregate_alerts()` returns `True`, `run()` also sets `outputTimestamp`. So the only
-fields left for `aggregate_alerts()` to fill are `description` and `alertsObtain`.
+After `aggregate_alerts()` returns `True`, `run()` also sets `aggregatedTimestamp`. So the only
+fields left for `aggregate_alerts()` to fill are `description` and `alertDetails`.
 
 !!! warning "The alerts' details are not carried over"
     `run()` copies only the fields listed above. Everything else in the incoming alerts is dropped
-    unless your `aggregate_alerts()` keeps it, including their `detectionTimestamp` and
+    unless your `aggregate_alerts()` keeps it, including their `detectedTimestamp` and
     `receivedTimestamp`.
 
 ## Available alert aggregators

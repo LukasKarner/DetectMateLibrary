@@ -179,7 +179,7 @@ Some parameters are inherited by **every** detector from `CoreDetectorConfig`/`C
 
     | Field | Type | Default | Description |
     |---|---|---|---|
-    | `auto_config` | boolean | True | Runs the configuration step before the training process. |
+    | `auto_config` | boolean | True | Runs the configuration step before the training process. Has no effect unless data_use_configure is set. |
     | `events` | object | {} | Events configuration dict keyed by event_id. |
     | `global` | object | {} | Instances monitoring event-independent header variables (e.g. hostname, level), keyed by instance name. Written as `global` in YAML. |
 
@@ -188,8 +188,8 @@ Some parameters are inherited by **every** detector from `CoreDetectorConfig`/`C
     | Field | Type | Default | Description |
     |---|---|---|---|
     | `start_id` | integer | 10 | Number used to start the unique ID generator. |
-    | `data_use_training` | integer, null | None | Data used for training, if None, training is not done. |
-    | `data_use_configure` | integer, null | None | Data used for configuration, if None, configuration is not done. |
+    | `data_use_training` | integer, null | None | Number of logs used for training. None skips training. |
+    | `data_use_configure` | integer, null | None | Number of logs used for the configuration step. None skips it. |
     | `use_config_data_as_training` | boolean | True | Combine the configured data in the training process if True. |
     | `train_buffer_max_records` | integer | 100000 | Configure records kept in memory for training (use_config_data_as_training) before the buffer spills to Parquet files on disk, in parts of this many records. |
     | `train_buffer_dir` | string, null | None | Local directory for the spilled training buffer. None uses the system temp directory (TMPDIR). Each spill goes to a private detectmate-train-* directory, removed after training reads it; a killed process leaves it behind. |
@@ -255,7 +255,7 @@ The two neural detectors ([DeepLog](detectors/deeplog.md), [LogBERT](detectors/l
 
 ### Configuration semantics (preliminary)
 
-**`events` key**: the key is the `EventID` (or `event_id`) to monitor: an integer as the parser emits it (see the [Template Matcher](parsers/template_matcher.md) docs for how the EventID is assigned), or a name (see [Named EventIDs and variables](#named-eventids-and-variables) below).
+**`events` key**: the key is the `eventID` (or `event_id`) to monitor: an integer as the parser emits it (see the [Template Matcher](parsers/template_matcher.md) docs for how the EventID is assigned), or a name (see [Named EventIDs and variables](#named-eventids-and-variables) below).
 
 **`global` key** - This one has a similar functionality as the `events` key but refers to variables, that are not bound to events (thus can only contain `header_variables`).
 
@@ -272,7 +272,7 @@ pid=<*> uid=<*> auid=<*> ses=<*> msg='op=<*> acct=<*> exe=<*> hostname=<*> addr=
 
 ### Named EventIDs and variables
 
-Instead of numbers, the `events` block can use names: a name for the `EventID`, and
+Instead of numbers, the `events` block can use names: a name for the `eventID`, and
 the name of a wildcard for `variables[].pos`. The names come from the
 [Template Matcher](parsers/template_matcher.md)'s template file:
 
@@ -285,10 +285,10 @@ the name of a wildcard for `variables[].pos`. The names come from the
     --8<-- "docs/examples/data/named_templates.csv"
     ```
 
-The parser still emits numbers (`EventID` 1 and position 0 for `<user>` in the second
+The parser still emits numbers (`eventID` 1 and position 0 for `<user>` in the second
 template), so the names must be translated before the detector runs. Do this once,
 after creating both components, with `compile_detector_config()`. **Without this step
-the detector monitors nothing**; it only logs a warning that the named `EventID` was
+the detector monitors nothing**; it only logs a warning that the named `eventID` was
 never observed in training.
 
 ```python
@@ -379,7 +379,7 @@ traffic looks stable, because the flood supplies enough samples to dominate the
 later segments. Enabling `time` cuts the same segments at **equal
 durations** instead, so each segment covers the same amount of wall-clock time;
 the detector then needs an event time per record, which it reads from the log's
-named variables (`logFormatVariables`, i.e. the fields declared in the parser's
+named variables (`headerVariables`, i.e. the fields declared in the parser's
 `log_format`) under the name given by `timestamp_variable`. `slope_index` and
 `slope_time` ask a different question (whether the change centroid sits early
 or late in the series), on the index axis and the time axis respectively.
@@ -447,7 +447,7 @@ All of these live in the detector's `auto_config_params` block.
 | `use_stable_vars` | `bool` | `true` | Include variables classified `STABLE` in the generated configuration. |
 | `use_static_vars` | `bool` | `true` | Include variables classified `STATIC`. Defaults to `false` on `NewValueComboDetector`. |
 | `classification` | `ClassificationMethods` | see below | Which classification methods run and how their verdicts combine. |
-| `timestamp_variable` | `str \| null` | `null` | Name of the field in `logFormatVariables` holding the record's event time. Required for `time` and `slope_time` to have any effect. Only named log-format fields are consulted, never the positional `variables` list. |
+| `timestamp_variable` | `str \| null` | `null` | Name of the field in `headerVariables` holding the record's event time. Required for `time` and `slope_time` to have any effect. Only named log-format fields are consulted, never the positional `variables` list. |
 | `timestamp_format` | `str \| null` | `null` | Explicit [`strftime`](https://docs.python.org/3/library/datetime.html#strftime-and-strptime-format-codes) pattern for parsing that field. When unset, `TimeFormatHandler` auto-detects the format (ISO 8601, Apache, syslog, numeric epoch seconds/milliseconds, and other common layouts). |
 
 Set `timestamp_format` when the source uses a layout the auto-detection does not

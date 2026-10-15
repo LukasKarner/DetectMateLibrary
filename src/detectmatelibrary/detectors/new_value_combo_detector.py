@@ -1,5 +1,8 @@
 from detectmatelibrary.common._config import generate_events_config
-from detectmatelibrary.common._config._compile import get_configured_variables
+from detectmatelibrary.common._config._compile import (
+    get_configured_variables,
+    get_instance_variables,
+)
 from detectmatelibrary.common._core_op._train_buffer import TrainBuffer
 from detectmatelibrary.base_detectors import (
     SingleStabilityTracker,
@@ -10,12 +13,28 @@ from detectmatelibrary.base_detectors import (
 
 from detectmatelibrary.schemas import ParserSchema
 
-from typing import Any, Dict, Optional, Sequence, Tuple, cast
+from typing import Any, Dict, List, Optional, Sequence, Tuple, cast
 from itertools import combinations
+import re
 
 from pydantic import Field
 
 from detectmatelibrary.tools.logging import logger
+
+
+_POSITIONAL_VARIABLE = re.compile(r"^var_(\d+)$")
+
+
+def _variable_order(name: str) -> Tuple[int, int, str]:
+    """Sort key: template variables by position, then header variables by
+    name."""
+    match = _POSITIONAL_VARIABLE.match(name)
+    return (0, int(match.group(1)), "") if match else (1, 0, name)
+
+
+def _combo_order(combo: Tuple[str, ...]) -> Tuple[int, List[Tuple[int, int, str]]]:
+    """Sort key: smaller combinations first, then by their variables."""
+    return len(combo), [_variable_order(name) for name in combo]
 
 
 def get_combo(variables: Dict[str, Any]) -> Dict[Tuple[str, ...], Tuple[Any, ...]]:
@@ -103,6 +122,11 @@ class NewValueComboDetector(VariableDetector):
             return cast(Dict[str, Any], get_combo(variables))
         return variables
 
+    def _event_variables(self, input_: ParserSchema) -> List[Dict[str, Any]]:
+        # every instance is its own combination; the empty group keeps an
+        # event without a complete combination recorded as seen
+        return list(get_instance_variables(input_, self.config.events).values()) or [{}]
+
     def _check_variable(
         self, tracker: SingleStabilityTracker, value: Any, key: Any
     ) -> Optional[str]:
@@ -128,6 +152,10 @@ class NewValueComboDetector(VariableDetector):
         2. Generate an initial config with combos of stable variables.
         3. Re-ingest all events to learn the stability of those combos (testing
            every possible combo up front would explode combinatorially).
+
+        Variables and combos are sorted before they are written, so the
+        generated config does not depend on the order the variables arrived in
+        (a ParserSchema keeps its headerVariables in no fixed order).
         """
         if max_combo_size is not None:
             self.config.auto_config_params.max_combo_size = max_combo_size
@@ -137,7 +165,7 @@ class NewValueComboDetector(VariableDetector):
         for event_id, tracker in self.auto_conf_persistency.get_events_data().items():
             stable_vars = tracker.get_features_by_classification("STABLE")
             if len(stable_vars) > 1:
-                variable_combos[event_id] = stable_vars
+                variable_combos[event_id] = sorted(stable_vars, key=_variable_order)
         self.config.events = generate_events_config(variable_combos, self.name)  # type: ignore
 
         # re-ingest all inputs to learn combos under the new configuration;
@@ -146,7 +174,7 @@ class NewValueComboDetector(VariableDetector):
             input_ = cast(ParserSchema, record)
             configured_variables = get_configured_variables(input_, self.config.events)
             self.auto_conf_persistency_combos.ingest_event(
-                event_id=input_["EventID"],
+                event_id=input_["eventID"],
                 event_template=input_["template"],
                 named_variables=configured_variables,
                 timestamp=self._timestamps.read(input_),
@@ -169,9 +197,10 @@ class NewValueComboDetector(VariableDetector):
                 if auto.use_static_vars
                 else []
             )
-            combos = stable_combos + static_combos
+            # the combo trackers are keyed by tuples of variable names
+            combos = cast(List[Tuple[str, ...]], stable_combos + static_combos)
             if combos:
-                combo_selection[event_id] = combos
+                combo_selection[event_id] = sorted(combos, key=_combo_order)
         self.config.events = generate_events_config(combo_selection, self.name)  # type: ignore
         self.config.auto_config = False
         if not self.config.events.events:

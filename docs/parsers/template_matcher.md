@@ -16,15 +16,15 @@ Input and output schemas in the pipeline
 The template matcher is a lightweight, fast parser intended for logs that follow stable textual templates with variable fields. Templates use the token `<*>` to mark wildcard slots. The matcher:
 
 - Preprocesses logs and templates (remove spaces, punctuation, lowercase) based on config.
-- Tries the templates in order of how often each has matched so far, uses the first one that matches, and extracts all wildcard parameters in order. If templates overlap, the same log can therefore get a different `EventID` over time.
-- Populates ParserSchema fields: `EventID`, `template`, `variables`,  `logID`, and related fields.
-- **`EventID` is the 0-indexed line number of the matched template** in the template file (first line → `EventID: 0`, second line → `EventID: 1`, etc.).
+- Tries the templates in order of how often each has matched so far, uses the first one that matches, and extracts all wildcard parameters in order. If templates overlap, the same log can therefore get a different `eventID` over time.
+- Populates ParserSchema fields: `eventID`, `template`, `variables`,  `logID`, and related fields.
+- **`eventID` is the 0-indexed line number of the matched template** in the template file (first line → `eventID: 0`, second line → `eventID: 1`, etc.).
 
 This parser is designed for high-throughput use when templates are known in advance.
 
 ## EventID assignment (preliminary)
 
-The `EventID` (or `event_id`) field in the output `ParserSchema` identifies which template was matched. It equals the **0-indexed line number** of the matching template in the template file, for example:
+The `eventID` (or `event_id`) field in the output `ParserSchema` identifies which template was matched. It equals the **0-indexed line number** of the matching template in the template file, for example:
 
 | Line in template file | EventID |
 |-----------------------|---------|
@@ -33,7 +33,7 @@ The `EventID` (or `event_id`) field in the output `ParserSchema` identifies whic
 | 3rd line              | 2       |
 | ...                   | ...     |
 
-The `EventID` is the integer key used in detector configurations (e.g., `NewValueDetector`) to scope detection rules to logs of a particular template type.
+The `eventID` is the integer key used in detector configurations (e.g., `NewValueDetector`) to scope detection rules to logs of a particular template type.
 
 ## Template format
 
