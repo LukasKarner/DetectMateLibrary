@@ -24,7 +24,7 @@ class CustomAlertAggregator(CoreAlertAggregator):
         self, input_: list[DetectorSchema] | DetectorSchema, output_: AggregateSchema
     ) -> bool:
         output_["description"] = "Custom alert aggregation"
-        output_["alertsObtain"]["type"] = "Anomalies aggregated by CustomAlertAggregator"
+        output_["alertDetails"]["type"] = "Anomalies aggregated by CustomAlertAggregator"
         return True
 
 

@@ -183,10 +183,10 @@ class TestCaseFrom:
             "log": "hello there",
             "variables": ["a", "b"],
             "template": "hello <*>",
-            "EventID": 0,
-            "logFormatVariables": {"Type": "A"}
+            "eventID": 0,
+            "headerVariables": {"Type": "A"}
         })
-        for field in ["log", "variables", "template", "EventID", "logFormatVariables"]:
+        for field in ["log", "variables", "template", "eventID", "headerVariables"]:
             assert parsed1[field] == schema1[field], field
         assert parsed1["logID"] == "0"
 
@@ -195,10 +195,10 @@ class TestCaseFrom:
             "log": "general kenobi",
             "variables": ["c", "d"],
             "template": "<*> kenobi",
-            "EventID": 1,
-            "logFormatVariables": {"Type": "B"}
+            "eventID": 1,
+            "headerVariables": {"Type": "B"}
         })
-        for field in ["log", "variables", "template", "EventID", "logFormatVariables"]:
+        for field in ["log", "variables", "template", "eventID", "headerVariables"]:
             assert parsed2[field] == schema2[field], field
         assert parsed2["logID"] == "1"
 
@@ -217,10 +217,10 @@ class TestCaseFrom:
             "log": "hello there",
             "variables": ["a", "b"],
             "template": "hello <*>",
-            "EventID": 0,
-            "logFormatVariables": {"Type": "A"}
+            "eventID": 0,
+            "headerVariables": {"Type": "A"}
         })
-        for field in ["log", "variables", "template", "EventID", "logFormatVariables"]:
+        for field in ["log", "variables", "template", "eventID", "headerVariables"]:
             assert parsed1[field] == schema1[field], field
         assert parsed1["logID"] == "0"
 
@@ -229,10 +229,10 @@ class TestCaseFrom:
             "log": "general kenobi",
             "variables": ["c", "d"],
             "template": "<*> kenobi",
-            "EventID": 1,
-            "logFormatVariables": {"Type": "B"}
+            "eventID": 1,
+            "headerVariables": {"Type": "B"}
         })
-        for field in ["log", "variables", "template", "EventID", "logFormatVariables"]:
+        for field in ["log", "variables", "template", "eventID", "headerVariables"]:
             assert parsed2[field] == schema2[field], field
         assert parsed2["logID"] == "1"
 
@@ -245,7 +245,7 @@ class TestCaseFrom:
             "EventIDs": [0, 1]
         })
         renames = {
-            "Content": "log", "Vars": "variables", "EventIDs": "EventID", "Templates": "template"
+            "Content": "log", "Vars": "variables", "EventIDs": "eventID", "Templates": "template"
         }
         gen = From.polars(DummyDetector(), df=table, do_process=False, renames=renames)
 
@@ -254,10 +254,10 @@ class TestCaseFrom:
             "log": "hello there",
             "variables": ["a", "b"],
             "template": "hello <*>",
-            "EventID": 0,
-            "logFormatVariables": {"Type": "A"}
+            "eventID": 0,
+            "headerVariables": {"Type": "A"}
         })
-        for field in ["log", "variables", "template", "EventID", "logFormatVariables"]:
+        for field in ["log", "variables", "template", "eventID", "headerVariables"]:
             assert parsed1[field] == schema1[field], field
 
     def test_frompolars_rename_vars(self):
@@ -269,7 +269,7 @@ class TestCaseFrom:
             "EventIDs": [0, 1]
         })
         renames = {
-            "Content": "log", "Vars": "variables", "EventIDs": "EventID", "Templates": "template"
+            "Content": "log", "Vars": "variables", "EventIDs": "eventID", "Templates": "template"
         }
         gen = From.polars(DummyDetector(), df=table, do_process=False, renames=renames)
 
@@ -278,10 +278,10 @@ class TestCaseFrom:
             "log": "hello there",
             "variables": ["a", "b"],
             "template": "hello <*>",
-            "EventID": 0,
-            "logFormatVariables": {"Type": "A"}
+            "eventID": 0,
+            "headerVariables": {"Type": "A"}
         })
-        for field in ["log", "variables", "template", "EventID", "logFormatVariables"]:
+        for field in ["log", "variables", "template", "eventID", "headerVariables"]:
             assert parsed1[field] == schema1[field], field
 
 

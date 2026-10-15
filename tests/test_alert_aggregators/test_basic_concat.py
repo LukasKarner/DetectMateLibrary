@@ -31,26 +31,26 @@ data_global = [schemas.DetectorSchema({
     "detectorID": str(i),
     "detectorType": "dummy",
     "alertID": str(i),
-    "detectionTimestamp": 0,
+    "detectedTimestamp": 0,
     "logIDs": [f"logID{i}"],
     "score": 0.2 + i / 10,
-    "extractedTimestamps": [int(datetime.now().timestamp() + i)],
+    "logTimestamps": [int(datetime.now().timestamp() + i)],
     "description": "hello there",
     "receivedTimestamp": 1,
-    "alertsObtain": {"99 problems": "but logs aint one"}
+    "alertDetails": {"99 problems": "but logs aint one"}
 }) for i in range(1, 4)]
 
 data_global += [schemas.DetectorSchema({
     "detectorID": "1",
     "detectorType": "dummy",
     "alertID": "1",
-    "detectionTimestamp": 0,
+    "detectedTimestamp": 0,
     "logIDs": [f"logID{1}"],
     "score": 0.3,
-    "extractedTimestamps": [int(datetime.now().timestamp() + 1)],
+    "logTimestamps": [int(datetime.now().timestamp() + 1)],
     "description": "hello there",
     "receivedTimestamp": 1,
-    "alertsObtain": {"99 problems": "but logs aint one"}
+    "alertDetails": {"99 problems": "but logs aint one"}
 }) for i in range(1, 4)]
 
 
@@ -68,9 +68,9 @@ class TestBasicAggregation:
         res_dict = result.as_dict()
         assert res_dict["detectorIDs"] == ["1", "2", "3", "1"]
         assert res_dict["alertIDs"] == ["1", "2", "3", "1"]
-        assert res_dict["outputTimestamp"] == 0
+        assert res_dict["aggregatedTimestamp"] == 0
         assert res_dict["logIDs"] == ["logID1", "logID2", "logID3", "logID1"]
-        assert len(res_dict["extractedTimestamps"]) == 4
+        assert len(res_dict["logTimestamps"]) == 4
         assert res_dict["description"] == "Basic aggregation by alert concatenation"
         assert res_dict["detectorTypes"] == ["dummy"]*4
 
@@ -89,8 +89,8 @@ class TestBasicAggregation:
         res_dict = result.as_dict()
         assert res_dict["detectorIDs"] == ["1", "2", "3"]
         assert res_dict["alertIDs"] == ["1", "2", "3"]
-        assert res_dict["outputTimestamp"] == 0
+        assert res_dict["aggregatedTimestamp"] == 0
         assert res_dict["logIDs"] == ["logID1", "logID2", "logID3"]
-        assert len(res_dict["extractedTimestamps"]) == 3
+        assert len(res_dict["logTimestamps"]) == 3
         assert res_dict["description"] == "Basic aggregation by alert concatenation"
         assert res_dict["detectorTypes"] == ["dummy"]

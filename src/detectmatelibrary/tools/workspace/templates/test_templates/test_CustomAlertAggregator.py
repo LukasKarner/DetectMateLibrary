@@ -40,7 +40,7 @@ class TestCustomAlertAggregator:
             if i % 3 == 2:
                 assert getattr(output, "description") == "Custom alert aggregation"
                 assert getattr(output, "detectorIDs") == ["MyCoolThing"]*3
-                assert getattr(output, "alertsObtain")["type"] == \
+                assert getattr(output, "alertDetails")["type"] == \
                        "Anomalies aggregated by CustomAlertAggregator"
                 assert getattr(output, "detectorTypes") == ["MyCoolThing_detector"]*3
                 assert getattr(output, "alertIDs") == [

@@ -30,5 +30,5 @@ class BasicConcatAggregation(CoreAlertAggregator):
             output_["detectorTypes"] = list(dict.fromkeys(output_["detectorTypes"]))
             output_["alertIDs"] = list(dict.fromkeys(output_["alertIDs"]))
             output_["logIDs"] = list(dict.fromkeys(output_["logIDs"]))
-            output_["extractedTimestamps"] = list(dict.fromkeys(output_["extractedTimestamps"]))
+            output_["logTimestamps"] = list(dict.fromkeys(output_["logTimestamps"]))
         return True

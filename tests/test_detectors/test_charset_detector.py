@@ -122,14 +122,14 @@ class TestCharsetDetectorTraining:
             for level in ["INFO", "WARNING", "ERROR"]:
                 parser_data = schemas.ParserSchema({
                     "parserType": "test",
-                    "EventID": event,
+                    "eventID": event,
                     "template": "test template",
                     "variables": ["0", "assa"],
                     "logID": "1",
                     "parsedLogID": "1",
                     "parserID": "test_parser",
                     "log": "test log message",
-                    "logFormatVariables": {"level": level}
+                    "headerVariables": {"level": level}
                 })
                 detector.train(parser_data)
 
@@ -153,28 +153,28 @@ class TestCharsetDetectorDetection:
         # Train with a value
         train_data = schemas.ParserSchema({
             "parserType": "test",
-            "EventID": 1,
+            "eventID": 1,
             "template": "test template",
             "variables": ["adsasd", "asdasd"],
             "logID": "1",
             "parsedLogID": "1",
             "parserID": "test_parser",
             "log": "test log message",
-            "logFormatVariables": {"level": "INFO"}
+            "headerVariables": {"level": "INFO"}
         })
         detector.train(train_data)
 
         # Detect with the same value
         test_data = schemas.ParserSchema({
             "parserType": "test",
-            "EventID": 12,
+            "eventID": 12,
             "template": "test template",
             "variables": ["adsasddddddaaa"],
             "logID": "2",
             "parsedLogID": "2",
             "parserID": "test_parser",
             "log": "test log message",
-            "logFormatVariables": {"level": "CRITICAL"}
+            "headerVariables": {"level": "CRITICAL"}
         })
         output = schemas.DetectorSchema()
 
@@ -189,28 +189,28 @@ class TestCharsetDetectorDetection:
         # Train with a value
         train_data = schemas.ParserSchema({
             "parserType": "test",
-            "EventID": 1,
+            "eventID": 1,
             "template": "test template",
             "variables": ["adsasd", "asdasd"],
             "logID": "1",
             "parsedLogID": "1",
             "parserID": "test_parser",
             "log": "test log message",
-            "logFormatVariables": {"level": "INFO"}
+            "headerVariables": {"level": "INFO"}
         })
         detector.train(train_data)
 
         # Detect with the same value
         test_data = schemas.ParserSchema({
             "parserType": "test",
-            "EventID": 1,
+            "eventID": 1,
             "template": "test template",
             "variables": ["asas", "adsd"],
             "logID": "2",
             "parsedLogID": "2",
             "parserID": "test_parser",
             "log": "test log message",
-            "logFormatVariables": {"level": "CRITICAL"}
+            "headerVariables": {"level": "CRITICAL"}
         })
         output = schemas.DetectorSchema()
 
@@ -242,17 +242,17 @@ class TestCharsetDetectorDetection:
         detector = CharsetDetector(config=cfg, name="Single")
 
         train = schemas.ParserSchema({
-            "parserType": "test", "EventID": 1, "template": "t",
+            "parserType": "test", "eventID": 1, "template": "t",
             "variables": ["abc"], "logID": "1", "parsedLogID": "1",
-            "parserID": "p", "log": "l", "logFormatVariables": {},
+            "parserID": "p", "log": "l", "headerVariables": {},
         })
         detector.train(train)
 
         # All known chars
         ok = schemas.ParserSchema({
-            "parserType": "test", "EventID": 1, "template": "t",
+            "parserType": "test", "eventID": 1, "template": "t",
             "variables": ["cba"], "logID": "2", "parsedLogID": "2",
-            "parserID": "p", "log": "l", "logFormatVariables": {},
+            "parserID": "p", "log": "l", "headerVariables": {},
         })
         out = schemas.DetectorSchema()
         assert not detector.detect(ok, out)
@@ -260,14 +260,14 @@ class TestCharsetDetectorDetection:
 
         # Unknown chars 'x' and 'y'
         bad = schemas.ParserSchema({
-            "parserType": "test", "EventID": 1, "template": "t",
+            "parserType": "test", "eventID": 1, "template": "t",
             "variables": ["axy"], "logID": "3", "parsedLogID": "3",
-            "parserID": "p", "log": "l", "logFormatVariables": {},
+            "parserID": "p", "log": "l", "headerVariables": {},
         })
         out = schemas.DetectorSchema()
         assert detector.detect(bad, out)
         assert out.score == 1.0
-        assert any("'x'" in msg and "'y'" in msg for msg in out["alertsObtain"].values())
+        assert any("'x'" in msg and "'y'" in msg for msg in out["alertDetails"].values())
 
 
 _PARSER_CONFIG = {
@@ -445,7 +445,7 @@ class TestCharsetDetectorGlobalInstances:
         for log in logs[TRAIN_UNTIL:]:
             output = schemas.DetectorSchema()
             if detector.detect(log, output_=output):
-                assert all(key.startswith("Global -") for key in output["alertsObtain"])
+                assert all(key.startswith("Global -") for key in output["alertDetails"])
                 detected_ids.add(log["logID"])
 
         assert len(detected_ids) > 0
@@ -460,10 +460,10 @@ class TestCharsetDetectorSetConfigurationPreservesPersist:
         # Feed configure() with a couple of stable-variable samples
         for _ in range(5):
             sample = schemas.ParserSchema({
-                "parserType": "test", "EventID": 1, "template": "t",
+                "parserType": "test", "eventID": 1, "template": "t",
                 "variables": ["abc"], "logID": "x", "parsedLogID": "x",
                 "parserID": "p", "log": "l",
-                "logFormatVariables": {"level": "INFO"},
+                "headerVariables": {"level": "INFO"},
             })
             detector.configure(sample)
 

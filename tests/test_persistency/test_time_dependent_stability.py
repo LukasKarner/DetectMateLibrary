@@ -388,14 +388,14 @@ class TestSegmentationWithDetectorAddValueFn:
 def _parser_record(ts_value, event_id=1):
     return schemas.ParserSchema({
         "parserType": "test",
-        "EventID": event_id,
+        "eventID": event_id,
         "template": "test template",
         "variables": ["abc"],
         "logID": "1",
         "parsedLogID": "1",
         "parserID": "test_parser",
         "log": "test log message",
-        "logFormatVariables": {"ts": ts_value},
+        "headerVariables": {"ts": ts_value},
     })
 
 

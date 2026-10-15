@@ -41,7 +41,7 @@ class CoreParser:
 
 `parse()` only has to fill the fields that describe the match:
 
-- `EventID` (int): identifier for the matched template/event
+- `eventID` (int): identifier for the matched template/event
 - `template` (string): event template text
 - `variables` (repeated string): extracted parameters (extend the list)
 
@@ -50,7 +50,7 @@ class CoreParser:
 - `parserID`, `parserType`: the parser's name and `method_type`
 - `parsedLogID`: a new unique ID for the parsed record
 - `logID`, `log`: copied from the input `LogSchema`
-- `logFormatVariables`: the header fields extracted with `log_format`
+- `headerVariables`: the header fields extracted with `log_format`
 - `receivedTimestamp`, `parsedTimestamp`: set just before and just after
   `parse()` runs
 
@@ -94,7 +94,7 @@ class MyParser(CoreParser):
         text = input_.log or ""
         # simple example: split on whitespace and treat as variables
         tokens = text.split()
-        output_["EventID"] = 1
+        output_["eventID"] = 1
         output_["template"] = " ".join(["<*>"] * len(tokens))
         output_["variables"].extend(tokens)
         return True
@@ -114,7 +114,7 @@ def test_my_parser_parse():
     out = schemas.ParserSchema()
     ok = parser.parse(raw, out)
     assert ok is True
-    assert out["EventID"] == 1
+    assert out["eventID"] == 1
     assert out["variables"] == ["a", "b", "c"]
 ```
 
