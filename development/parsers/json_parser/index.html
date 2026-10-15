@@ -2048,7 +2048,7 @@
 
 
 <h1 id="json-parser">JSON Parser</h1>
-<p>Extracts structured information from JSON-formatted logs. Optionally delegates parsing of a specific JSON field (the "content") to a sibling Template Matcher parser. Nested JSON objects are always flattened to dot-separated keys in <code>logFormatVariables</code>.</p>
+<p>Extracts structured information from JSON-formatted logs. Optionally delegates parsing of a specific JSON field (the "content") to a sibling Template Matcher parser. Nested JSON objects are always flattened to dot-separated keys in <code>headerVariables</code>.</p>
 <h2 id="inout">In/out</h2>
 <p>Input and output schemas in the pipeline</p>
 <table>
@@ -2086,8 +2086,8 @@
 <span class="n">output</span> <span class="o">=</span> <span class="n">schemas</span><span class="o">.</span><span class="n">ParserSchema</span><span class="p">()</span>
 <span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">schemas</span><span class="o">.</span><span class="n">LogSchema</span><span class="p">({</span><span class="s2">"logID"</span><span class="p">:</span> <span class="s2">"1"</span><span class="p">,</span> <span class="s2">"log"</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">json_log</span><span class="p">)}),</span> <span class="n">output</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">logFormatVariables</span><span class="p">[</span><span class="s2">"request.method"</span><span class="p">])</span>  <span class="c1"># GET</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">logFormatVariables</span><span class="p">[</span><span class="s2">"request.path"</span><span class="p">])</span>    <span class="c1"># /api/users</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">headerVariables</span><span class="p">[</span><span class="s2">"request.method"</span><span class="p">])</span>  <span class="c1"># GET</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">headerVariables</span><span class="p">[</span><span class="s2">"request.path"</span><span class="p">])</span>    <span class="c1"># /api/users</span>
 </code></pre></div>
 <p>With the configuration file below, the <code>message</code> field is also matched against templates:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>  <span class="c1"># noqa: E402</span>
@@ -2104,7 +2104,7 @@
 <span class="n">output</span> <span class="o">=</span> <span class="n">schemas</span><span class="o">.</span><span class="n">ParserSchema</span><span class="p">()</span>
 <span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">schemas</span><span class="o">.</span><span class="n">LogSchema</span><span class="p">({</span><span class="s2">"logID"</span><span class="p">:</span> <span class="s2">"1"</span><span class="p">,</span> <span class="s2">"log"</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">json_log</span><span class="p">)}),</span> <span class="n">output</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">logFormatVariables</span><span class="p">[</span><span class="s2">"level"</span><span class="p">])</span>  <span class="c1"># INFO</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">headerVariables</span><span class="p">[</span><span class="s2">"level"</span><span class="p">])</span>  <span class="c1"># INFO</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">template</span><span class="p">)</span>                     <span class="c1"># pid=&lt;*&gt; uid=&lt;*&gt; auid=&lt;*&gt; ses=&lt;*&gt; msg='op=PAM:&lt;*&gt; acct=&lt;*&gt;</span>
 </code></pre></div>
 <h2 id="configuration-file">Configuration file</h2>

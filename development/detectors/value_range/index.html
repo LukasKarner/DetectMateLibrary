@@ -2150,7 +2150,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">download</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">bytes_read</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">schemas</span><span class="o">.</span><span class="n">ParserSchema</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""What a parser emits for 'close &lt;path&gt; bytes read &lt;bytes_read&gt; written</span>
 <span class="sd">    0'."""</span>
-    <span class="k">return</span> <span class="n">schemas</span><span class="o">.</span><span class="n">ParserSchema</span><span class="p">({</span><span class="s2">"EventID"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">"variables"</span><span class="p">:</span> <span class="p">[</span><span class="n">path</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">bytes_read</span><span class="p">),</span> <span class="s2">"0"</span><span class="p">]})</span>
+    <span class="k">return</span> <span class="n">schemas</span><span class="o">.</span><span class="n">ParserSchema</span><span class="p">({</span><span class="s2">"eventID"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">"variables"</span><span class="p">:</span> <span class="p">[</span><span class="n">path</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">bytes_read</span><span class="p">),</span> <span class="s2">"0"</span><span class="p">]})</span>
 
 
 <span class="c1"># the first 3 logs train the detector (data_use_training: 3)</span>
@@ -2159,7 +2159,7 @@
 
 <span class="nb">print</span><span class="p">(</span><span class="n">detector</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">download</span><span class="p">(</span><span class="s2">"/srv/d.pdf"</span><span class="p">,</span> <span class="mi">200</span><span class="p">)))</span>  <span class="c1"># None: inside the learned range</span>
 <span class="n">alert</span> <span class="o">=</span> <span class="n">detector</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">download</span><span class="p">(</span><span class="s2">"/srv/db.dump"</span><span class="p">,</span> <span class="mi">99999</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">alert</span><span class="p">[</span><span class="s2">"alertsObtain"</span><span class="p">]))</span>  <span class="c1"># {'EventID 2 - bytes_read': "Out of range value: '99999' (100 - 250)"}</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">alert</span><span class="p">[</span><span class="s2">"alertDetails"</span><span class="p">]))</span>  <span class="c1"># {'EventID 2 - bytes_read': "Out of range value: '99999' (100 - 250)"}</span>
 </code></pre></div>
 <h2 id="configuration-file">Configuration file</h2>
 <p>The configuration used by the example above. It sets only what this use case needs; every other parameter keeps its default (see <a href="#configuration-arguments">Configuration arguments</a>).</p>

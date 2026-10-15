@@ -2140,7 +2140,7 @@ our own <code>log_format</code> and write our own template file instead of a rea
 one.</p>
 <p><strong>Splitting off the prefix.</strong> The <code>log_format</code> string tells the parser how to
 carve off the <code>type=</code>/<code>msg=audit(...)</code> prefix into
-<code>logFormatVariables</code> and hand the parser only the <code>&lt;Content&gt;</code> part to match
+<code>headerVariables</code> and hand the parser only the <code>&lt;Content&gt;</code> part to match
 against templates:</p>
 <div class="highlight"><pre><span></span><code>type=&lt;Type&gt; msg=audit(&lt;Time&gt;:&lt;Serial&gt;): &lt;Content&gt;
 </code></pre></div>
@@ -2158,7 +2158,7 @@ proctitle=&lt;*&gt;
 </code></pre></div>
 <p>A few things worth noticing while writing templates like these:</p>
 <ul>
-<li>The line number is the <code>EventID</code>: line 1 (0-indexed: <code>0</code>) matches
+<li>The line number is the <code>eventID</code>: line 1 (0-indexed: <code>0</code>) matches
   <code>DAEMON_START</code>, line 2 (<code>1</code>) matches <code>CONFIG_CHANGE</code>, and so on, exactly as
   described in <a href="../../parsers/template_matcher/#eventid-assignment-preliminary">EventID assignment</a>.</li>
 <li>The second template's <code>op=set &lt;*&gt; old=&lt;*&gt; ...</code> has only one wildcard where
@@ -2191,7 +2191,7 @@ proctitle=&lt;*&gt;
 
 <span class="n">parsed_logs</span> <span class="o">=</span> <span class="p">[</span><span class="n">parser</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">raw</span><span class="p">)</span> <span class="k">for</span> <span class="n">raw</span> <span class="ow">in</span> <span class="n">raw_logs</span><span class="p">]</span>
 <span class="k">for</span> <span class="n">plog</span> <span class="ow">in</span> <span class="n">parsed_logs</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">plog</span><span class="p">[</span><span class="s2">"EventID"</span><span class="p">],</span> <span class="n">plog</span><span class="p">[</span><span class="s2">"template"</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">plog</span><span class="p">[</span><span class="s2">"eventID"</span><span class="p">],</span> <span class="n">plog</span><span class="p">[</span><span class="s2">"template"</span><span class="p">])</span>
 </code></pre></div>
 <blockquote>
 <p><strong>Common pitfall: don't escape <code>log_format</code> yourself.</strong> The Quickstart's
@@ -2205,7 +2205,7 @@ real log data. The regex then silently fails to match anything, and every
 log falls back to <code>&lt;Not Found&gt;</code>. Write <code>log_format</code> as plain text; only the
 <code>&lt;Placeholder&gt;</code> tokens are special.</p>
 </blockquote>
-<p>Running this prints, for each of the 9 logs, the <code>EventID</code> and the matched
+<p>Running this prints, for each of the 9 logs, the <code>eventID</code> and the matched
 template. All four templates get used, and every line matches (nothing
 comes back as <code>&lt;Not Found&gt;</code>).</p>
 <h2 id="3-run-several-detectors-and-compare-their-alerts">3. Run several detectors and compare their alerts</h2>
@@ -2216,7 +2216,7 @@ stream:</p>
 <li><a href="../../detectors/new_value/"><strong>NewValueDetector</strong></a> watches the <em>content</em> of
   specific fields and alerts when a value it hasn't been trained on shows up.</li>
 <li><a href="../../detectors/event_sequence/"><strong>EventSequenceDetector</strong></a> ignores field
-  content entirely and instead watches the <em>order</em> of <code>EventID</code>s, alerting
+  content entirely and instead watches the <em>order</em> of <code>eventID</code>s, alerting
   when a sequence of consecutive events wasn't part of what it was trained
   on.</li>
 </ul>
@@ -2270,7 +2270,7 @@ stream:</p>
     <span class="n">nv_alert</span> <span class="o">=</span> <span class="n">new_value_detector</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">plog</span><span class="p">)</span>
     <span class="n">es_alert</span> <span class="o">=</span> <span class="n">event_sequence_detector</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">plog</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span>
-        <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s2">&gt;2</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">plog</span><span class="p">[</span><span class="s1">'EventID'</span><span class="p">]</span><span class="si">:</span><span class="s2">&gt;7</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="n">nv_alert</span><span class="p">))</span><span class="si">:</span><span class="s2">&gt;8</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="n">es_alert</span><span class="p">))</span><span class="si">:</span><span class="s2">&gt;13</span><span class="si">}</span><span class="s2">"</span>
+        <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s2">&gt;2</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">plog</span><span class="p">[</span><span class="s1">'eventID'</span><span class="p">]</span><span class="si">:</span><span class="s2">&gt;7</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="n">nv_alert</span><span class="p">))</span><span class="si">:</span><span class="s2">&gt;8</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="n">es_alert</span><span class="p">))</span><span class="si">:</span><span class="s2">&gt;13</span><span class="si">}</span><span class="s2">"</span>
     <span class="p">)</span>
     <span class="k">if</span> <span class="n">nv_alert</span><span class="p">:</span>
         <span class="n">alerts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nv_alert</span><span class="p">)</span>
@@ -2282,8 +2282,8 @@ stream:</p>
 runs on the remaining 6; see <a href="../../detectors/#configuration">Configuration</a>
 for how <code>data_use_training</code> and <code>events</code> interact. <code>NewValueDetector</code> is
 pointed at the two fields we identified while writing the templates in step
-2: the <code>key=value</code> pair inside <code>CONFIG_CHANGE</code> (<code>EventID: 1</code>, <code>pos: 0</code>) and
-the process name inside <code>SYSCALL</code> (<code>EventID: 2</code>, <code>pos: 22</code>, the <code>comm=</code> slot
+2: the <code>key=value</code> pair inside <code>CONFIG_CHANGE</code> (<code>eventID: 1</code>, <code>pos: 0</code>) and
+the process name inside <code>SYSCALL</code> (<code>eventID: 2</code>, <code>pos: 22</code>, the <code>comm=</code> slot
 counting <code>&lt;*&gt;</code> positions left to right in the third template line).</p>
 <p>Running the loop prints one row per log line:</p>
 <div class="highlight"><pre><span></span><code> #  EventID  NewValue  EventSequence
@@ -2382,14 +2382,14 @@ simplest aggregation strategy available:</p>
   <code>log_format</code> string breaks matching:
   <code>generate_logformat_regex()</code> already escapes literal text for you.</li>
 <li>Detectors configured with an <code>events</code> block (such as <code>NewValueDetector</code>) only
-  check <code>EventID</code>s they have seen in training. If you configure an <code>EventID</code> that
+  check <code>eventID</code>s they have seen in training. If you configure an <code>eventID</code> that
   never appears in the training window (<code>data_use_training</code>), the detector stays
   silent for that event type: it does not alert on everything, and it does not
   raise an error. It does log a warning when training ends, for example
   <code>[NewValueDetector] EventID 5 is configured but was never observed in training data</code>,
   so check the log after training. This does not apply to every detector: the
   <a href="../../detectors/new_event/">New Event Detector</a> exists to alert on exactly
-  those never-seen <code>EventID</code>s.</li>
+  those never-seen <code>eventID</code>s.</li>
 <li>Calling <code>.process()</code> on a detector or aggregator returns <code>None</code> when
   nothing fires, and the actual output schema (truthy) when it does, so check
   with <code>if result:</code> rather than assuming a boolean.</li>

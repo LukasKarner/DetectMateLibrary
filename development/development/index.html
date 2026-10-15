@@ -2164,10 +2164,10 @@ and can be installed as part of the <code>dev</code> extras. To ensure pre-commi
 <p>The <code>configure()</code> method ingests all available variables (not just configured ones) so the tracker can assess each one:</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">auto_conf_persistency</span><span class="o">.</span><span class="n">ingest_event</span><span class="p">(</span>
-        <span class="n">event_id</span><span class="o">=</span><span class="n">input_</span><span class="p">[</span><span class="s2">"EventID"</span><span class="p">],</span>
+        <span class="n">event_id</span><span class="o">=</span><span class="n">input_</span><span class="p">[</span><span class="s2">"eventID"</span><span class="p">],</span>
         <span class="n">event_template</span><span class="o">=</span><span class="n">input_</span><span class="p">[</span><span class="s2">"template"</span><span class="p">],</span>
         <span class="n">variables</span><span class="o">=</span><span class="n">input_</span><span class="p">[</span><span class="s2">"variables"</span><span class="p">],</span>
-        <span class="n">named_variables</span><span class="o">=</span><span class="n">input_</span><span class="p">[</span><span class="s2">"logFormatVariables"</span><span class="p">],</span>
+        <span class="n">named_variables</span><span class="o">=</span><span class="n">input_</span><span class="p">[</span><span class="s2">"headerVariables"</span><span class="p">],</span>
     <span class="p">)</span>
 </code></pre></div>
 <p>The <code>set_configuration()</code> method queries the tracker results and writes the

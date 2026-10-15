@@ -2113,7 +2113,7 @@ template:   hello I am a log about &lt;*&gt; and about &lt;*&gt;
 </thead>
 <tbody>
 <tr>
-<td><code>EventID</code></td>
+<td><code>eventID</code></td>
 <td><code>0</code></td>
 </tr>
 <tr>
@@ -2125,7 +2125,7 @@ template:   hello I am a log about &lt;*&gt; and about &lt;*&gt;
 <td><code>["DetectMate getting started", "what is a log"]</code></td>
 </tr>
 <tr>
-<td><code>logFormatVariables</code></td>
+<td><code>headerVariables</code></td>
 <td><code>{"Level": "INFO", "Time": "18-05-2005", "Content": "hello I am a log about DetectMate getting started and about what is a log"}</code></td>
 </tr>
 </tbody>
@@ -2134,25 +2134,25 @@ template:   hello I am a log about &lt;*&gt; and about &lt;*&gt;
 anomaly detection.</p>
 <h3 id="what-is-an-eventid">What is an EventID?</h3>
 <p>Every distinct template is a different <em>kind</em> of event, and the parser gives
-each one a number: the <strong><code>EventID</code></strong>. All lines that match the same template get
-the same <code>EventID</code>, so <code>User alice logged in from 192.168.0.5</code> and
-<code>User bob logged in from 10.0.0.2</code> share one <code>EventID</code>, while a
+each one a number: the <strong><code>eventID</code></strong>. All lines that match the same template get
+the same <code>eventID</code>, so <code>User alice logged in from 192.168.0.5</code> and
+<code>User bob logged in from 10.0.0.2</code> share one <code>eventID</code>, while a
 <code>User bob logged out</code> line would get another.</p>
 <p>How the number is chosen depends on the parser. With the
 <a href="../../parsers/template_matcher/">Template Matcher</a>, it is the position of the
 matching template in your template file, counting from <code>0</code>: the first template is
-<code>EventID 0</code>, the second <code>EventID 1</code>, and so on. In the table above the template
-file contains just one template, so the line gets <code>EventID 0</code>. A line that
-matches no template gets <code>EventID -1</code> and the template <code>&lt;Not Found&gt;</code>.</p>
-<p>The <code>EventID</code> is what detectors build on:</p>
+<code>eventID 0</code>, the second <code>eventID 1</code>, and so on. In the table above the template
+file contains just one template, so the line gets <code>eventID 0</code>. A line that
+matches no template gets <code>eventID -1</code> and the template <code>&lt;Not Found&gt;</code>.</p>
+<p>The <code>eventID</code> is what detectors build on:</p>
 <ul>
-<li>Detectors that watch variable values are configured per <code>EventID</code>: their
+<li>Detectors that watch variable values are configured per <code>eventID</code>: their
   <code>events</code> block says which variables to monitor for which kind of event (see
   <a href="../../detectors/#configuration">Detectors</a>).</li>
-<li>Some detectors look at nothing but the <code>EventID</code>, for example the
-  <a href="../../detectors/new_event/">New Event Detector</a> (an <code>EventID</code> never seen
+<li>Some detectors look at nothing but the <code>eventID</code>, for example the
+  <a href="../../detectors/new_event/">New Event Detector</a> (an <code>eventID</code> never seen
   before) and the <a href="../../detectors/event_sequence/">Event Sequence Detector</a> (an
-  unusual order of <code>EventID</code>s).</li>
+  unusual order of <code>eventID</code>s).</li>
 </ul>
 
 

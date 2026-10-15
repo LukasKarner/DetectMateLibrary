@@ -2118,7 +2118,7 @@ login success: user=&lt;*&gt; source=&lt;*&gt;
     <span class="s2">"logID"</span><span class="p">:</span> <span class="s2">"0"</span><span class="p">,</span>
     <span class="s2">"log"</span><span class="p">:</span> <span class="s2">"pid=9699 uid=0 auid=4294967295 ses=4294967295 msg='op=PAM:accounting acct=</span><span class="se">\"</span><span class="s2">root</span><span class="se">\"</span><span class="s2">'"</span><span class="p">,</span>
 <span class="p">}))</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">parsed</span><span class="o">.</span><span class="n">EventID</span><span class="p">)</span>    <span class="c1"># 0: the first template in the file</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">parsed</span><span class="o">.</span><span class="n">eventID</span><span class="p">)</span>    <span class="c1"># 0: the first template in the file</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">parsed</span><span class="o">.</span><span class="n">template</span><span class="p">)</span>   <span class="c1"># pid &lt;*&gt; uid &lt;*&gt; auid &lt;*&gt; ses &lt;*&gt; msg op PAM &lt;*&gt; acct &lt;*&gt;</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">parsed</span><span class="o">.</span><span class="n">variables</span><span class="p">)</span>  <span class="c1"># ['9699', '0', '4294967295', '4294967295', 'accounting', 'root']</span>
 </code></pre></div>

@@ -2150,7 +2150,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">failed_login</span><span class="p">(</span><span class="n">user</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">schemas</span><span class="o">.</span><span class="n">ParserSchema</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""What a parser emits for 'Failed password for &lt;user&gt; from 10.0.0.1 port</span>
 <span class="sd">    22'."""</span>
-    <span class="k">return</span> <span class="n">schemas</span><span class="o">.</span><span class="n">ParserSchema</span><span class="p">({</span><span class="s2">"EventID"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"variables"</span><span class="p">:</span> <span class="p">[</span><span class="n">user</span><span class="p">,</span> <span class="s2">"10.0.0.1"</span><span class="p">,</span> <span class="s2">"22"</span><span class="p">]})</span>
+    <span class="k">return</span> <span class="n">schemas</span><span class="o">.</span><span class="n">ParserSchema</span><span class="p">({</span><span class="s2">"eventID"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"variables"</span><span class="p">:</span> <span class="p">[</span><span class="n">user</span><span class="p">,</span> <span class="s2">"10.0.0.1"</span><span class="p">,</span> <span class="s2">"22"</span><span class="p">]})</span>
 
 
 <span class="c1"># the first 4 logs train the detector (data_use_training: 4)</span>
@@ -2159,7 +2159,7 @@
 
 <span class="nb">print</span><span class="p">(</span><span class="n">detector</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">failed_login</span><span class="p">(</span><span class="s2">"alia"</span><span class="p">)))</span>  <span class="c1"># None: familiar character pairs</span>
 <span class="n">alert</span> <span class="o">=</span> <span class="n">detector</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">failed_login</span><span class="p">(</span><span class="s2">"xq7zv9k"</span><span class="p">))</span>  <span class="c1"># random-looking user name</span>
-<span class="nb">print</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">alert</span><span class="p">[</span><span class="s2">"alertsObtain"</span><span class="p">]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">alert</span><span class="p">[</span><span class="s2">"alertDetails"</span><span class="p">]))</span>
 <span class="c1"># {'EventID 1 - user': 'Bigram frequency anomaly with value xq7zv9k, critical_val 0.0 and threshold 0.05.'}</span>
 </code></pre></div>
 <h2 id="configuration-file">Configuration file</h2>

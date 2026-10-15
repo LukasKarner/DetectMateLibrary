@@ -2305,7 +2305,7 @@
 
 <h1 id="persistency">Persistency</h1>
 <p>The persistency module gives a detector a place to remember things about the
-events it sees. State is keyed by <code>EventID</code> and survives across training, the
+events it sees. State is keyed by <code>eventID</code> and survives across training, the
 detection loop, and (optionally) restarts on disk.</p>
 <p>This page is structured to read top-to-bottom: first the mental model, then a
 quick start, then the API surface.</p>
@@ -2313,10 +2313,10 @@ quick start, then the API surface.</p>
 <p>Persistency has three moving parts. Understanding what each one does makes the
 rest of the page much easier to follow.</p>
 <h3 id="1-events">1. Events</h3>
-<p>Logs are grouped by <code>EventID</code>. Two events with the same ID share a template
+<p>Logs are grouped by <code>eventID</code>. Two events with the same ID share a template
 but have their own variable values. Persistency stores <strong>one independent state
-object per event ID</strong>, so an <code>EventStabilityTracker</code> for <code>EventID=4733</code> does
-not interfere with one for <code>EventID=4624</code>.</p>
+object per event ID</strong>, so an <code>EventStabilityTracker</code> for <code>eventID=4733</code> does
+not interfere with one for <code>eventID=4624</code>.</p>
 <h3 id="2-backends-eventdatastructure">2. Backends (<code>EventDataStructure</code>)</h3>
 <p>A backend is the thing that actually stores the per-event state. Persistency
 owns the dict <code>{event_id: backend}</code>; the backend itself decides <em>how</em> data is
@@ -2515,10 +2515,10 @@ for the config schema.</p>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_ingest</span><span class="p">(</span><span class="n">input_</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="p">{</span><span class="o">...</span><span class="p">},</span> <span class="n">event_id</span><span class="o">=</span><span class="n">input_</span><span class="p">[</span><span class="s2">"EventID"</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ingest</span><span class="p">(</span><span class="n">input_</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="p">{</span><span class="o">...</span><span class="p">},</span> <span class="n">event_id</span><span class="o">=</span><span class="n">input_</span><span class="p">[</span><span class="s2">"eventID"</span><span class="p">])</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">detect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_</span><span class="p">,</span> <span class="n">output_</span><span class="p">):</span>
-        <span class="n">tracker</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">persistency</span><span class="o">.</span><span class="n">get_events_data</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">input_</span><span class="p">[</span><span class="s2">"EventID"</span><span class="p">])</span>
+        <span class="n">tracker</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">persistency</span><span class="o">.</span><span class="n">get_events_data</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">input_</span><span class="p">[</span><span class="s2">"eventID"</span><span class="p">])</span>
         <span class="c1"># compare against tracker to produce alerts</span>
 </code></pre></div>
 <p><code>TrackerDetector</code> builds <code>self.persistency</code>, the store training and detection

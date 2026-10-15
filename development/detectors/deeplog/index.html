@@ -2149,7 +2149,7 @@
 
 <span class="k">def</span><span class="w"> </span><span class="nf">event</span><span class="p">(</span><span class="n">event_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">schemas</span><span class="o">.</span><span class="n">ParserSchema</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""A parsed log; only its EventID (the matched template) matters here."""</span>
-    <span class="k">return</span> <span class="n">schemas</span><span class="o">.</span><span class="n">ParserSchema</span><span class="p">({</span><span class="s2">"EventID"</span><span class="p">:</span> <span class="n">event_id</span><span class="p">})</span>
+    <span class="k">return</span> <span class="n">schemas</span><span class="o">.</span><span class="n">ParserSchema</span><span class="p">({</span><span class="s2">"eventID"</span><span class="p">:</span> <span class="n">event_id</span><span class="p">})</span>
 
 
 <span class="c1"># a repeating workflow of 4 events; the model trains once 60 windows are collected</span>

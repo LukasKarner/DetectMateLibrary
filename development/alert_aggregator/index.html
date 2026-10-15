@@ -2110,14 +2110,14 @@
 alerts in the window:</p>
 <ul>
 <li><code>detectorIDs</code>, <code>detectorTypes</code>, <code>alertIDs</code>: one entry per alert</li>
-<li><code>logIDs</code>, <code>extractedTimestamps</code>: the entries of all alerts, combined into one list</li>
+<li><code>logIDs</code>, <code>logTimestamps</code>: the entries of all alerts, combined into one list</li>
 </ul>
-<p>After <code>aggregate_alerts()</code> returns <code>True</code>, <code>run()</code> also sets <code>outputTimestamp</code>. So the only
-fields left for <code>aggregate_alerts()</code> to fill are <code>description</code> and <code>alertsObtain</code>.</p>
+<p>After <code>aggregate_alerts()</code> returns <code>True</code>, <code>run()</code> also sets <code>aggregatedTimestamp</code>. So the only
+fields left for <code>aggregate_alerts()</code> to fill are <code>description</code> and <code>alertDetails</code>.</p>
 <div class="admonition warning">
 <p class="admonition-title">The alerts' details are not carried over</p>
 <p><code>run()</code> copies only the fields listed above. Everything else in the incoming alerts is dropped
-unless your <code>aggregate_alerts()</code> keeps it, including their <code>detectionTimestamp</code> and
+unless your <code>aggregate_alerts()</code> keeps it, including their <code>detectedTimestamp</code> and
 <code>receivedTimestamp</code>.</p>
 </div>
 <h2 id="available-alert-aggregators">Available alert aggregators</h2>

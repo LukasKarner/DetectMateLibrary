@@ -2170,7 +2170,7 @@
 </tbody>
 </table>
 <h2 id="description">Description</h2>
-<p>The detector analyzes parsed logs one by one and checks which rules are triggered. When alerts are produced, the triggered rules and their messages are recorded in the <code>alertsObtain</code> field of the output schema. The <code>score</code> field contains the number of rules that triggered.</p>
+<p>The detector analyzes parsed logs one by one and checks which rules are triggered. When alerts are produced, the triggered rules and their messages are recorded in the <code>alertDetails</code> field of the output schema. The <code>score</code> field contains the number of rules that triggered.</p>
 <h3 id="available-rules">Available rules</h3>
 <table>
 <thead>
@@ -2227,7 +2227,7 @@
 
 <span class="k">def</span><span class="w"> </span><span class="nf">parsed</span><span class="p">(</span><span class="n">event_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">log</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"INFO"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">schemas</span><span class="o">.</span><span class="n">ParserSchema</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""A parsed log; EventID -1 means the parser found no matching template."""</span>
-    <span class="k">return</span> <span class="n">schemas</span><span class="o">.</span><span class="n">ParserSchema</span><span class="p">({</span><span class="s2">"EventID"</span><span class="p">:</span> <span class="n">event_id</span><span class="p">,</span> <span class="s2">"log"</span><span class="p">:</span> <span class="n">log</span><span class="p">,</span> <span class="s2">"logFormatVariables"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"Level"</span><span class="p">:</span> <span class="n">level</span><span class="p">}})</span>
+    <span class="k">return</span> <span class="n">schemas</span><span class="o">.</span><span class="n">ParserSchema</span><span class="p">({</span><span class="s2">"eventID"</span><span class="p">:</span> <span class="n">event_id</span><span class="p">,</span> <span class="s2">"log"</span><span class="p">:</span> <span class="n">log</span><span class="p">,</span> <span class="s2">"headerVariables"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"Level"</span><span class="p">:</span> <span class="n">level</span><span class="p">}})</span>
 
 
 <span class="n">logs</span> <span class="o">=</span> <span class="p">[</span>
@@ -2238,7 +2238,7 @@
 <span class="p">]</span>
 <span class="k">for</span> <span class="n">log</span> <span class="ow">in</span> <span class="n">logs</span><span class="p">:</span>
     <span class="n">alert</span> <span class="o">=</span> <span class="n">detector</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">log</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">alert</span><span class="p">[</span><span class="s2">"alertsObtain"</span><span class="p">])</span> <span class="k">if</span> <span class="n">alert</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">alert</span><span class="p">[</span><span class="s2">"alertDetails"</span><span class="p">])</span> <span class="k">if</span> <span class="n">alert</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
 <span class="c1"># None</span>
 <span class="c1"># {'R001 - TemplateNotFound': 'No template found by parser'}</span>
 <span class="c1"># {'R002 - SpecificKeyword': "Found word 'sudo' in the logs"}</span>

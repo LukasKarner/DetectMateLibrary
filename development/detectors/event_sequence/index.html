@@ -2199,7 +2199,7 @@
 
 <span class="k">def</span><span class="w"> </span><span class="nf">event</span><span class="p">(</span><span class="n">event_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">schemas</span><span class="o">.</span><span class="n">ParserSchema</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""A parsed log; only its EventID (the matched template) matters here."""</span>
-    <span class="k">return</span> <span class="n">schemas</span><span class="o">.</span><span class="n">ParserSchema</span><span class="p">({</span><span class="s2">"EventID"</span><span class="p">:</span> <span class="n">event_id</span><span class="p">})</span>
+    <span class="k">return</span> <span class="n">schemas</span><span class="o">.</span><span class="n">ParserSchema</span><span class="p">({</span><span class="s2">"eventID"</span><span class="p">:</span> <span class="n">event_id</span><span class="p">})</span>
 
 
 <span class="c1"># normal session: 0 = login accepted, 1 = session opened, 2 = session closed.</span>
@@ -2212,7 +2212,7 @@
 
 <span class="n">detector</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">event</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
 <span class="n">alert</span> <span class="o">=</span> <span class="n">detector</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">event</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>  <span class="c1"># session closed without being opened</span>
-<span class="nb">print</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">alert</span><span class="p">[</span><span class="s2">"alertsObtain"</span><span class="p">]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">alert</span><span class="p">[</span><span class="s2">"alertDetails"</span><span class="p">]))</span>
 <span class="c1"># {'Sequence (0, 2)': 'EventID sequence of length 2 ending at logID  was not seen during training.'}</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">detector</span><span class="o">.</span><span class="n">get_known_sequences</span><span class="p">())</span>  <span class="c1"># {(0, 1), (1, 2), (2, 0)}</span>

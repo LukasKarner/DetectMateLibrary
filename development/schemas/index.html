@@ -2341,7 +2341,7 @@
 <td>Parser instance identifier.</td>
 </tr>
 <tr>
-<td>EventID</td>
+<td>eventID</td>
 <td>int32</td>
 <td>Template/event identifier.</td>
 </tr>
@@ -2371,7 +2371,7 @@
 <td>Raw log text.</td>
 </tr>
 <tr>
-<td>logFormatVariables</td>
+<td>headerVariables</td>
 <td>map<string,string></td>
 <td>Key/value pairs from format extraction.</td>
 </tr>
@@ -2415,7 +2415,7 @@
 <td>Unique alert identifier.</td>
 </tr>
 <tr>
-<td>detectionTimestamp</td>
+<td>detectedTimestamp</td>
 <td>int64</td>
 <td>When the alert was produced.</td>
 </tr>
@@ -2430,7 +2430,7 @@
 <td>Confidence/score (if applicable).</td>
 </tr>
 <tr>
-<td>extractedTimestamps</td>
+<td>logTimestamps</td>
 <td>repeated int64</td>
 <td>Timestamps extracted from logs.</td>
 </tr>
@@ -2445,7 +2445,7 @@
 <td>When inputs were received by detector.</td>
 </tr>
 <tr>
-<td>alertsObtain</td>
+<td>alertDetails</td>
 <td>map<string,string></td>
 <td>Additional alert metadata.</td>
 </tr>
@@ -2479,7 +2479,7 @@
 <td>List of unique alert identifiers.</td>
 </tr>
 <tr>
-<td>outputTimestamp</td>
+<td>aggregatedTimestamp</td>
 <td>int64</td>
 <td>When the aggregation was produced.</td>
 </tr>
@@ -2489,7 +2489,7 @@
 <td>IDs of logs related to the alerts.</td>
 </tr>
 <tr>
-<td>extractedTimestamps</td>
+<td>logTimestamps</td>
 <td>repeated int64</td>
 <td>Timestamps extracted from logs.</td>
 </tr>
@@ -2499,7 +2499,7 @@
 <td>Human-readable description of the alert aggregation.</td>
 </tr>
 <tr>
-<td>alertsObtain</td>
+<td>alertDetails</td>
 <td>map<string,string></td>
 <td>Additional alert metadata from the alert aggregation.</td>
 </tr>

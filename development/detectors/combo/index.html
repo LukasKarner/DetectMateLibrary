@@ -2152,7 +2152,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">login</span><span class="p">(</span><span class="n">user</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">schemas</span><span class="o">.</span><span class="n">ParserSchema</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""What a parser emits for 'Accepted password for &lt;user&gt; from &lt;ip&gt; port</span>
 <span class="sd">    22'."""</span>
-    <span class="k">return</span> <span class="n">schemas</span><span class="o">.</span><span class="n">ParserSchema</span><span class="p">({</span><span class="s2">"EventID"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"variables"</span><span class="p">:</span> <span class="p">[</span><span class="n">user</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="s2">"22"</span><span class="p">]})</span>
+    <span class="k">return</span> <span class="n">schemas</span><span class="o">.</span><span class="n">ParserSchema</span><span class="p">({</span><span class="s2">"eventID"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"variables"</span><span class="p">:</span> <span class="p">[</span><span class="n">user</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="s2">"22"</span><span class="p">]})</span>
 
 
 <span class="c1"># the first 3 logs train the detector (data_use_training: 3)</span>
@@ -2162,7 +2162,7 @@
 <span class="nb">print</span><span class="p">(</span><span class="n">detector</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">login</span><span class="p">(</span><span class="s2">"bob"</span><span class="p">,</span> <span class="s2">"10.0.0.2"</span><span class="p">)))</span>  <span class="c1"># None: known user/IP pair</span>
 <span class="c1"># alice and 10.0.0.2 are both known, but never appeared together</span>
 <span class="n">alert</span> <span class="o">=</span> <span class="n">detector</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">login</span><span class="p">(</span><span class="s2">"alice"</span><span class="p">,</span> <span class="s2">"10.0.0.2"</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">alert</span><span class="p">[</span><span class="s2">"alertsObtain"</span><span class="p">]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">alert</span><span class="p">[</span><span class="s2">"alertDetails"</span><span class="p">]))</span>
 <span class="c1"># {"EventID 0 - ('user', 'src_ip')": "Unknown value combination: ('alice', '10.0.0.2')"}</span>
 </code></pre></div>
 <h2 id="configuration-file">Configuration file</h2>

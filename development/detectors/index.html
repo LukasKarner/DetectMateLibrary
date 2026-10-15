@@ -2959,7 +2959,7 @@ example configurations set <code>auto_config: false</code> anyway, to make this 
 <!-- End deeplearning_arguments -->
 
 <h3 id="configuration-semantics-preliminary">Configuration semantics (preliminary)</h3>
-<p><strong><code>events</code> key</strong>: the key is the <code>EventID</code> (or <code>event_id</code>) to monitor: an integer as the parser emits it (see the <a href="../parsers/template_matcher/">Template Matcher</a> docs for how the EventID is assigned), or a name (see <a href="#named-eventids-and-variables">Named EventIDs and variables</a> below).</p>
+<p><strong><code>events</code> key</strong>: the key is the <code>eventID</code> (or <code>event_id</code>) to monitor: an integer as the parser emits it (see the <a href="../parsers/template_matcher/">Template Matcher</a> docs for how the EventID is assigned), or a name (see <a href="#named-eventids-and-variables">Named EventIDs and variables</a> below).</p>
 <p><strong><code>global</code> key</strong> - This one has a similar functionality as the <code>events</code> key but refers to variables, that are not bound to events (thus can only contain <code>header_variables</code>).</p>
 <p><strong><code>variables[].pos</code></strong>: the 0-indexed position of the <code>&lt;*&gt;</code> wildcard in the matched template, counting from left to right starting at 0. For example, given:</p>
 <div class="highlight"><pre><span></span><code>pid=&lt;*&gt; uid=&lt;*&gt; auid=&lt;*&gt; ses=&lt;*&gt; msg='op=&lt;*&gt; acct=&lt;*&gt; exe=&lt;*&gt; hostname=&lt;*&gt; addr=&lt;*&gt; terminal=&lt;*&gt; res=&lt;*&gt;'
@@ -2968,7 +2968,7 @@ example configurations set <code>auto_config: false</code> anyway, to make this 
 <code>exe=</code> (for example <code>"/usr/sbin/cron"</code>), and so on.</p>
 <p><strong><code>header_variables[].pos</code></strong>: a named field from the log format string (e.g., <code>Type</code>, <code>Time</code>, <code>Content</code>) rather than a wildcard position.</p>
 <h3 id="named-eventids-and-variables">Named EventIDs and variables</h3>
-<p>Instead of numbers, the <code>events</code> block can use names: a name for the <code>EventID</code>, and
+<p>Instead of numbers, the <code>events</code> block can use names: a name for the <code>eventID</code>, and
 the name of a wildcard for <code>variables[].pos</code>. The names come from the
 <a href="../parsers/template_matcher/">Template Matcher</a>'s template file:</p>
 <ul>
@@ -2983,10 +2983,10 @@ login_failure,Failed password for &lt;user&gt; from &lt;ip&gt; port &lt;port&gt;
 </code></pre></div>
 </li>
 </ul>
-<p>The parser still emits numbers (<code>EventID</code> 1 and position 0 for <code>&lt;user&gt;</code> in the second
+<p>The parser still emits numbers (<code>eventID</code> 1 and position 0 for <code>&lt;user&gt;</code> in the second
 template), so the names must be translated before the detector runs. Do this once,
 after creating both components, with <code>compile_detector_config()</code>. <strong>Without this step
-the detector monitors nothing</strong>; it only logs a warning that the named <code>EventID</code> was
+the detector monitors nothing</strong>; it only logs a warning that the named <code>eventID</code> was
 never observed in training.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">detectmatelibrary</span><span class="w"> </span><span class="kn">import</span> <span class="n">schemas</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">detectmatelibrary.parsers.template_matcher</span><span class="w"> </span><span class="kn">import</span> <span class="n">MatcherParser</span>
@@ -3024,7 +3024,7 @@ never observed in training.</p>
 <span class="p">]</span>
 <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
     <span class="n">alert</span> <span class="o">=</span> <span class="n">detector</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">parser</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">schemas</span><span class="o">.</span><span class="n">LogSchema</span><span class="p">({</span><span class="s2">"log"</span><span class="p">:</span> <span class="n">line</span><span class="p">})))</span>
-    <span class="nb">print</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">alert</span><span class="p">[</span><span class="s2">"alertsObtain"</span><span class="p">])</span> <span class="k">if</span> <span class="n">alert</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">alert</span><span class="p">[</span><span class="s2">"alertDetails"</span><span class="p">])</span> <span class="k">if</span> <span class="n">alert</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
 <span class="c1"># None</span>
 <span class="c1"># None</span>
 <span class="c1"># {'EventID 1 - user': "Unknown value: 'mallory'"}</span>
@@ -3117,7 +3117,7 @@ traffic looks stable, because the flood supplies enough samples to dominate the
 later segments. Enabling <code>time</code> cuts the same segments at <strong>equal
 durations</strong> instead, so each segment covers the same amount of wall-clock time;
 the detector then needs an event time per record, which it reads from the log's
-named variables (<code>logFormatVariables</code>, i.e. the fields declared in the parser's
+named variables (<code>headerVariables</code>, i.e. the fields declared in the parser's
 <code>log_format</code>) under the name given by <code>timestamp_variable</code>. <code>slope_index</code> and
 <code>slope_time</code> ask a different question (whether the change centroid sits early
 or late in the series), on the index axis and the time axis respectively.</p>
@@ -3231,7 +3231,7 @@ would silently classify every remaining variable <code>STABLE</code>.</p>
 <td><code>timestamp_variable</code></td>
 <td><code>str \| null</code></td>
 <td><code>null</code></td>
-<td>Name of the field in <code>logFormatVariables</code> holding the record's event time. Required for <code>time</code> and <code>slope_time</code> to have any effect. Only named log-format fields are consulted, never the positional <code>variables</code> list.</td>
+<td>Name of the field in <code>headerVariables</code> holding the record's event time. Required for <code>time</code> and <code>slope_time</code> to have any effect. Only named log-format fields are consulted, never the positional <code>variables</code> list.</td>
 </tr>
 <tr>
 <td><code>timestamp_format</code></td>

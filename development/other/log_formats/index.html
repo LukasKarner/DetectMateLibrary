@@ -2583,7 +2583,7 @@
 
 <h1 id="log-format-catalog">Log Format Catalog</h1>
 <p>This catalog covers 18 common log formats and provides ready-to-use <code>log_format</code> patterns for the DetectMate parsers, such as the <a href="../../parsers/template_matcher/">MatcherParser</a>.</p>
-<p><strong>Key concept:</strong> <code>log_format</code> splits a raw log line into structured header fields that become entries in <code>ParserSchema.logFormatVariables</code>. The special <code>&lt;Content&gt;</code> token captures the variable message body, which is then matched against your template file to produce <code>EventID</code> and <code>variables</code>. Formats without <code>&lt;Content&gt;</code> are fully structured, so no template file is needed.</p>
+<p><strong>Key concept:</strong> <code>log_format</code> splits a raw log line into structured header fields that become entries in <code>ParserSchema.headerVariables</code>. The special <code>&lt;Content&gt;</code> token captures the variable message body, which is then matched against your template file to produce <code>eventID</code> and <code>variables</code>. Formats without <code>&lt;Content&gt;</code> are fully structured, so no template file is needed.</p>
 <p><strong>Generic configuration:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nt">parsers</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">MyParser</span><span class="p">:</span>
@@ -2738,7 +2738,7 @@
 </code></pre></div>
 <p><strong><code>log_format</code>:</strong> <code>&lt;IP&gt; - - [&lt;Time&gt;] "&lt;RequestType&gt; &lt;Request&gt; &lt;Version&gt;" &lt;Status&gt; &lt;ResponseSize&gt; "&lt;Referer&gt;" "&lt;UserAgent&gt;"</code></p>
 <blockquote>
-<p>All fields land directly in <code>logFormatVariables</code>. Use <code>header_variables</code> in your detector config to track e.g. <code>Status</code>, <code>IP</code>, or <code>RequestType</code>.</p>
+<p>All fields land directly in <code>headerVariables</code>. Use <code>header_variables</code> in your detector config to track e.g. <code>Status</code>, <code>IP</code>, or <code>RequestType</code>.</p>
 </blockquote>
 <hr />
 <h3 id="apache">Apache</h3>

@@ -1942,6 +1942,7 @@
 <span class="w">    </span><span class="nt">BasicConcatAggregator</span><span class="p">:</span>
 <span class="w">        </span><span class="nt">method_type</span><span class="p">:</span><span class="w"> </span><span class="s">"basic_concat_aggregator"</span>
 <span class="w">        </span><span class="nt">buffer_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<span class="w">        </span><span class="nt">deduplicate_values</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span>
 <span class="w">        </span><span class="nt">auto_config</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span>
 </code></pre></div>
 <h2 id="example-usage">Example usage</h2>
@@ -1955,6 +1956,7 @@
         <span class="s2">"BasicConcatAggregator"</span><span class="p">:</span> <span class="p">{</span>
             <span class="s2">"method_type"</span><span class="p">:</span> <span class="s2">"basic_concat_aggregator"</span><span class="p">,</span>
             <span class="s2">"buffer_size"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="s2">"deduplicate_values"</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
             <span class="s2">"auto_config"</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
         <span class="p">}</span>
     <span class="p">}</span>
@@ -1965,13 +1967,13 @@
     <span class="s2">"detectorID"</span><span class="p">:</span> <span class="s2">"1"</span><span class="p">,</span>
     <span class="s2">"detectorType"</span><span class="p">:</span> <span class="s2">"dummy"</span><span class="p">,</span>
     <span class="s2">"alertID"</span><span class="p">:</span> <span class="s2">"2"</span><span class="p">,</span>
-    <span class="s2">"detectionTimestamp"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">"detectedTimestamp"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
     <span class="s2">"logIDs"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"logID1"</span><span class="p">],</span>
     <span class="s2">"score"</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span>
-    <span class="s2">"extractedTimestamps"</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+    <span class="s2">"logTimestamps"</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
     <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"hello there"</span><span class="p">,</span>
     <span class="s2">"receivedTimestamp"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="s2">"alertsObtain"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"99 problems"</span><span class="p">:</span> <span class="s2">"but logs aint one"</span><span class="p">}</span>
+    <span class="s2">"alertDetails"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"99 problems"</span><span class="p">:</span> <span class="s2">"but logs aint one"</span><span class="p">}</span>
 <span class="p">})</span>
 
 <span class="n">alert_aggregator</span> <span class="o">=</span> <span class="n">BasicConcatAggregation</span><span class="p">(</span>
