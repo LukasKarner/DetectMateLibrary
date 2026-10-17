@@ -1,5 +1,5 @@
 from detectmatelibrary.common.alert_aggregator import (
-    CoreAlertAggregatorConfig, CoreAlertAggregator, BufferMode
+    CoreAlertAggregatorConfig, CoreAlertAggregator, BufferMode, _extract_field, _extract_list_fields
 )
 
 from detectmatelibrary.utils.aux import time_test_mode
@@ -72,6 +72,36 @@ dummy_config = {
 }
 
 time_test_mode()
+
+
+class TestAuxiliar:
+    def test_get_field(self) -> None:
+        expected = {"dummy2", "dummy"}
+
+        dummy_schema2 = dummy_schema.copy()
+        dummy_schema2["detectorType"] = "dummy2"
+        input_ = [dummy_schema, dummy_schema2]
+        input_ = [schemas.DetectorSchema(in_) for in_ in input_]
+
+        assert len(field := _extract_field(input_, "detectorType")) == 2
+        assert expected == set(field)
+
+    def test_get_logID_timestamp(self) -> None:
+        expected_logID = ["logID1", "logID2", "logID3"]
+        expected_times = [-1, 0, 1]
+
+        dummy_schema2 = dummy_schema.copy()
+        dummy_schema2["logIDs"] = ["logID2", "logID3", "logID1"]
+        dummy_schema2["extractedTimestamps"] = [0, 1, 3]
+        input_ = [dummy_schema, dummy_schema2]
+        input_ = [schemas.DetectorSchema(in_) for in_ in input_]
+
+        logids, times = _extract_list_fields(
+            input_, field1="logIDs", field2="extractedTimestamps"
+        )
+
+        assert expected_logID == logids
+        assert times == expected_times
 
 
 class TestCoreAlertAggregator:

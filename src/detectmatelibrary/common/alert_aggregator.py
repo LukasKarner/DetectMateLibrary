@@ -20,15 +20,23 @@ def _extract_field(
     return list(set([str(i[field]) for i in input_]))
 
 
-def _extract_list_field(input_: list[DetectorSchema] | DetectorSchema, field: str) -> list[str]:
+def _extract_list_fields(
+    input_: list[DetectorSchema] | DetectorSchema, field1: str, field2: str
+) -> tuple[list[str], list[str]]:
+
     if not isinstance(input_, list):
         input_ = [input_]
 
-    final = []
-    for i in input_:
-        final.extend(i[field])
+    final1, final2 = [], []
+    already_checked = set()
+    for in_ in input_:
+        for i_1, i_2 in zip(in_[field1], in_[field2]):
+            if i_1 not in already_checked:
+                final1.append(i_1)
+                final2.append(i_2)
+                already_checked.add(i_1)
 
-    return list(set(final))
+    return final1, final2
 
 
 class CoreAlertAggregatorConfig(CoreConfig):
@@ -64,8 +72,9 @@ class CoreAlertAggregator(CoreComponent):
         output_["detectorIDs"] = _extract_field(input_, "detectorID")
         output_["detectorTypes"] = _extract_field(input_, "detectorType")
         output_["alertIDs"] = _extract_field(input_, "alertID")
-        output_["logIDs"] = _extract_list_field(input_, "logIDs")
-        output_["extractedTimestamps"] = _extract_list_field(input_, "extractedTimestamps")
+        output_["logIDs"], output_["extractedTimestamps"] = _extract_list_fields(
+            input_, "logIDs", "extractedTimestamps"
+        )
 
         if (alert := self.aggregate_alerts(input_=input_, output_=output_)):
             output_["outputTimestamp"] = get_timestamp()
