@@ -75,7 +75,14 @@ time_test_mode()
 
 
 class TestAuxiliar:
-    def test_get_field(self) -> None:
+    def test_get_field_single(self) -> None:
+        expected = {"dummy"}
+        input_ = schemas.DetectorSchema(dummy_schema)
+
+        assert len(field := _extract_field(input_, "detectorType")) == 1
+        assert expected == set(field)
+
+    def test_get_field_multiple(self) -> None:
         expected = {"dummy2", "dummy"}
 
         dummy_schema2 = dummy_schema.copy()
@@ -86,7 +93,23 @@ class TestAuxiliar:
         assert len(field := _extract_field(input_, "detectorType")) == 2
         assert expected == set(field)
 
-    def test_get_logID_timestamp(self) -> None:
+    def test_get_logID_timestamp_single(self) -> None:
+        expected_logID = ["logID1", "logID2", "logID3"]
+        expected_times = [-1, 0, 1]
+
+        dummy_schema2 = dummy_schema.copy()
+        dummy_schema2["logIDs"] = ["logID1", "logID2", "logID3", "logID1"]
+        dummy_schema2["extractedTimestamps"] = [-1, 0, 1, 3]
+        input_ = schemas.DetectorSchema(dummy_schema2)
+
+        logids, times = _extract_list_fields(
+            input_, field1="logIDs", field2="extractedTimestamps"
+        )
+
+        assert expected_logID == logids
+        assert times == expected_times
+
+    def test_get_logID_timestamp_multiple(self) -> None:
         expected_logID = ["logID1", "logID2", "logID3"]
         expected_times = [-1, 0, 1]
 
