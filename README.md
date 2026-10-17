@@ -17,7 +17,8 @@ pip install detectmatelibrary
 
 Main documentations:
 
-- [Project Documentation](https://ait-detectmate.github.io/DetectMateLibrary/latest/)
+- [Library Documentation](https://ait-detectmate.github.io/DetectMateLibrary/latest/) (this repo)
+- [Service Documentation](https://github.com/ait-detectmate/DetectMateService/tree/main)
 
 ## Contribution
 
