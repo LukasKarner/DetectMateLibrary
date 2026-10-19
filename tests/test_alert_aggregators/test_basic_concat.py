@@ -26,7 +26,7 @@ dummy_schema = {
     "detectorID": "1",
     "detectorType": "dummy",
     "alertID": "2",
-    "detectionTimestamp": 0,
+    "detectedTimestamp": 0,
     "logIDs": ["logID1"],
     "score": 0.2,
     "logTimestamps": [-1],

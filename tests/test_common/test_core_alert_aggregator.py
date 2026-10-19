@@ -99,11 +99,11 @@ class TestAuxiliar:
 
         dummy_schema2 = dummy_schema.copy()
         dummy_schema2["logIDs"] = ["logID1", "logID2", "logID3", "logID1"]
-        dummy_schema2["extractedTimestamps"] = [-1, 0, 1, 3]
+        dummy_schema2["logTimestamps"] = [-1, 0, 1, 3]
         input_ = schemas.DetectorSchema(dummy_schema2)
 
         logids, times = _extract_list_fields(
-            input_, field1="logIDs", field2="extractedTimestamps"
+            input_, field1="logIDs", field2="logTimestamps"
         )
 
         assert expected_logID == logids
@@ -115,12 +115,12 @@ class TestAuxiliar:
 
         dummy_schema2 = dummy_schema.copy()
         dummy_schema2["logIDs"] = ["logID2", "logID3", "logID1"]
-        dummy_schema2["extractedTimestamps"] = [0, 1, 3]
+        dummy_schema2["logTimestamps"] = [0, 1, 3]
         input_ = [dummy_schema, dummy_schema2]
         input_ = [schemas.DetectorSchema(in_) for in_ in input_]
 
         logids, times = _extract_list_fields(
-            input_, field1="logIDs", field2="extractedTimestamps"
+            input_, field1="logIDs", field2="logTimestamps"
         )
 
         assert expected_logID == logids
