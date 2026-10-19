@@ -77,7 +77,7 @@ time_test_mode()
 class TestAuxiliar:
     def test_get_field_single(self) -> None:
         expected = {"dummy"}
-        input_ = schemas.DetectorSchema(dummy_schema)
+        input_ = sc.DetectorSchema(dummy_schema)
 
         assert len(field := _extract_field(input_, "detectorType")) == 1
         assert expected == set(field)
@@ -88,7 +88,7 @@ class TestAuxiliar:
         dummy_schema2 = dummy_schema.copy()
         dummy_schema2["detectorType"] = "dummy2"
         input_ = [dummy_schema, dummy_schema2]
-        input_ = [schemas.DetectorSchema(in_) for in_ in input_]
+        input_ = [sc.DetectorSchema(in_) for in_ in input_]
 
         assert len(field := _extract_field(input_, "detectorType")) == 2
         assert expected == set(field)
@@ -100,7 +100,7 @@ class TestAuxiliar:
         dummy_schema2 = dummy_schema.copy()
         dummy_schema2["logIDs"] = ["logID1", "logID2", "logID3", "logID1"]
         dummy_schema2["logTimestamps"] = [-1, 0, 1, 3]
-        input_ = schemas.DetectorSchema(dummy_schema2)
+        input_ = sc.DetectorSchema(dummy_schema2)
 
         logids, times = _extract_list_fields(
             input_, field1="logIDs", field2="logTimestamps"
@@ -117,7 +117,7 @@ class TestAuxiliar:
         dummy_schema2["logIDs"] = ["logID2", "logID3", "logID1"]
         dummy_schema2["logTimestamps"] = [0, 1, 3]
         input_ = [dummy_schema, dummy_schema2]
-        input_ = [schemas.DetectorSchema(in_) for in_ in input_]
+        input_ = [sc.DetectorSchema(in_) for in_ in input_]
 
         logids, times = _extract_list_fields(
             input_, field1="logIDs", field2="logTimestamps"
@@ -176,7 +176,7 @@ class TestCoreAlertAggregator:
 
     def test_process_input_schema_not_serialized_window_3(self) -> None:
         alert_aggregator = MockupAlertAggregator(name="TestDetector", config=MockupConfig(), buffer_size=3)
-        expected_result = schemas.AggregateSchema({
+        expected_result = sc.AggregateSchema({
             "__version__": "1.0.0",
             "detectorIDs": ["1"],
             "detectorTypes": ["dummy"],
@@ -199,7 +199,7 @@ class TestCoreAlertAggregator:
         alert_aggregator = MockupAlertAggregatorBuffer(
             name="TestDetector", config=MockupConfig(), buffer_size=3
         )
-        expected_result = schemas.AggregateSchema({
+        expected_result = sc.AggregateSchema({
             "__version__": "1.0.0",
             "detectorIDs": ["1"],
             "detectorTypes": ["dummy"],

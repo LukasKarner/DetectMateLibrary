@@ -1,5 +1,6 @@
 
 from detectmatelibrary.common.core import CoreComponent, CoreConfig
+
 from detectmatelibrary.common.alert_aggregator import CoreAlertAggregator, CoreAlertAggregatorConfig
 from detectmatelibrary.common.detector import CoreDetector, CoreDetectorConfig
 from detectmatelibrary.common.parser import CoreParser, CoreParserConfig
@@ -39,6 +40,10 @@ def _select_output(config: PipelineConfig) -> type[sc.BaseSchema]:
     return sc.DetectorSchema if config.do_aggregation else sc.AggregateSchema
 
 
+def _check_output(in_: sc.BaseSchema, method: CoreComponent) -> Optional[bytes | sc.BaseSchema]:
+    return method.process(in_)
+
+
 def _run_pipeline(
     config: PipelineConfig,
     input_: sc.ParserSchema | bytes | sc.LogSchema,
@@ -51,14 +56,14 @@ def _run_pipeline(
     if config.do_parsing:
         aux = []
         for in_ in input_:  # type: ignore
-            if (out_ := parser.process(in_)) is not None:  # type: ignore
+            if (out_ := _check_output(in_, parser)) is not None:  # type: ignore
                 aux.append(out_)
         input_ = aux   # type: ignore
 
     output_ = []
     for in_ in input_:  # type: ignore
         for detector in detectors:
-            if (out_ := detector.process(in_)) is not None:  # type: ignore
+            if (out_ := _check_output(in_, detector)) is not None:  # type: ignore
                 output_.append(out_)
 
     if not config.do_aggregation:
@@ -66,7 +71,7 @@ def _run_pipeline(
 
     last_output_ = []
     for in_ in output_:
-        if (out_ := alert_aggreator.process(in_)) is not None:  # type: ignore
+        if (out_ := _check_output(in_, alert_aggreator)) is not None:  # type: ignore
             last_output_.append(out_)
 
     return last_output_  # type: ignore
@@ -96,11 +101,11 @@ class Pipeline(CoreComponent):
         ) if self.config.do_parsing else None
 
         self.detectors: list[CoreDetector] = ipy.pickComponents(  # type: ignore
-            self.config.parser, component_type="detectors"
+            self.config.detectors, component_type="detectors"
         )
 
         self.alert_aggregator: CoreAlertAggregator | None = ipy.pickComponent(  # type: ignore
-            self.config.aggregator, component_type="alert_aggregation"
+            self.config.aggregator, component_type="alert_aggregators"
         ) if self.config.do_aggregation else None
 
     @overload  # type: ignore

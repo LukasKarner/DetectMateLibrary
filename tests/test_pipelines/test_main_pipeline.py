@@ -1,5 +1,6 @@
+from tests.test_data import AUDIT_LOG, AUDIT_TEMPLATES, TRAIN_UNTIL
 
-from detectmatelibrary.pipeline import PipelineConfig, _run_pipeline
+from detectmatelibrary.pipeline import PipelineConfig, _run_pipeline, Pipeline
 
 from detectmatelibrary._testutils.dummy_parser import DummyParser
 from detectmatelibrary._testutils.dummy_detector import DummyDetectorConfig
@@ -7,9 +8,19 @@ from detectmatelibrary._testutils.dummy_alert_aggregator import (
     DummyAlertAggregator, DummyAlertAggregatorConfig
 )
 
+from detectmatelibrary.helper.from_to import From
 import detectmatelibrary.schemas as sc
 
 from detectmatelibrary.common.detector import CoreDetector
+
+from detectmatelibrary.detectors.ecvc_detector import ECVCDetectorConfig
+from detectmatelibrary.detectors.charset_detector import CharsetDetectorConfig
+
+from detectmatelibrary.parsers.tree_matcher import TemplateCppTreeMatcherConfig
+
+from detectmatelibrary.alert_aggregation.logid_count import LogIDCountAggegationConfig
+
+import pytest
 
 
 class AlwayAlert(CoreDetector):
@@ -107,3 +118,40 @@ class TestRunPipeline:
         assert isinstance(out_, list)
         assert isinstance(out_[0], sc.AggregateSchema)
         assert len(out_) == 1
+
+
+class TestPipeline:
+    @pytest.mark.ignored
+    def test_full_pipeline(self) -> None:
+        config = PipelineConfig(
+            do_parsing=True,
+            do_aggregation=True,
+            parser=TemplateCppTreeMatcherConfig(
+                path_templates=AUDIT_TEMPLATES,
+                log_format="type=<Type> msg=audit(<Time>): <Content>"
+            ),
+            detectors=[
+                ECVCDetectorConfig(
+                    data_use_configure=TRAIN_UNTIL,
+                    window_size=10,
+                    seed=0,
+                    validation_per=0.,
+                    threshold_method="mean"
+                ),
+                CharsetDetectorConfig(
+                    data_use_configure=TRAIN_UNTIL,
+                    data_use_training=1,
+                    auto_config=True,
+                )
+            ],
+            aggregator=LogIDCountAggegationConfig(max_count=1)
+        )
+
+        pipeline = Pipeline(config=config)
+        alerts = []
+        for parsed_log in From.log(pipeline.parser, in_path=AUDIT_LOG, do_process=True):
+            if (alert := pipeline.process(parsed_log)) is not None:
+                alerts.extend(alert["logIDs"])
+
+        expected = ['1859', '1860', '1861', '1862', '1864', '1865', '1866', '1867']
+        assert set(alerts) == set(expected)
