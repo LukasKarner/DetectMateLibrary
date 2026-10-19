@@ -12,7 +12,7 @@ config = PipelineConfig(
         do_parsing=True,  # Use the parser
         do_aggregation=True,  # Use the aggregator
         parser=TemplateCppTreeMatcherConfig(
-            path_templates=" tests/test_data/test_templates.txt",
+            path_templates="docs/examples/data/tutorial_templates.txt",
             log_format="type=<Type> msg=audit(<Time>): <Content>"
         ),
         detectors=[
