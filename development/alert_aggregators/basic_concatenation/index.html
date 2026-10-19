@@ -14,7 +14,7 @@
         <link rel="prev" href="../../detectors/logbert/">
       
       
-        <link rel="next" href="../../helper/from_to/">
+        <link rel="next" href="../logid_count/">
       
       
         
@@ -1427,6 +1427,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    00_Basic Concat
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1444,6 +1462,119 @@
 
       </a>
       
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#inout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In/out
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#at-a-glance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        At a glance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Description
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration file
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-arguments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration arguments
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../logid_count/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01_LogID Count
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -1899,6 +2030,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#inout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In/out
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#at-a-glance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        At a glance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Description
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration file
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-arguments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration arguments
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1916,6 +2121,7 @@
 
 <h1 id="basic-concat-alert-aggregation">Basic Concat Alert Aggregation</h1>
 <p>The basic concat alert aggregation approach aggregates x number of alerts into one output schema.</p>
+<h2 id="inout">In/out</h2>
 <table>
 <thead>
 <tr>
@@ -1937,31 +2143,37 @@
 </tr>
 </tbody>
 </table>
-<h1 id="configuration-example">Configuration example</h1>
-<div class="highlight"><pre><span></span><code><span class="nt">alert_aggregators</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">BasicConcatAggregator</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">method_type</span><span class="p">:</span><span class="w"> </span><span class="s">"basic_concat_aggregator"</span>
-<span class="w">        </span><span class="nt">buffer_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
-<span class="w">        </span><span class="nt">deduplicate_values</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span>
-<span class="w">        </span><span class="nt">auto_config</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span>
-</code></pre></div>
-<h2 id="example-usage">Example usage</h2>
+<h2 id="at-a-glance">At a glance</h2>
+<table>
+<thead>
+<tr>
+<th>Learns from training data</th>
+<th>Auto-configuration</th>
+<th>Needs <code>events</code></th>
+<th>Federation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+</tbody>
+</table>
+<h2 id="description">Description</h2>
+<p>A basic approach that simply concatenates the alerts without verifying anything specific.</p>
+<h2 id="example">Example</h2>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">detectmatelibrary.alert_aggregation.basic_concat</span><span class="w"> </span><span class="kn">import</span> <span class="n">BasicConcatAggregation</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">detectmatelibrary.schemas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">schemas</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
 
-<span class="n">aggregations_config</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">"alert_aggregators"</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">"BasicConcatAggregator"</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">"method_type"</span><span class="p">:</span> <span class="s2">"basic_concat_aggregator"</span><span class="p">,</span>
-            <span class="s2">"buffer_size"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-            <span class="s2">"deduplicate_values"</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-            <span class="s2">"auto_config"</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
 
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"docs/examples/alert_aggregators/basic_concat.yaml"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 
 <span class="n">input_</span> <span class="o">=</span> <span class="n">schemas</span><span class="o">.</span><span class="n">DetectorSchema</span><span class="p">({</span>
     <span class="s2">"detectorID"</span><span class="p">:</span> <span class="s2">"1"</span><span class="p">,</span>
@@ -1976,11 +2188,116 @@
     <span class="s2">"alertDetails"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"99 problems"</span><span class="p">:</span> <span class="s2">"but logs aint one"</span><span class="p">}</span>
 <span class="p">})</span>
 
-<span class="n">alert_aggregator</span> <span class="o">=</span> <span class="n">BasicConcatAggregation</span><span class="p">(</span>
-    <span class="s2">"BasicConcatAggregator"</span><span class="p">,</span> <span class="n">aggregations_config</span>
-<span class="p">)</span>
+<span class="n">alert_aggregator</span> <span class="o">=</span> <span class="n">BasicConcatAggregation</span><span class="p">(</span><span class="s2">"BasicConcatAggregator"</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
 <span class="n">alert_aggregator</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">input_</span><span class="p">)</span>
 </code></pre></div>
+<h2 id="configuration-file">Configuration file</h2>
+<p>The configuration used by the example above. It sets only what this use case needs; every other parameter keeps its default (see <a href="#configuration-arguments">Configuration arguments</a>).</p>
+<div class="highlight"><pre><span></span><code><span class="nt">alert_aggregators</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">BasicConcatAggregator</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">method_type</span><span class="p">:</span><span class="w"> </span><span class="s">"basic_concat_aggregator"</span>
+<span class="w">        </span><span class="nt">buffer_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<span class="w">        </span><span class="nt">auto_config</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span>
+</code></pre></div>
+<h2 id="configuration-arguments">Configuration arguments</h2>
+<p>All parameters this detector accepts, grouped by the YAML block they go in. <strong>Scope</strong> tells whether a parameter is <code>specific</code> to this detector or <code>shared</code> with other detectors (see the <a href="../../alert_aggregator/#common-parameters-all-alert-aggregators">Alert Aggregation overview</a>). Where this detector changes a shared default, the shared value is shown in brackets.</p>
+<!-- Start arguments -->
+<details class="note">
+<summary>Top level</summary>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Scope</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>method_type</code></td>
+<td>string</td>
+<td>basic_concat_aggregator</td>
+<td>shared</td>
+<td>Indicates what type of method it is.</td>
+</tr>
+<tr>
+<td><code>auto_config</code></td>
+<td>boolean</td>
+<td>False</td>
+<td>shared</td>
+<td>Runs the configuration step before the training process.</td>
+</tr>
+</tbody>
+</table>
+</details>
+<details class="note" open="open">
+<summary>params</summary>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Scope</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>buffer_size</code></td>
+<td>integer</td>
+<td>3</td>
+<td>specific</td>
+<td>Buffer size use in the aggregation.</td>
+</tr>
+<tr>
+<td><code>start_id</code></td>
+<td>integer</td>
+<td>10</td>
+<td>shared</td>
+<td>Number used to start the unique ID generator.</td>
+</tr>
+<tr>
+<td><code>data_use_training</code></td>
+<td>integer, null</td>
+<td>None</td>
+<td>shared</td>
+<td>Data used for training, if None, training is not done.</td>
+</tr>
+<tr>
+<td><code>data_use_configure</code></td>
+<td>integer, null</td>
+<td>None</td>
+<td>shared</td>
+<td>Data used for configuration, if None, configuration is not done.</td>
+</tr>
+<tr>
+<td><code>use_config_data_as_training</code></td>
+<td>boolean</td>
+<td>True</td>
+<td>shared</td>
+<td>Combine the configured data in the training process if True.</td>
+</tr>
+<tr>
+<td><code>train_buffer_max_records</code></td>
+<td>integer</td>
+<td>100000</td>
+<td>shared</td>
+<td>Configure records kept in memory for training (use_config_data_as_training) before the buffer spills to Parquet files on disk, in parts of this many records.</td>
+</tr>
+<tr>
+<td><code>train_buffer_dir</code></td>
+<td>string, null</td>
+<td>None</td>
+<td>shared</td>
+<td>Local directory for the spilled training buffer. None uses the system temp directory (TMPDIR). Each spill goes to a private detectmate-train-* directory, removed after training reads it; a killed process leaves it behind.</td>
+</tr>
+</tbody>
+</table>
+</details>
+<!-- End arguments -->
 
 
 
@@ -2027,13 +2344,13 @@
         
         
           
-          <a href="../../helper/from_to/" class="md-footer__link md-footer__link--next" aria-label="Next: FromTo">
+          <a href="../logid_count/" class="md-footer__link md-footer__link--next" aria-label="Next: 01_LogID Count">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                FromTo
+                01_LogID Count
               </div>
             </div>
             <div class="md-footer__button md-icon">

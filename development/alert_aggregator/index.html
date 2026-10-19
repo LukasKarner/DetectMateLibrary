@@ -786,13 +786,30 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#available-alert-aggregators" class="md-nav__link">
+  <a href="#alert-aggregator-methods" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Available alert aggregators
+        Alert aggregator methods
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Alert aggregator methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#common-parameters-all-alert-aggregators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common parameters (all alert aggregators)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1530,6 +1547,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../alert_aggregators/logid_count/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01_LogID Count
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2020,13 +2065,30 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#available-alert-aggregators" class="md-nav__link">
+  <a href="#alert-aggregator-methods" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Available alert aggregators
+        Alert aggregator methods
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Alert aggregator methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#common-parameters-all-alert-aggregators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common parameters (all alert aggregators)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2120,10 +2182,105 @@ fields left for <code>aggregate_alerts()</code> to fill are <code>description</c
 unless your <code>aggregate_alerts()</code> keeps it, including their <code>detectedTimestamp</code> and
 <code>receivedTimestamp</code>.</p>
 </div>
-<h2 id="available-alert-aggregators">Available alert aggregators</h2>
-<ul>
-<li><a href="../alert_aggregators/basic_concatenation/">Basic Concat</a></li>
-</ul>
+<h2 id="alert-aggregator-methods">Alert aggregator methods</h2>
+<p>The alert aggregator are numbered from simplest to most complex, and the sidebar lists them in the same order.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Detector</th>
+<th>What it detects</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>00</td>
+<td><a href="../alert_aggregators/basic_concatenation/">Basic Concat Aggregator</a></td>
+<td>Concat a set of alerts.</td>
+</tr>
+<tr>
+<td>01</td>
+<td><a href="../alert_aggregators/logid_count/">LogID Count Aggregator</a></td>
+<td>Count the amount of times a logID is in alerts.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="common-parameters-all-alert-aggregators">Common parameters (all alert aggregators)</h3>
+<p>There are some parameters, that <strong>every</strong> alert aggregator inherits from <code>CoreAlertAggregatorConfig</code>/<code>CoreConfigCoreAlertAggregator</code>/<code>BasicConfig</code>, regardless of what it does. The other parameters, that are <strong>specific</strong> for the respective detector, are explained right at the detectors documentation page, later on.</p>
+<!-- Start common_arguments -->
+<details class="note" open="open">
+<summary>Top level</summary>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>auto_config</code></td>
+<td>boolean</td>
+<td>False</td>
+<td>Runs the configuration step before the training process.</td>
+</tr>
+</tbody>
+</table>
+</details>
+<details class="note" open="open">
+<summary>params</summary>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>start_id</code></td>
+<td>integer</td>
+<td>10</td>
+<td>Number used to start the unique ID generator.</td>
+</tr>
+<tr>
+<td><code>data_use_training</code></td>
+<td>integer, null</td>
+<td>None</td>
+<td>Data used for training, if None, training is not done.</td>
+</tr>
+<tr>
+<td><code>data_use_configure</code></td>
+<td>integer, null</td>
+<td>None</td>
+<td>Data used for configuration, if None, configuration is not done.</td>
+</tr>
+<tr>
+<td><code>use_config_data_as_training</code></td>
+<td>boolean</td>
+<td>True</td>
+<td>Combine the configured data in the training process if True.</td>
+</tr>
+<tr>
+<td><code>train_buffer_max_records</code></td>
+<td>integer</td>
+<td>100000</td>
+<td>Configure records kept in memory for training (use_config_data_as_training) before the buffer spills to Parquet files on disk, in parts of this many records.</td>
+</tr>
+<tr>
+<td><code>train_buffer_dir</code></td>
+<td>string, null</td>
+<td>None</td>
+<td>Local directory for the spilled training buffer. None uses the system temp directory (TMPDIR). Each spill goes to a private detectmate-train-* directory, removed after training reads it; a killed process leaves it behind.</td>
+</tr>
+</tbody>
+</table>
+</details>
+<!-- End common_arguments -->
 
 
 
