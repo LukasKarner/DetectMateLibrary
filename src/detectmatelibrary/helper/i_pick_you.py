@@ -57,3 +57,18 @@ def pickComponent(
         raise ValueError(f"{method_type} form {component_type} not found.")
 
     return component(name=name, config=config)
+
+
+def pickComponents(
+    configs: list[CoreConfig | dict[str, Any]],
+    component_type: str,
+    names: Optional[list[str | None]] = None
+) -> list[CoreComponent]:
+
+    if names is None:
+        names = [None for _ in configs]
+
+    return [
+        pickComponent(config=config, component_type=component_type, name=name)
+        for config, name in zip(configs, names)
+    ]

@@ -1,5 +1,5 @@
 from detectmatelibrary.alert_aggregation.basic_concat import BasicConcatAggregation
-from detectmatelibrary.detectors.random_detector import RandomDetector
+from detectmatelibrary.detectors.random_detector import RandomDetector, RandomDetectorConfig
 from detectmatelibrary.parsers.drain import DrainParser, DrainConfig
 
 import detectmatelibrary.helper.i_pick_you as ipy
@@ -57,3 +57,33 @@ class TestPickComponets:
         comp = ipy.pickComponent(config=config, component_type="parsers")
 
         assert isinstance(comp, DrainParser)
+
+    def test_pick_multiple_components(self):
+        configs = [
+            {
+                "detectors": {
+                    "a": {"method_type": "random_detector"}
+                }
+            },
+            RandomDetectorConfig(),
+        ]
+        names = ["a", "b"]
+
+        for component in ipy.pickComponents(
+            configs=configs, names=names, component_type="detectors"
+        ):
+            assert isinstance(component, RandomDetector)
+
+    def test_pick_multiple_components_no_names(self):
+        configs = [
+            {
+                "detectors": {
+                    "a": {"method_type": "random_detector"}
+                }
+            },
+            RandomDetectorConfig(),
+        ]
+        for component in ipy.pickComponents(
+            configs=configs, component_type="detectors"
+        ):
+            assert isinstance(component, RandomDetector)
