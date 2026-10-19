@@ -5,9 +5,11 @@ from detectmatelibrary.alert_aggregation.basic_concat import BasicConcatAggregat
 
 import detectmatelibrary.schemas as schemas
 
-with open("docs/examples/alert_aggregators/basic_concat.yaml") as f:
-    aggregations_config = yaml.safe_load(f)
+import yaml
 
+
+with open("docs/examples/alert_aggregators/basic_concat.yaml") as f:
+    config = yaml.safe_load(f)
 
 input_ = schemas.DetectorSchema({
     "detectorID": "1",
@@ -22,9 +24,7 @@ input_ = schemas.DetectorSchema({
     "alertDetails": {"99 problems": "but logs aint one"}
 })
 
-alert_aggregator = BasicConcatAggregation(
-    "BasicConcatAggregator", aggregations_config
-)
+alert_aggregator = BasicConcatAggregation("BasicConcatAggregator", config)
 alert_aggregator.process(input_)
 
 # --8<-- [end:example_1]

@@ -7,6 +7,8 @@ concatenating their IDs and timestamps.
 
 Input and output schemas in the pipeline
 
+## In/out
+
 |            | Schema                     | Description        |
 |------------|----------------------------|--------------------|
 | **Input**  | [DetectorSchema](../schemas.md)    | Alerts from detectors  |
@@ -19,6 +21,13 @@ is emitted once the window is full, and then one record for every new alert, so 
 overlap. Alerts are combined in the order they arrive, not grouped by log, and the alerts' own
 messages are not carried over (see [What `run()` fills in for you](../alert_aggregator.md#what-run-fills-in-for-you)).
 The [tutorial](../user_guide/tutorial.md#4-add-an-alert-aggregator) shows the overlapping output.
+
+## At a glance
+
+| Learns from training data | Auto-configuration | Needs `events` | Federation |
+|---|---|---|---|
+| ❌ | ❌ | ❌ | ❌ |
+
 
 ## Example
 
@@ -52,11 +61,10 @@ All parameters this alert aggregator accepts, grouped by the YAML block they go 
 
     | Field | Type | Default | Scope | Description |
     |---|---|---|---|---|
-    | `buffer_size` | integer | 3 | specific | Number of most recent alerts aggregated together (size of the sliding window). |
-    | `deduplicate_values` | boolean | False | specific | Drop repeated entries from the aggregated ID, type and timestamp lists, keeping the first of each. |
+    | `buffer_size` | integer | 3 | specific | Buffer size use in the aggregation. |
     | `start_id` | integer | 10 | shared | Number used to start the unique ID generator. |
-    | `data_use_training` | integer, null | None | shared | Number of logs used for training. None skips training. |
-    | `data_use_configure` | integer, null | None | shared | Number of logs used for the configuration step. None skips it. |
+    | `data_use_training` | integer, null | None | shared | Data used for training, if None, training is not done. |
+    | `data_use_configure` | integer, null | None | shared | Data used for configuration, if None, configuration is not done. |
     | `use_config_data_as_training` | boolean | True | shared | Combine the configured data in the training process if True. |
     | `train_buffer_max_records` | integer | 100000 | shared | Configure records kept in memory for training (use_config_data_as_training) before the buffer spills to Parquet files on disk, in parts of this many records. |
     | `train_buffer_dir` | string, null | None | shared | Local directory for the spilled training buffer. None uses the system temp directory (TMPDIR). Each spill goes to a private detectmate-train-* directory, removed after training reads it; a killed process leaves it behind. |
