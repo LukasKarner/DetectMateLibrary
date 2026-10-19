@@ -2,7 +2,7 @@ from detectmatelibrary.common.core import CoreConfig, CoreComponent
 from detectmatelibrary import detectors, parsers, alert_aggregation
 from detectmatelibrary.schemas import BaseSchema
 
-from typing import Optional
+from typing import Optional, Any
 
 
 __types = {
@@ -12,7 +12,7 @@ __types = {
 }
 
 
-def find_component_from_type(
+def _find_component_from_type(
     method_type: str, component_type: str
 ) -> Optional[type[CoreComponent[BaseSchema, BaseSchema]]]:
 
@@ -31,3 +31,18 @@ def find_component_from_type(
             pass
 
     return None
+
+
+def pickComponent(config: CoreConfig | dict[str, Any], component_type: str) -> CoreComponent:
+    """Component, I pick you!!!"""
+
+    if isinstance(config, CoreConfig):
+        method_type = config.method_type
+    else:
+        method_type = config[method_type]
+
+    component = _find_component_from_type(method_type, component_type=component_type)
+    if component is None:
+        raise ValueError(f"{method_type} form {component_type} not found.")
+
+    return component(name="picked_component", config=config)
