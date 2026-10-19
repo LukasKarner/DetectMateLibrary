@@ -4,7 +4,7 @@ from detectmatelibrary.schemas import BaseSchema
 
 from typing import Optional, Any
 
-
+# --------------------- Auxiliar
 __types = {
     "parsers": parsers,
     "detectors": detectors,
@@ -33,16 +33,27 @@ def _find_component_from_type(
     return None
 
 
-def pickComponent(config: CoreConfig | dict[str, Any], component_type: str) -> CoreComponent:
-    """Component, I pick you!!!"""
+# --------------------------------- Main methods
+def pickComponent(
+    config: CoreConfig | dict[str, Any], component_type: str, name: Optional[str] = None
+) -> CoreComponent:
+    """Component, I pick you!!!
+
+    If name=None, it will check in the config
+    """
 
     if isinstance(config, CoreConfig):
         method_type = config.method_type
+        name = name if name is not None else "pickedComponent"
+
     else:
-        method_type = config[method_type]
+        if name is None:
+            name = list(config[component_type].keys())[0]
+
+        method_type = config[component_type][name]["method_type"]
 
     component = _find_component_from_type(method_type, component_type=component_type)
     if component is None:
         raise ValueError(f"{method_type} form {component_type} not found.")
 
-    return component(name="picked_component", config=config)
+    return component(name=name, config=config)
