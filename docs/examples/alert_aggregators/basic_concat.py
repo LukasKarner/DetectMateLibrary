@@ -1,6 +1,5 @@
 
 # --8<-- [start:example_1]
-import yaml
 from detectmatelibrary.alert_aggregation.basic_concat import BasicConcatAggregation
 
 import detectmatelibrary.schemas as schemas
