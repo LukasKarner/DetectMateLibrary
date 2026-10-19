@@ -66,10 +66,10 @@ The `configure()` method ingests all available variables (not just configured on
 ```python
 def configure(self, input_):
     self.auto_conf_persistency.ingest_event(
-        event_id=input_["EventID"],
+        event_id=input_["eventID"],
         event_template=input_["template"],
         variables=input_["variables"],
-        named_variables=input_["logFormatVariables"],
+        named_variables=input_["headerVariables"],
     )
 ```
 

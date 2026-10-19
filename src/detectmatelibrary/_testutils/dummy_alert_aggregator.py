@@ -23,5 +23,5 @@ class DummyAlertAggregator(CoreAlertAggregator):
         self, input_: list[DetectorSchema] | DetectorSchema, output_: AggregateSchema
     ) -> bool:
         output_["description"] = "Dummy alert aggregation"
-        output_["alertsObtain"]["type"] = "Anomalies aggregated by DummyAlertAggregator"
+        output_["alertDetails"]["type"] = "Anomalies aggregated by DummyAlertAggregator"
         return True

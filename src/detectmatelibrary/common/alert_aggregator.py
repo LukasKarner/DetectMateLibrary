@@ -72,12 +72,12 @@ class CoreAlertAggregator(CoreComponent):
         output_["detectorIDs"] = _extract_field(input_, "detectorID")
         output_["detectorTypes"] = _extract_field(input_, "detectorType")
         output_["alertIDs"] = _extract_field(input_, "alertID")
-        output_["logIDs"], output_["extractedTimestamps"] = _extract_list_fields(
-            input_, "logIDs", "extractedTimestamps"
+        output_["logIDs"], output_["logTimestamps"] = _extract_list_fields(
+            input_, "logIDs", "logTimestamps"
         )
 
         if (alert := self.aggregate_alerts(input_=input_, output_=output_)):
-            output_["outputTimestamp"] = get_timestamp()
+            output_["aggregatedTimestamp"] = get_timestamp()
 
         return alert
 

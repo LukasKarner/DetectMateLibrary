@@ -35,7 +35,7 @@ class TestDeeplog:
 
         for j in range(2):
             for i in [1, 2, 3, 4, 5, 1, 2]:
-                logbert.process(schemas.ParserSchema({"EventID": i}))
+                logbert.process(schemas.ParserSchema({"eventID": i}))
 
             if j == 0:
                 assert logbert.get_state() == "Configuring"
@@ -44,7 +44,7 @@ class TestDeeplog:
 
         for _ in range(2):
             for i in [1, 2, 3, 4, 5, 1, 2]:
-                logbert.process(schemas.ParserSchema({"EventID": i}))
+                logbert.process(schemas.ParserSchema({"eventID": i}))
         assert logbert.get_state() == "Default"
         
     @pytest.mark.ignored
@@ -84,7 +84,7 @@ class TestDeeplog:
 
         for j in range(2):
             for i in [1, 2, 3, 4, 5, 1, 2]:
-                logbert.process(schemas.ParserSchema({"EventID": i}))
+                logbert.process(schemas.ParserSchema({"eventID": i}))
             if j == 0:
                 assert logbert.get_state() == "Training"
 
