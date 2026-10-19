@@ -15,6 +15,7 @@ config = PipelineConfig(
             path_templates="docs/examples/data/tutorial_templates.txt",
             log_format="type=<Type> msg=audit(<Time>): <Content>"
         ),
+        n_workers=1,  # You can add parallelization for the detectors
         detectors=[
             {
                 "detectors": {
