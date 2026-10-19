@@ -1,7 +1,7 @@
 from detectmatelibrary.alert_aggregation.basic_concat import BasicConcatAggregation
 from detectmatelibrary.schemas import AggregateSchema
 from detectmatelibrary.utils.aux import time_test_mode
-import detectmatelibrary.schemas as schemas
+import detectmatelibrary.schemas as sc
 from datetime import datetime
 
 
@@ -27,7 +27,7 @@ aggregations_config = {
 }
 
 
-data_global = [schemas.DetectorSchema({
+data_global = [sc.DetectorSchema({
     "detectorID": str(i),
     "detectorType": "dummy",
     "alertID": str(i),
@@ -40,7 +40,7 @@ data_global = [schemas.DetectorSchema({
     "alertDetails": {"99 problems": "but logs aint one"}
 }) for i in range(1, 4)]
 
-data_global += [schemas.DetectorSchema({
+data_global += [sc.DetectorSchema({
     "detectorID": "1",
     "detectorType": "dummy",
     "alertID": "1",

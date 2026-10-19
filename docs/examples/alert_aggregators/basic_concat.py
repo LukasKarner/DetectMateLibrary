@@ -2,7 +2,7 @@
 # --8<-- [start:example_1]
 from detectmatelibrary.alert_aggregation.basic_concat import BasicConcatAggregation
 
-import detectmatelibrary.schemas as schemas
+import detectmatelibrary.schemas as sc
 
 
 aggregations_config = {
@@ -17,7 +17,7 @@ aggregations_config = {
 }
 
 
-input_ = schemas.DetectorSchema({
+input_ = sc.DetectorSchema({
     "detectorID": "1",
     "detectorType": "dummy",
     "alertID": "2",

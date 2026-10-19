@@ -3,7 +3,7 @@ from detectmatelibrary._testutils.dummy_detector import DummyDetector
 from detectmatelibrary._testutils.dummy_parser import DummyParser
 from tests.test_data import AUDIT_TEMPLATES, DUMMY_TXT_PATH, DUMMY_TXT_PATH2, DUMMY_JSON_PATH, \
     DUMMY_JSON_PATH2, DUMMY_YAML_PATH, DUMMY_YAML_PATH2
-import detectmatelibrary.schemas as schemas
+import detectmatelibrary.schemas as sc
 import detectmateperformance as dmp
 import polars as pl
 import json
@@ -128,7 +128,7 @@ class TestCaseFrom:
         log = next(From.log(parser, in_path=AUDIT_TEMPLATES, do_process=False))
 
         assert log.log == expected_log
-        assert isinstance(log, schemas.LogSchema)
+        assert isinstance(log, sc.LogSchema)
 
     def test_fromlog(self):
         parser = DummyParser()
@@ -136,7 +136,7 @@ class TestCaseFrom:
         log = next(From.log(parser, in_path=AUDIT_TEMPLATES, do_process=True))
 
         assert log.log == expected_log
-        assert isinstance(log, schemas.ParserSchema)
+        assert isinstance(log, sc.ParserSchema)
 
     @remove_files
     def test_frombinary(self):
@@ -179,7 +179,7 @@ class TestCaseFrom:
         gen = From.polars(DummyDetector(), df=table, do_process=False)
 
         parsed1 = next(gen)
-        schema1 = schemas.ParserSchema({
+        schema1 = sc.ParserSchema({
             "log": "hello there",
             "variables": ["a", "b"],
             "template": "hello <*>",
@@ -191,7 +191,7 @@ class TestCaseFrom:
         assert parsed1["logID"] == "0"
 
         parsed2 = next(gen)
-        schema2 = schemas.ParserSchema({
+        schema2 = sc.ParserSchema({
             "log": "general kenobi",
             "variables": ["c", "d"],
             "template": "<*> kenobi",
@@ -213,7 +213,7 @@ class TestCaseFrom:
         gen = From.polars(DummyDetector(), df=table, do_process=False)
 
         parsed1 = next(gen)
-        schema1 = schemas.ParserSchema({
+        schema1 = sc.ParserSchema({
             "log": "hello there",
             "variables": ["a", "b"],
             "template": "hello <*>",
@@ -225,7 +225,7 @@ class TestCaseFrom:
         assert parsed1["logID"] == "0"
 
         parsed2 = next(gen)
-        schema2 = schemas.ParserSchema({
+        schema2 = sc.ParserSchema({
             "log": "general kenobi",
             "variables": ["c", "d"],
             "template": "<*> kenobi",
@@ -250,7 +250,7 @@ class TestCaseFrom:
         gen = From.polars(DummyDetector(), df=table, do_process=False, renames=renames)
 
         parsed1 = next(gen)
-        schema1 = schemas.ParserSchema({
+        schema1 = sc.ParserSchema({
             "log": "hello there",
             "variables": ["a", "b"],
             "template": "hello <*>",
@@ -274,7 +274,7 @@ class TestCaseFrom:
         gen = From.polars(DummyDetector(), df=table, do_process=False, renames=renames)
 
         parsed1 = next(gen)
-        schema1 = schemas.ParserSchema({
+        schema1 = sc.ParserSchema({
             "log": "hello there",
             "variables": ["a", "b"],
             "template": "hello <*>",

@@ -4,7 +4,7 @@ from detectmatelibrary.parsers.json_parser import (
     JsonParserConfig,
     flatten_dict
 )
-import detectmatelibrary.schemas as schemas
+import detectmatelibrary.schemas as sc
 from tests.test_data import TEST_TEMPLATES
 
 
@@ -52,12 +52,12 @@ class TestJsonParser:
             "error_code": 404
         }
 
-        input_log = schemas.LogSchema({
+        input_log = sc.LogSchema({
             "logID": "1",
             "log": json.dumps(json_log)
         })
 
-        output = schemas.ParserSchema()
+        output = sc.ParserSchema()
         parser.parse(input_log, output)
 
         # When no message field, template should be empty
@@ -87,12 +87,12 @@ class TestJsonParser:
             }
         }
 
-        input_log = schemas.LogSchema({
+        input_log = sc.LogSchema({
             "logID": "1",
             "log": json.dumps(json_log)
         })
 
-        output = schemas.ParserSchema()
+        output = sc.ParserSchema()
         parser.parse(input_log, output)
 
         # Check flattened structure
@@ -112,12 +112,12 @@ class TestJsonParser:
             "events": ["login", "update", "logout"]
         }
 
-        input_log = schemas.LogSchema({
+        input_log = sc.LogSchema({
             "logID": "1",
             "log": json.dumps(json_log)
         })
 
-        output = schemas.ParserSchema()
+        output = sc.ParserSchema()
         parser.parse(input_log, output)
 
         # Check array is flattened
@@ -151,12 +151,12 @@ class TestJsonParser:
             "level": "INFO"
         }
 
-        input_log = schemas.LogSchema({
+        input_log = sc.LogSchema({
             "logID": "1",
             "log": json.dumps(json_log)
         })
 
-        output = schemas.ParserSchema()
+        output = sc.ParserSchema()
         parser.parse(input_log, output)
 
         # The content parser should have parsed the message
@@ -174,12 +174,12 @@ class TestJsonParser:
             "severity": "high"
         }
 
-        input_log = schemas.LogSchema({
+        input_log = sc.LogSchema({
             "logID": "1",
             "log": json.dumps(json_log)
         })
 
-        output = schemas.ParserSchema()
+        output = sc.ParserSchema()
         parser.parse(input_log, output)
 
         # Timestamp should be extracted and Time should be in headerVariables
@@ -198,7 +198,7 @@ class TestJsonParser:
             "status": "ok"
         }
 
-        input_log = schemas.LogSchema({
+        input_log = sc.LogSchema({
             "logID": "1",
             "log": json.dumps(json_log)
         })
@@ -206,7 +206,7 @@ class TestJsonParser:
         # Test the full process method
         result = parser.process(input_log)
 
-        assert isinstance(result, schemas.ParserSchema)
+        assert isinstance(result, sc.ParserSchema)
         assert "Time" in result.headerVariables
         assert "status" in result.headerVariables
         assert result.headerVariables["status"] == "ok"
