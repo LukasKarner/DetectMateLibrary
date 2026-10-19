@@ -60,15 +60,15 @@ class CoreDetector(CoreComponent[ParserSchema, DetectorSchema]):
         name: str = "CoreDetector",
         buffer_mode: BufferMode = BufferMode.NO_BUF,
         buffer_size: Optional[int] = None,
-        config: Optional[CoreDetectorConfig | dict[str, Any]] = CoreDetectorConfig(),
+        config: CoreDetectorConfig | dict[str, Any] = CoreDetectorConfig(),
     ) -> None:
         if isinstance(config, dict):
             config = CoreDetectorConfig.from_dict(config, name)
 
         super().__init__(
             name=name,
-            type_=config.component_type,  # type: ignore
-            config=config,  # type: ignore
+            type_=config.component_type,
+            config=config,
             args_buffer=ArgsBuffer(mode=buffer_mode, size=buffer_size),
             input_schema=ParserSchema,
             output_schema=DetectorSchema,

@@ -51,7 +51,7 @@ class DeepLearningDetector(CoreDetector):
         self,
         model_cls: DeepModel,
         name: str = "CoreDetector",
-        config: DeepLearningDetectorConfig = DeepLearningDetectorConfig()
+        config: DeepLearningDetectorConfig | dict[str, Any] = DeepLearningDetectorConfig()
     ) -> None:
 
         if isinstance(config, dict):

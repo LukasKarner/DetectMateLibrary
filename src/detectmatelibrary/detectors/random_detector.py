@@ -7,7 +7,7 @@ from detectmatelibrary.utils.data_buffer import BufferMode
 import detectmatelibrary.schemas as sc
 
 from typing_extensions import override
-from typing import List
+from typing import List, Any
 
 from pydantic import Field
 import numpy as np
@@ -26,7 +26,7 @@ class RandomDetector(CoreDetector):
     def __init__(
         self,
         name: str = "RandomDetector",
-        config: RandomDetectorConfig = RandomDetectorConfig(),
+        config: RandomDetectorConfig | dict[str, Any] = RandomDetectorConfig(),
     ) -> None:
         if isinstance(config, dict):
             config = RandomDetectorConfig.from_dict(config, name)
