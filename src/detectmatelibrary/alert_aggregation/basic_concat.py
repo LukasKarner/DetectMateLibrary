@@ -1,6 +1,6 @@
 from detectmatelibrary.common.alert_aggregator import (CoreAlertAggregatorConfig, CoreAlertAggregator)
 from detectmatelibrary.schemas import DetectorSchema, AggregateSchema
-from typing import Any, Optional
+from typing import Any
 
 
 class BasicConcatAggregationConfig(CoreAlertAggregatorConfig):
@@ -13,12 +13,12 @@ class BasicConcatAggregation(CoreAlertAggregator):
     def __init__(
         self,
         name: str = "BasicConcatAggregator",
-        config: Optional[BasicConcatAggregationConfig | dict[str, Any]] = BasicConcatAggregationConfig(),
+        config: BasicConcatAggregationConfig | dict[str, Any] = BasicConcatAggregationConfig(),
     ) -> None:
         if isinstance(config, dict):
             config = BasicConcatAggregationConfig.from_dict(config, name)
-        buffer_size: int = config.buffer_size  # type: ignore
-        self.deduplicate_values: bool = config.deduplicate_values  # type: ignore
+        buffer_size: int = config.buffer_size
+        self.deduplicate_values: bool = config.deduplicate_values
         super().__init__(name=name, buffer_size=buffer_size, config=config)
 
     def aggregate_alerts(
