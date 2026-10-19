@@ -69,6 +69,7 @@ nav:
       - 01_LogID Count: alert_aggregators/logid_count.md
     - Helpers:
       - FromTo: helper/from_to.md
+      - IPickYou: helper/pick_you.md
     - Auxiliary:
       - Persistency: auxiliar/persistency.md
       - Data buffer: auxiliar/input_buffer.md
