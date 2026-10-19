@@ -31,6 +31,8 @@ class PipelineConfig(CoreConfig):
         default=None, description="Aggregator configuration use, if do_aggregation=False keep empty."
     )
 
+# ------------- Auxiliar methods
+
 
 def _select_input(config: PipelineConfig) -> type[sc.BaseSchema]:
     return sc.LogSchema if config.do_parsing else sc.ParserSchema
@@ -76,6 +78,8 @@ def _run_pipeline(
 
     return last_output_  # type: ignore
 
+
+# ------------- Nain pipeline
 
 class Pipeline(CoreComponent):
     def __init__(
