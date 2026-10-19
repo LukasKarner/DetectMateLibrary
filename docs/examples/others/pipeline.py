@@ -20,6 +20,7 @@ config = PipelineConfig(
             {
                 "detectors": {
                     "ECVCDetector": {
+                        "method_type": "ecvc_detector",
                         "data_use_configure": 100,
                         "window_size": 10,
                         "seed": 0,
