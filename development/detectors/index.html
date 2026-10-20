@@ -2508,7 +2508,7 @@
 </tr>
 </tbody>
 </table>
-<p>This document describes the minimal API, implementation guidance, a short example detector and a unit test pattern.</p>
+<p>This document describes the minimal API, implementation guidance and a short example detector.</p>
 <h2 id="coredetector-minimal-api">CoreDetector: minimal API</h2>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">CoreDetectorConfig</span><span class="p">(</span><span class="n">CoreConfig</span><span class="p">):</span>
     <span class="n">component_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"detectors"</span>
@@ -2692,7 +2692,7 @@ reference below explains the blocks those files use.</p>
 example configurations set <code>auto_config: false</code> anyway, to make this explicit. If
 <code>auto_config</code> is <code>True</code> <em>and</em> <code>data_use_configure</code> is set, the configure phase replaces the
 <code>events</code> block with its own selection.</p>
-<p>When <code>auto_config</code> is set to <code>False</code>, the detector expects an explicit <code>events</code> or <code>global</code> block that specifies exactly which variables to monitor. <code>events</code> refers to event-specific variables while <code>global</code> refers to variables, that are not bound to events (<code>header_variables</code> can but don't have to be event bound):</p>
+<p>When <code>auto_config</code> is set to <code>False</code>, the detector expects an explicit <code>events</code> or <code>global</code> block that specifies exactly which variables to monitor. <code>events</code> refers to event-specific variables while <code>global</code> refers to variables that are not bound to events (<code>header_variables</code> can but don't have to be event bound):</p>
 <div class="highlight"><pre><span></span><code><span class="nt">detectors</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">NewValueDetector</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">method_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">new_value_detector</span>
@@ -2714,7 +2714,7 @@ example configurations set <code>auto_config: false</code> anyway, to make this 
 <span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pos</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Status</span>
 </code></pre></div>
 <h3 id="common-parameters-all-detectors">Common parameters (all detectors)</h3>
-<p>There are some parameters, that <strong>every</strong> detector inherits from <code>CoreDetectorConfig</code>/<code>CoreConfig</code>/<code>BasicConfig</code>, regardless of what it does. The other parameters, that are <strong>specific</strong> for the respective detector, are explained right at the detectors documentation page, later on.</p>
+<p>Some parameters are inherited by <strong>every</strong> detector from <code>CoreDetectorConfig</code>/<code>CoreConfig</code>/<code>BasicConfig</code>, regardless of what it does. The parameters that are <strong>specific</strong> to a detector are explained on that detector's own page.</p>
 <!-- Start common_arguments -->
 <details class="note" open="open">
 <summary>Top level</summary>
@@ -2732,7 +2732,7 @@ example configurations set <code>auto_config: false</code> anyway, to make this 
 <td><code>auto_config</code></td>
 <td>boolean</td>
 <td>True</td>
-<td>Runs the configuration step before the training process.</td>
+<td>Runs the configuration step before the training process. Has no effect unless data_use_configure is set.</td>
 </tr>
 <tr>
 <td><code>events</code></td>
@@ -2771,13 +2771,13 @@ example configurations set <code>auto_config: false</code> anyway, to make this 
 <td><code>data_use_training</code></td>
 <td>integer, null</td>
 <td>None</td>
-<td>Data used for training, if None, training is not done.</td>
+<td>Number of logs used for training. None skips training.</td>
 </tr>
 <tr>
 <td><code>data_use_configure</code></td>
 <td>integer, null</td>
 <td>None</td>
-<td>Data used for configuration, if None, configuration is not done.</td>
+<td>Number of logs used for the configuration step. None skips it.</td>
 </tr>
 <tr>
 <td><code>use_config_data_as_training</code></td>
@@ -2828,7 +2828,7 @@ example configurations set <code>auto_config: false</code> anyway, to make this 
 <td><code>persist</code></td>
 <td>object, null</td>
 <td>None</td>
-<td>Periodic state saving (path, interval_seconds, events_until_save, auto_load, storage_options). None disables it. See the Persistency page.</td>
+<td>Periodic state saving (path, interval_seconds, events_until_save, auto_load, storage_options). None disables it. See Saving state (persist) on the Detectors page.</td>
 </tr>
 </tbody>
 </table>
@@ -2849,7 +2849,7 @@ example configurations set <code>auto_config: false</code> anyway, to make this 
 <td><code>allow_fed</code></td>
 <td>boolean</td>
 <td>False</td>
-<td>Allow to do the federation</td>
+<td>Builds the stores needed to take part in federation.</td>
 </tr>
 </tbody>
 </table>
@@ -3134,8 +3134,8 @@ axes:</p>
 </tr>
 </tbody>
 </table>
-<p>Any subset of the four may be enabled, and any single one may stand alone. The
-default (<code>index</code> alone) is the historical behaviour: each segment's mean rate
+<p>Any subset of the four may be enabled, and any single one may stand alone. By
+default only <code>index</code> is enabled: each segment's mean rate
 of change is compared against its entry in <code>segment_thresholds</code> (four segments
 by default, one threshold per segment), and the segments are <strong>equal-count</strong>:
 each holds the same number of observations, regardless of how much time they
@@ -3172,12 +3172,11 @@ consulted at detection time.</p>
 <span class="w">      </span><span class="nt">timestamp_variable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Time</span>
 <span class="w">      </span><span class="nt">timestamp_format</span><span class="p">:</span><span class="w"> </span><span class="s">"%y%m%d</span><span class="nv"> </span><span class="s">%H%M%S"</span>
 </code></pre></div>
-<p>Defaults reproduce the historical behaviour exactly: <code>index: True</code>, the other
-three <code>False</code>, <code>segment_thresholds: [1.1, 0.3, 0.1, 0.01]</code>, <code>decision: consensus</code>,
+<p>The defaults are <code>index: True</code>, the other three <code>False</code>,
+<code>segment_thresholds: [1.1, 0.3, 0.1, 0.01]</code>, <code>decision: consensus</code> and
 <code>slope_threshold: -0.05</code>. A config that sets nothing under <code>classification</code>
-classifies identically to before these changes on every series with at least
-four observations; the one exception is the segment floor described under
-"Fields" below.</p>
+uses exactly these. A variable with fewer observations than segments is
+classified <code>INSUFFICIENT_DATA</code>; see the segment floor under "Fields" below.</p>
 <h4 id="the-decision-rule">The decision rule</h4>
 <p>When more than one method is enabled, <code>decision</code> picks how their verdicts
 combine. <code>consensus</code> requires every enabled method to return stable; <code>majority</code>

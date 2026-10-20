@@ -2117,14 +2117,15 @@ shape as the Quickstart's dataset), but recorded on a different machine, and
 this time <strong>you write the templates yourself</strong>. A finished template file is
 included in the repository, but only so you can check your result in step 2.
 That is the point: before you can parse a dataset, you have to look at it.</p>
-<blockquote>
-<p><strong>Note:</strong> like the Quickstart, this tutorial assumes a cloned repository and
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Like the Quickstart, this tutorial assumes a cloned repository and
 runs from the repository root, the folder that contains <code>pyproject.toml</code> (see
 <a href="../quickstart/#before-you-start">Before you start</a>). The code finds its files
 relative to that folder through <code>ROOT = Path.cwd()</code>. If you work in a notebook
 stored somewhere else, set <code>ROOT</code> to the path of your clone instead, for example
 <code>ROOT = Path("/home/me/DetectMateLibrary")</code>.</p>
-</blockquote>
+</div>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">detectmatelibrary.helper.from_to</span><span class="w"> </span><span class="kn">import</span> <span class="n">From</span>
 
@@ -2221,9 +2222,9 @@ proctitle=&lt;*&gt;
 <span class="k">for</span> <span class="n">plog</span> <span class="ow">in</span> <span class="n">parsed_logs</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">plog</span><span class="p">[</span><span class="s2">"eventID"</span><span class="p">],</span> <span class="n">plog</span><span class="p">[</span><span class="s2">"template"</span><span class="p">])</span>
 </code></pre></div>
-<blockquote>
-<p><strong>Common pitfall: don't escape <code>log_format</code> yourself.</strong> The Quickstart's
-<code>log_format</code> string escapes the parentheses by hand:
+<div class="admonition warning">
+<p class="admonition-title">Common pitfall: don't escape log_format yourself</p>
+<p>The Quickstart's <code>log_format</code> string escapes the parentheses by hand:
 <code>r"...audit\(&lt;Time&gt;:&lt;Serial&gt;\):..."</code>. Don't copy that; it's wrong.
 <code>generate_logformat_regex()</code> (used internally by every parser that accepts
 <code>log_format</code>) already escapes every literal character outside the
@@ -2232,7 +2233,7 @@ to match a <strong>literal backslash</strong> followed by <code>(</code>, which 
 real log data. The regex then silently fails to match anything, and every
 log falls back to <code>&lt;Not Found&gt;</code>. Write <code>log_format</code> as plain text; only the
 <code>&lt;Placeholder&gt;</code> tokens are special.</p>
-</blockquote>
+</div>
 <p>Running this prints, for each of the 9 logs, the <code>eventID</code> and the matched
 template. All four templates get used, and every line matches (nothing
 comes back as <code>&lt;Not Found&gt;</code>).</p>

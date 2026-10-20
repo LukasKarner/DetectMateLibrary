@@ -1489,10 +1489,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#at-a-glance" class="md-nav__link">
+  <a href="#inout_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        At a glance
+        In/out
       
     </span>
   </a>
@@ -1504,6 +1504,17 @@
     <span class="md-ellipsis">
       
         Description
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#at-a-glance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        At a glance
       
     </span>
   </a>
@@ -2048,10 +2059,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#at-a-glance" class="md-nav__link">
+  <a href="#inout_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        At a glance
+        In/out
       
     </span>
   </a>
@@ -2063,6 +2074,17 @@
     <span class="md-ellipsis">
       
         Description
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#at-a-glance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        At a glance
       
     </span>
   </a>
@@ -2120,8 +2142,11 @@
 
 
 <h1 id="basic-concat-alert-aggregation">Basic Concat Alert Aggregation</h1>
-<p>The basic concat alert aggregation approach aggregates x number of alerts into one output schema.</p>
+<p>The Basic Concat alert aggregation combines the most recent alerts into one aggregated record by
+concatenating their IDs and timestamps.</p>
 <h2 id="inout">In/out</h2>
+<p>Input and output schemas in the pipeline</p>
+<h2 id="inout_1">In/out</h2>
 <table>
 <thead>
 <tr>
@@ -2143,6 +2168,12 @@
 </tr>
 </tbody>
 </table>
+<h2 id="description">Description</h2>
+<p>The aggregator keeps a sliding window of the last <code>buffer_size</code> alerts. The first aggregated record
+is emitted once the window is full, and then one record for every new alert, so consecutive records
+overlap. Alerts are combined in the order they arrive, not grouped by log, and the alerts' own
+messages are not carried over (see <a href="../../alert_aggregator/#what-run-fills-in-for-you">What <code>run()</code> fills in for you</a>).
+The <a href="../../user_guide/tutorial/#4-add-an-alert-aggregator">tutorial</a> shows the overlapping output.</p>
 <h2 id="at-a-glance">At a glance</h2>
 <table>
 <thead>
@@ -2162,8 +2193,6 @@
 </tr>
 </tbody>
 </table>
-<h2 id="description">Description</h2>
-<p>A basic approach that simply concatenates the alerts without verifying anything specific.</p>
 <h2 id="example">Example</h2>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">detectmatelibrary.alert_aggregation.basic_concat</span><span class="w"> </span><span class="kn">import</span> <span class="n">BasicConcatAggregation</span>
 
@@ -2194,13 +2223,15 @@
 <h2 id="configuration-file">Configuration file</h2>
 <p>The configuration used by the example above. It sets only what this use case needs; every other parameter keeps its default (see <a href="#configuration-arguments">Configuration arguments</a>).</p>
 <div class="highlight"><pre><span></span><code><span class="nt">alert_aggregators</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">BasicConcatAggregator</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">method_type</span><span class="p">:</span><span class="w"> </span><span class="s">"basic_concat_aggregator"</span>
-<span class="w">        </span><span class="nt">buffer_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
-<span class="w">        </span><span class="nt">auto_config</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span>
+<span class="w">  </span><span class="nt">BasicConcatAggregator</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">method_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">basic_concat_aggregator</span>
+<span class="w">    </span><span class="nt">auto_config</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">    </span><span class="nt">params</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">buffer_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span><span class="w">            </span><span class="c1"># aggregate the 3 most recent alerts</span>
 </code></pre></div>
+<p>Load it with <code>yaml.safe_load</code> and pass the dict as <code>config=</code>, as in the example. The key under <code>alert_aggregators:</code> must match the aggregator's <code>name</code>.</p>
 <h2 id="configuration-arguments">Configuration arguments</h2>
-<p>All parameters this detector accepts, grouped by the YAML block they go in. <strong>Scope</strong> tells whether a parameter is <code>specific</code> to this detector or <code>shared</code> with other detectors (see the <a href="../../alert_aggregator/#common-parameters-all-alert-aggregators">Alert Aggregation overview</a>). Where this detector changes a shared default, the shared value is shown in brackets.</p>
+<p>All parameters this alert aggregator accepts, grouped by the YAML block they go in. <strong>Scope</strong> tells whether a parameter is <code>specific</code> to this aggregator or <code>shared</code> with other alert aggregators.</p>
 <!-- Start arguments -->
 <details class="note">
 <summary>Top level</summary>
@@ -2264,14 +2295,14 @@
 <td>integer, null</td>
 <td>None</td>
 <td>shared</td>
-<td>Data used for training, if None, training is not done.</td>
+<td>Number of logs used for training. None skips training.</td>
 </tr>
 <tr>
 <td><code>data_use_configure</code></td>
 <td>integer, null</td>
 <td>None</td>
 <td>shared</td>
-<td>Data used for configuration, if None, configuration is not done.</td>
+<td>Number of logs used for the configuration step. None skips it.</td>
 </tr>
 <tr>
 <td><code>use_config_data_as_training</code></td>

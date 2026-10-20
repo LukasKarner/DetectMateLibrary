@@ -2170,11 +2170,11 @@
 <p>The template matcher is a lightweight, fast parser intended for logs that follow stable textual templates with variable fields. Templates use the token <code>&lt;*&gt;</code> to mark wildcard slots. The matcher:</p>
 <ul>
 <li>Preprocesses logs and templates (remove spaces, punctuation, lowercase) based on config.</li>
-<li>Finds the first template that matches and extracts all wildcard parameters in order.</li>
+<li>Tries the templates in order of how often each has matched so far, uses the first one that matches, and extracts all wildcard parameters in order. If templates overlap, the same log can therefore get a different <code>eventID</code> over time.</li>
 <li>Populates ParserSchema fields: <code>eventID</code>, <code>template</code>, <code>variables</code>,  <code>logID</code>, and related fields.</li>
 <li><strong><code>eventID</code> is the 0-indexed line number of the matched template</strong> in the template file (first line → <code>eventID: 0</code>, second line → <code>eventID: 1</code>, etc.).</li>
 </ul>
-<p>This parser is deterministic and designed for high-throughput use when templates are known in advance.</p>
+<p>This parser is designed for high-throughput use when templates are known in advance.</p>
 <h2 id="eventid-assignment-preliminary">EventID assignment (preliminary)</h2>
 <p>The <code>eventID</code> (or <code>event_id</code>) field in the output <code>ParserSchema</code> identifies which template was matched. It equals the <strong>0-indexed line number</strong> of the matching template in the template file, for example:</p>
 <table>
@@ -2213,6 +2213,10 @@
 <div class="highlight"><pre><span></span><code>pid=&lt;*&gt; uid=&lt;*&gt; auid=&lt;*&gt; ses=&lt;*&gt; msg='op=PAM:&lt;*&gt; acct=&lt;*&gt;
 login success: user=&lt;*&gt; source=&lt;*&gt;
 </code></pre></div></p>
+<p>Templates can also name their wildcards (<code>&lt;user&gt;</code> instead of <code>&lt;*&gt;</code>), and a <code>.csv</code> template
+file with an <code>EventId</code> column can name each template. Detector configurations can then use
+these names instead of numbers; see
+<a href="../../detectors/#named-eventids-and-variables">Named EventIDs and variables</a>.</p>
 <h2 id="example">Example</h2>
 <p>Load the templates and match a log:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
@@ -2330,14 +2334,14 @@ login success: user=&lt;*&gt; source=&lt;*&gt;
 <td>integer, null</td>
 <td>None</td>
 <td>shared</td>
-<td>Data used for training, if None, training is not done.</td>
+<td>Number of logs used for training. None skips training.</td>
 </tr>
 <tr>
 <td><code>data_use_configure</code></td>
 <td>integer, null</td>
 <td>None</td>
 <td>shared</td>
-<td>Data used for configuration, if None, configuration is not done.</td>
+<td>Number of logs used for the configuration step. None skips it.</td>
 </tr>
 <tr>
 <td><code>use_config_data_as_training</code></td>

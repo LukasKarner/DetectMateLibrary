@@ -2749,7 +2749,7 @@
 <p>Linux auditd log. Produced by the kernel audit subsystem; records system calls, authentication, and policy events.</p>
 <div class="highlight"><pre><span></span><code>type=USER_ACCT msg=audit(1642723741.072:375): pid=10125 uid=0 auid=4294967295 ses=4294967295 msg='op=PAM:accounting acct="root" exe="/usr/sbin/cron" hostname=? addr=? terminal=cron res=success'
 </code></pre></div>
-<p><strong><code>log_format</code>:</strong> <code>type=&lt;Type&gt; msg=audit(&lt;Time&gt;): &lt;Content&gt;</code></p>
+<p><strong><code>log_format</code>:</strong> <code>type=&lt;Type&gt; msg=audit(&lt;Time&gt;:&lt;Serial&gt;): &lt;Content&gt;</code></p>
 <p><strong>Variable noise patterns:</strong> Numeric field values (<code>=\d+</code>), IP addresses (<code>(\d+\.){3}\d+</code>).</p>
 <hr />
 <h3 id="openssh">OpenSSH</h3>
@@ -2765,9 +2765,10 @@
 <div class="highlight"><pre><span></span><code>64.242.88.10 - - [07/Mar/2004:16:10:02 -0800] "GET /twiki/bin/edit/Main/Double_bounce_sender?topicparent=Main.ConfigurationVariables HTTP/1.1" 401 12846 "-" "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.2) Gecko/20021202"
 </code></pre></div>
 <p><strong><code>log_format</code>:</strong> <code>&lt;IP&gt; - - [&lt;Time&gt;] "&lt;RequestType&gt; &lt;Request&gt; &lt;Version&gt;" &lt;Status&gt; &lt;ResponseSize&gt; "&lt;Referer&gt;" "&lt;UserAgent&gt;"</code></p>
-<blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
 <p>All fields land directly in <code>headerVariables</code>. Use <code>header_variables</code> in your detector config to track e.g. <code>Status</code>, <code>IP</code>, or <code>RequestType</code>.</p>
-</blockquote>
+</div>
 <hr />
 <h3 id="apache">Apache</h3>
 <p>Apache httpd error log. Records server errors, warnings, and informational notices.</p>
@@ -2847,9 +2848,10 @@
 <div class="highlight"><pre><span></span><code>Jun 14 15:16:02 combo sshd(pam_unix)[19939]: authentication failure; logname= uid=0 euid=0 tty=NODEVssh ruser= rhost=218.188.2.4
 </code></pre></div>
 <p><strong><code>log_format</code>:</strong> <code>&lt;Month&gt; &lt;Date&gt; &lt;Time&gt; &lt;Level&gt; &lt;Component&gt;([&lt;PID&gt;])?: &lt;Content&gt;</code></p>
-<blockquote>
-<p>Note: <code>&lt;Level&gt;</code> captures the <strong>hostname</strong> in standard syslog (the field name follows benchmark convention).</p>
-</blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code>&lt;Level&gt;</code> captures the <strong>hostname</strong> in standard syslog (the field name follows benchmark convention).</p>
+</div>
 <p><strong>Variable noise patterns:</strong> IP addresses (<code>(\d+\.){3}\d+</code>), embedded timestamps (<code>\d{2}:\d{2}:\d{2}</code>).</p>
 <hr />
 <h3 id="windows">Windows</h3>

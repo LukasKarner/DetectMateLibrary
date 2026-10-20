@@ -2237,7 +2237,7 @@
 <td>boolean</td>
 <td>True</td>
 <td>shared</td>
-<td>Runs the configuration step before the training process.</td>
+<td>Runs the configuration step before the training process. Has no effect unless data_use_configure is set.</td>
 </tr>
 <tr>
 <td><code>events</code></td>
@@ -2258,7 +2258,7 @@
 <td>object, null</td>
 <td>None</td>
 <td>shared</td>
-<td>Periodic state saving (path, interval_seconds, events_until_save, auto_load, storage_options). None disables it. See the Persistency page.</td>
+<td>Periodic state saving (path, interval_seconds, events_until_save, auto_load, storage_options). None disables it. See Saving state (persist) on the Detectors page.</td>
 </tr>
 </tbody>
 </table>
@@ -2295,14 +2295,14 @@
 <td>integer, null</td>
 <td>None</td>
 <td>shared</td>
-<td>Data used for training, if None, training is not done.</td>
+<td>Number of logs used for training. None skips training.</td>
 </tr>
 <tr>
 <td><code>data_use_configure</code></td>
 <td>integer, null</td>
 <td>None</td>
 <td>shared</td>
-<td>Data used for configuration, if None, configuration is not done.</td>
+<td>Number of logs used for the configuration step. None skips it.</td>
 </tr>
 <tr>
 <td><code>use_config_data_as_training</code></td>
@@ -2337,7 +2337,7 @@
 <td>boolean</td>
 <td>False</td>
 <td>shared</td>
-<td>Allow to do the federation</td>
+<td>Builds the stores needed to take part in federation.</td>
 </tr>
 </tbody>
 </table>

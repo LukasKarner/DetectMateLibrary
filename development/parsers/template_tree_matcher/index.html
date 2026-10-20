@@ -2123,7 +2123,10 @@
 </tr>
 </tbody>
 </table>
-<p>WARNING: This parser is not yet in a stable release and may behave differently across platforms or hardware.</p>
+<div class="admonition warning">
+<p class="admonition-title">Not yet stable</p>
+<p>This parser is not yet in a stable release and may behave differently across platforms or hardware.</p>
+</div>
 <h2 id="template-format">Template format</h2>
 <ul>
 <li>Templates are plain text lines in a template file.</li>
@@ -2228,14 +2231,14 @@ login success: user=&lt;*&gt; source=&lt;*&gt;
 <td>integer, null</td>
 <td>None</td>
 <td>shared</td>
-<td>Data used for training, if None, training is not done.</td>
+<td>Number of logs used for training. None skips training.</td>
 </tr>
 <tr>
 <td><code>data_use_configure</code></td>
 <td>integer, null</td>
 <td>None</td>
 <td>shared</td>
-<td>Data used for configuration, if None, configuration is not done.</td>
+<td>Number of logs used for the configuration step. None skips it.</td>
 </tr>
 <tr>
 <td><code>use_config_data_as_training</code></td>
@@ -2277,7 +2280,10 @@ login success: user=&lt;*&gt; source=&lt;*&gt;
 </details>
 <!-- End arguments -->
 
-<p>Note: this matcher removes non-alphanumeric characters from logs and templates before matching, except for the <code>&lt;*&gt;</code> token. Ensure your templates are compatible with that normalization.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This matcher removes non-alphanumeric characters from logs and templates before matching, except for the <code>&lt;*&gt;</code> token. Ensure your templates are compatible with that normalization.</p>
+</div>
 
 
 

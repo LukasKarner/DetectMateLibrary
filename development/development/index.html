@@ -2163,9 +2163,9 @@
 </code></pre></div>
 <p><em>Please note that this step is not necessary. <code>uv run --dev</code> will automatically download all dependencies.</em></p>
 <h2 id="use-prek-to-run-code-checks">Use prek to run code checks</h2>
-<p>Every code contributer must use <a href="https://github.com/j178/prek"><code>prek</code></a> to run basic checks at commit time.
+<p>Every code contributor must use <a href="https://github.com/j178/prek"><code>prek</code></a> to run basic checks at commit time.
 <code>prek</code> is configured via the existing <code>.pre-commit-config.yaml</code>
-and can be installed as part of the <code>dev</code> extras. To ensure pre-commit hooks run before each commit, run:</p>
+and is installed with the <code>dev</code> dependency group. To ensure pre-commit hooks run before each commit, run:</p>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>prek<span class="w"> </span>install
 </code></pre></div>
 <p>To run the checks manually, you can execute:</p>

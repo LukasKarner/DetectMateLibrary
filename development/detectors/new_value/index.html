@@ -2164,7 +2164,7 @@
 </tbody>
 </table>
 <h2 id="description">Description</h2>
-<p>This detector maintains a lightweight set of observed values per monitored field and emits an alert when a value not present in the set is seen for the first time (subject to configuration).</p>
+<p>This detector keeps the set of values observed during training for each monitored field and emits an alert whenever a value that is not in the set appears. Alerts don't add the value to the set, so the same unseen value raises an alert every time it appears.</p>
 <h2 id="example">Example</h2>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">detectmatelibrary</span><span class="w"> </span><span class="kn">import</span> <span class="n">schemas</span>
@@ -2237,7 +2237,7 @@
 <td>boolean</td>
 <td>True</td>
 <td>shared</td>
-<td>Runs the configuration step before the training process.</td>
+<td>Runs the configuration step before the training process. Has no effect unless data_use_configure is set.</td>
 </tr>
 <tr>
 <td><code>events</code></td>
@@ -2258,7 +2258,7 @@
 <td>object, null</td>
 <td>None</td>
 <td>shared</td>
-<td>Periodic state saving (path, interval_seconds, events_until_save, auto_load, storage_options). None disables it. See the Persistency page.</td>
+<td>Periodic state saving (path, interval_seconds, events_until_save, auto_load, storage_options). None disables it. See Saving state (persist) on the Detectors page.</td>
 </tr>
 </tbody>
 </table>
@@ -2288,14 +2288,14 @@
 <td>integer, null</td>
 <td>None</td>
 <td>shared</td>
-<td>Data used for training, if None, training is not done.</td>
+<td>Number of logs used for training. None skips training.</td>
 </tr>
 <tr>
 <td><code>data_use_configure</code></td>
 <td>integer, null</td>
 <td>None</td>
 <td>shared</td>
-<td>Data used for configuration, if None, configuration is not done.</td>
+<td>Number of logs used for the configuration step. None skips it.</td>
 </tr>
 <tr>
 <td><code>use_config_data_as_training</code></td>
@@ -2330,7 +2330,7 @@
 <td>boolean</td>
 <td>False</td>
 <td>shared</td>
-<td>Allow to do the federation</td>
+<td>Builds the stores needed to take part in federation.</td>
 </tr>
 </tbody>
 </table>
