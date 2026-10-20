@@ -117,15 +117,15 @@ class Pipeline(CoreComponent):
         )
         self.config: PipelineConfig
 
-        self.parser: CoreParser | None = ipy.pickComponent(  # type: ignore
+        self.parser: CoreParser | None = ipy.selectComponent(  # type: ignore
             self.config.parser, component_type="parsers"
         ) if self.config.do_parsing else None
 
-        self.detectors: list[CoreDetector] = ipy.pickComponents(  # type: ignore
+        self.detectors: list[CoreDetector] = ipy.selectComponents(  # type: ignore
             self.config.detectors, component_type="detectors"
         )
 
-        self.alert_aggregator: CoreAlertAggregator | None = ipy.pickComponent(  # type: ignore
+        self.alert_aggregator: CoreAlertAggregator | None = ipy.selectComponent(  # type: ignore
             self.config.aggregator, component_type="alert_aggregators"
         ) if self.config.do_aggregation else None
 

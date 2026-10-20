@@ -28,7 +28,7 @@ class TestPickComponets:
                 "TestDetector": {"method_type": "random_detector"}
             }
         }
-        comp = ipy.pickComponent(
+        comp = ipy.selectComponent(
             name="TestDetector", config=config, component_type="detectors"
         )
 
@@ -40,13 +40,13 @@ class TestPickComponets:
                 "TestDetector": {"method_type": "random_detector"}
             }
         }
-        comp = ipy.pickComponent(config=config, component_type="detectors")
+        comp = ipy.selectComponent(config=config, component_type="detectors")
 
         assert isinstance(comp, RandomDetector)
 
     def test_pick_component(self):
         config = DrainConfig()
-        comp = ipy.pickComponent(
+        comp = ipy.selectComponent(
             name="Drain", config=config, component_type="parsers"
         )
 
@@ -54,7 +54,7 @@ class TestPickComponets:
 
     def test_pick_component_no_name(self):
         config = DrainConfig()
-        comp = ipy.pickComponent(config=config, component_type="parsers")
+        comp = ipy.selectComponent(config=config, component_type="parsers")
 
         assert isinstance(comp, DrainParser)
 
@@ -69,7 +69,7 @@ class TestPickComponets:
         ]
         names = ["a", "b"]
 
-        for component in ipy.pickComponents(
+        for component in ipy.selectComponents(
             configs=configs, names=names, component_type="detectors"
         ):
             assert isinstance(component, RandomDetector)
@@ -83,7 +83,7 @@ class TestPickComponets:
             },
             RandomDetectorConfig(),
         ]
-        for component in ipy.pickComponents(
+        for component in ipy.selectComponents(
             configs=configs, component_type="detectors"
         ):
             assert isinstance(component, RandomDetector)

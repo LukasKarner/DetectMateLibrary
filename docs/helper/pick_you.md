@@ -3,20 +3,20 @@
 Methods that make it easy to choose components solely through configuration settings.
 
 ```python
-def pickComponent(
+def selectComponent(
     config: CoreConfig | dict[str, Any],
     component_type: str,
     name: Optional[str] = None
 ) -> CoreComponent:
-    """Pick a single component"""
+    """Select a single component"""
 
 
-def pickComponents(
+def selectComponents(
     configs: list[CoreConfig | dict[str, Any]],
     component_type: str,
     names: Optional[list[str | None]] = None
 ) -> list[CoreComponent]:
-    """Pick multiple components"""
+    """Select multiple components"""
 ```
 
 ## Usage

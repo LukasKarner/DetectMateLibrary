@@ -34,7 +34,7 @@ def _find_component_from_type(
 
 
 # --------------------------------- Main methods
-def pickComponent(
+def selectComponent(
     config: CoreConfig | dict[str, Any], component_type: str, name: Optional[str] = None
 ) -> CoreComponent:
     """Component, I pick you!!!
@@ -59,7 +59,7 @@ def pickComponent(
     return component(name=name, config=config)
 
 
-def pickComponents(
+def selectComponents(
     configs: list[CoreConfig | dict[str, Any]],
     component_type: str,
     names: Optional[list[str | None]] = None
@@ -69,6 +69,6 @@ def pickComponents(
         names = [None for _ in configs]
 
     return [
-        pickComponent(config=config, component_type=component_type, name=name)
+        selectComponent(config=config, component_type=component_type, name=name)
         for config, name in zip(configs, names)
     ]

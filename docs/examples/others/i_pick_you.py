@@ -14,7 +14,7 @@ configs = [
 ]
 names = ["a", "b"]
 
-components = ipy.pickComponents(
+components = ipy.selectComponents(
     configs=configs, names=names, component_type="detectors"
 )
 print(len(components))  # 2
