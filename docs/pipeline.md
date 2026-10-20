@@ -9,6 +9,8 @@ The main pipeline functions like a standard inference pipeline. To initialize th
 
 If `do_parsing=False`, the pipeline will take already-parsed logs as input, and the parsing step will be skipped. Likewise, if `do_aggregation=False`, the pipeline will output the detectors’ alerts directly, and the alert aggregation step will be skipped.
 
+The pipeline allows you to pass either a Config class instance or the dictionary used to initialize that Config class as arguments to the various components. For the detectors list, both methods can be combined, as shown in the example.
+
 ### Example
 
 ```python
