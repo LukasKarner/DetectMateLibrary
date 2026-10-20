@@ -858,6 +858,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#event-ids" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Event IDs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#configuration-file" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2037,6 +2048,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#event-ids" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Event IDs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#configuration-file" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2135,6 +2157,34 @@
 <span class="nb">print</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">headerVariables</span><span class="p">[</span><span class="s2">"level"</span><span class="p">])</span>  <span class="c1"># INFO</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">template</span><span class="p">)</span>                     <span class="c1"># pid=&lt;*&gt; uid=&lt;*&gt; auid=&lt;*&gt; ses=&lt;*&gt; msg='op=PAM:&lt;*&gt; acct=&lt;*&gt;</span>
 </code></pre></div>
+<h2 id="event-ids">Event IDs</h2>
+<table>
+<thead>
+<tr>
+<th>Log</th>
+<th>Event ID</th>
+<th>Template</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>message</code> matches a template</td>
+<td>that template's ID</td>
+<td>the template</td>
+</tr>
+<tr>
+<td><code>message</code> matches no template</td>
+<td><code>-1</code></td>
+<td><code>&lt;Not Found&gt;</code></td>
+</tr>
+<tr>
+<td>no <code>message</code> field</td>
+<td><code>-2</code></td>
+<td>empty</td>
+</tr>
+</tbody>
+</table>
+<p>If the content parser has no templates (for example with the defaults, as in the first example), every message gets <code>-1</code>. The parser then logs a warning at the first message.</p>
 <h2 id="configuration-file">Configuration file</h2>
 <p>The configuration used by the second example above (the first one runs with all defaults). It sets only what this use case needs; every other parameter keeps its default (see <a href="#configuration-arguments">Configuration arguments</a>).</p>
 <div class="highlight"><pre><span></span><code><span class="nt">parsers</span><span class="p">:</span>
