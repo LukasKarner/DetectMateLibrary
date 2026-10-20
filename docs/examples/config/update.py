@@ -25,13 +25,13 @@ from detectmatelibrary.parsers.tree_matcher import TemplateCppTreeMatcherConfig
 
 from detectmatelibrary.common.core import CoreConfig
 from detectmatelibrary.common.detector import CoreDetectorConfig
-from detectmatelibrary.common.alert_aggregator import CoreAlertAggregatorConfig
 from detectmatelibrary.common.parser import CoreParserConfig
+from detectmatelibrary.common.alert_aggregator import CoreAlertAggregatorConfig
+from detectmatelibrary.alert_aggregation.basic_concat import BasicConcatAggregationConfig
 from detectmatelibrary.base_detectors import TrackerDetectorConfig
 from detectmatelibrary.base_detectors import VariableDetectorConfig
 from detectmatelibrary.base_detectors import DeepLearningDetectorConfig
 
-from detectmatelibrary.alert_aggregation.basic_concat import BasicConcatAggregationConfig
 
 from typing import Any
 
