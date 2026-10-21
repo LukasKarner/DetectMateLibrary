@@ -175,12 +175,12 @@ class TestJsonParser:
             "message": "hello world"
         }
 
-        input_log = schemas.LogSchema({
+        input_log = sc.LogSchema({
             "logID": "1",
             "log": json.dumps(json_log)
         })
 
-        output = schemas.ParserSchema()
+        output = sc.ParserSchema()
         parser.parse(input_log, output)
 
         assert output.template == "<Not Found>"
@@ -212,8 +212,8 @@ class TestJsonParser:
 
         event_ids = []
         for json_log in json_logs:
-            output = schemas.ParserSchema()
-            parser.parse(schemas.LogSchema({"logID": "1", "log": json.dumps(json_log)}), output)
+            output = sc.ParserSchema()
+            parser.parse(sc.LogSchema({"logID": "1", "log": json.dumps(json_log)}), output)
             event_ids.append(output.eventID)
 
         assert event_ids == [0, -1, -2]
@@ -223,7 +223,7 @@ class TestJsonParser:
         parser = JsonParser(name="TestParser", config=JsonParserConfig())
 
         def parse(json_log):
-            parser.parse(schemas.LogSchema({"log": json.dumps(json_log)}), schemas.ParserSchema())
+            parser.parse(sc.LogSchema({"log": json.dumps(json_log)}), sc.ParserSchema())
 
         with caplog.at_level(logging.WARNING):
             parse({"level": "INFO"})
@@ -249,7 +249,7 @@ class TestJsonParser:
         parser = JsonParser(name="TestParser", config=config_dict)
 
         with caplog.at_level(logging.WARNING):
-            parser.parse(schemas.LogSchema({"log": json.dumps({"message": "hello"})}), schemas.ParserSchema())
+            parser.parse(sc.LogSchema({"log": json.dumps({"message": "hello"})}), sc.ParserSchema())
 
         assert not [r for r in caplog.records if "no templates" in r.message]
 
