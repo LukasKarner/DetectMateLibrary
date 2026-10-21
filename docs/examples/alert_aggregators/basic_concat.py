@@ -2,7 +2,7 @@
 # --8<-- [start:example_1]
 from detectmatelibrary.alert_aggregation.basic_concat import BasicConcatAggregation
 
-import detectmatelibrary.schemas as schemas
+import detectmatelibrary.schemas as sc
 
 import yaml
 
@@ -10,7 +10,7 @@ import yaml
 with open("docs/examples/alert_aggregators/basic_concat.yaml") as f:
     config = yaml.safe_load(f)
 
-input_ = schemas.DetectorSchema({
+input_ = sc.DetectorSchema({
     "detectorID": "1",
     "detectorType": "dummy",
     "alertID": "2",

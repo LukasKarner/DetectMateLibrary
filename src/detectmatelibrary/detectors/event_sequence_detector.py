@@ -9,7 +9,7 @@ from detectmatelibrary.schemas import ParserSchema, DetectorSchema
 
 from collections import deque
 
-from typing_extensions import override
+from typing_extensions import override, Any
 from pydantic import Field, model_validator
 
 
@@ -71,7 +71,7 @@ class EventSequenceDetector(TrackerDetector):
     def __init__(
         self,
         name: str = "EventSequenceDetector",
-        config: EventSequenceDetectorConfig = EventSequenceDetectorConfig(),
+        config: EventSequenceDetectorConfig | dict[str, Any] = EventSequenceDetectorConfig(),
     ) -> None:
         if isinstance(config, dict):
             config = EventSequenceDetectorConfig.from_dict(config, name)

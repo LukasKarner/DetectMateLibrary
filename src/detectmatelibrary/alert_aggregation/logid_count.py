@@ -5,7 +5,7 @@ from detectmatelibrary.common.alert_aggregator import (
 from detectmatelibrary.schemas import DetectorSchema, AggregateSchema
 from detectmatelibrary.utils.data_buffer import BufferMode
 
-from typing import Any, Optional
+from typing import Any
 from functools import lru_cache
 from pydantic import Field
 import polars as pl
@@ -66,7 +66,7 @@ class LogIDCountAggegation(CoreAlertAggregator):
     def __init__(
         self,
         name: str = "LogIDCountAggregator",
-        config: Optional[LogIDCountAggegationConfig | dict[str, Any]] = LogIDCountAggegationConfig(),
+        config: LogIDCountAggegationConfig | dict[str, Any] = LogIDCountAggegationConfig(),
     ) -> None:
         if isinstance(config, dict):
             config = LogIDCountAggegationConfig.from_dict(config, name)

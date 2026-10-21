@@ -69,11 +69,14 @@ class CoreComponent(Component[TInput, TOutput], FedOperations):
         self,
         name: str,
         type_: str = "Core",
-        config: CoreConfig = CoreConfig(),
+        config: CoreConfig | dict[str, Any] = CoreConfig(),
         args_buffer: ArgsBuffer = ArgsBuffer(BufferMode.NO_BUF),
         input_schema: type[BaseSchema] = BaseSchema,
         output_schema: type[BaseSchema] = BaseSchema,
     ) -> None:
+        if isinstance(config, dict):
+            config = CoreConfig.from_dict(config, name)
+
         Component.__init__(self, name=name, type_=type_, config=config)
         FedOperations.__init__(self)
         self.config: CoreConfig

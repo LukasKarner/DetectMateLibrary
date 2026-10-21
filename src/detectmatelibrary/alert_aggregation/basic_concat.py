@@ -4,7 +4,7 @@ from detectmatelibrary.common.alert_aggregator import (
 
 from detectmatelibrary.schemas import DetectorSchema, AggregateSchema
 
-from typing import Any, Optional
+from typing import Any
 from pydantic import Field
 
 
@@ -21,12 +21,12 @@ class BasicConcatAggregation(CoreAlertAggregator):
     def __init__(
         self,
         name: str = "BasicConcatAggregator",
-        config: Optional[BasicConcatAggregationConfig | dict[str, Any]] = BasicConcatAggregationConfig(),
+        config: BasicConcatAggregationConfig | dict[str, Any] = BasicConcatAggregationConfig(),
     ) -> None:
         if isinstance(config, dict):
             config = BasicConcatAggregationConfig.from_dict(config, name)
 
-        buffer_size: int = config.buffer_size  # type: ignore
+        buffer_size: int = config.buffer_size
         super().__init__(name=name, buffer_size=buffer_size, config=config)
 
     def aggregate_alerts(

@@ -27,6 +27,7 @@ Here you can get the full scope.
 * [Parsers](parsers.md)
 * [Detectors](detectors.md)
 * [Alert Aggregation](alert_aggregator.md)
+* [Pipelines](pipeline.md)
 * [Federation](federation.md)
 
 ## How to contribute
