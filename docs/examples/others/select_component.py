@@ -2,7 +2,7 @@
 # --8<-- [start:pickyou]
 from detectmatelibrary.detectors.random_detector import RandomDetectorConfig
 
-import detectmatelibrary.helper.i_pick_you as ipy
+import detectmatelibrary.helper.select_component as selc
 
 configs = [
     {
@@ -14,7 +14,7 @@ configs = [
 ]
 names = ["a", "b"]
 
-components = ipy.selectComponents(
+components = selc.selectComponents(
     configs=configs, names=names, component_type="detectors"
 )
 print(len(components))  # 2

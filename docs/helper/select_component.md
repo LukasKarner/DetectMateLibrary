@@ -1,4 +1,4 @@
-# I pick you
+# Select Component
 
 Methods that make it easy to choose components solely through configuration settings.
 
@@ -22,5 +22,5 @@ def selectComponents(
 ## Usage
 
 ```python
---8<-- "docs/examples/others/i_pick_you.py:pickyou"
+--8<-- "docs/examples/others/select_component.py:pickyou"
 ```

@@ -2,23 +2,23 @@ from detectmatelibrary.alert_aggregation.basic_concat import BasicConcatAggregat
 from detectmatelibrary.detectors.random_detector import RandomDetector, RandomDetectorConfig
 from detectmatelibrary.parsers.drain import DrainParser, DrainConfig
 
-import detectmatelibrary.helper.i_pick_you as ipy
+import detectmatelibrary.helper.select_component as selc
 
 
 class TestFindFromName:
     def test_get_configs(self):
-        assert (comp := ipy._find_component_from_type("drain_parser", "parsers")) is not None
+        assert (comp := selc._find_component_from_type("drain_parser", "parsers")) is not None
         assert isinstance(comp(), DrainParser)
 
-        assert (comp := ipy._find_component_from_type("random_detector", "detectors")) is not None
+        assert (comp := selc._find_component_from_type("random_detector", "detectors")) is not None
         assert isinstance(comp(), RandomDetector)
 
-        assert (comp := ipy._find_component_from_type(
+        assert (comp := selc._find_component_from_type(
             "basic_concat_aggregator", "alert_aggregators"
         )) is not None
         assert isinstance(comp(), BasicConcatAggregation)
 
-        assert ipy._find_component_from_type("aux", "alert_aggregators") is None
+        assert selc._find_component_from_type("aux", "alert_aggregators") is None
 
 
 class TestPickComponets:
@@ -28,7 +28,7 @@ class TestPickComponets:
                 "TestDetector": {"method_type": "random_detector"}
             }
         }
-        comp = ipy.selectComponent(
+        comp = selc.selectComponent(
             name="TestDetector", config=config, component_type="detectors"
         )
 
@@ -40,13 +40,13 @@ class TestPickComponets:
                 "TestDetector": {"method_type": "random_detector"}
             }
         }
-        comp = ipy.selectComponent(config=config, component_type="detectors")
+        comp = selc.selectComponent(config=config, component_type="detectors")
 
         assert isinstance(comp, RandomDetector)
 
     def test_pick_component(self):
         config = DrainConfig()
-        comp = ipy.selectComponent(
+        comp = selc.selectComponent(
             name="Drain", config=config, component_type="parsers"
         )
 
@@ -54,7 +54,7 @@ class TestPickComponets:
 
     def test_pick_component_no_name(self):
         config = DrainConfig()
-        comp = ipy.selectComponent(config=config, component_type="parsers")
+        comp = selc.selectComponent(config=config, component_type="parsers")
 
         assert isinstance(comp, DrainParser)
 
@@ -69,7 +69,7 @@ class TestPickComponets:
         ]
         names = ["a", "b"]
 
-        for component in ipy.selectComponents(
+        for component in selc.selectComponents(
             configs=configs, names=names, component_type="detectors"
         ):
             assert isinstance(component, RandomDetector)
@@ -83,7 +83,7 @@ class TestPickComponets:
             },
             RandomDetectorConfig(),
         ]
-        for component in ipy.selectComponents(
+        for component in selc.selectComponents(
             configs=configs, component_type="detectors"
         ):
             assert isinstance(component, RandomDetector)

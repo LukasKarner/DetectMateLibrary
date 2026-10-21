@@ -6,7 +6,7 @@ from detectmatelibrary.common.detector import CoreDetector, CoreDetectorConfig
 from detectmatelibrary.common.parser import CoreParser, CoreParserConfig
 
 from detectmatelibrary.utils.data_buffer import ArgsBuffer, BufferMode
-import detectmatelibrary.helper.i_pick_you as ipy
+import detectmatelibrary.helper.select_component as selc
 
 import detectmatelibrary.schemas as sc
 
@@ -117,15 +117,15 @@ class Pipeline(CoreComponent):
         )
         self.config: PipelineConfig
 
-        self.parser: CoreParser | None = ipy.selectComponent(  # type: ignore
+        self.parser: CoreParser | None = selc.selectComponent(  # type: ignore
             self.config.parser, component_type="parsers"
         ) if self.config.do_parsing else None
 
-        self.detectors: list[CoreDetector] = ipy.selectComponents(  # type: ignore
+        self.detectors: list[CoreDetector] = selc.selectComponents(  # type: ignore
             self.config.detectors, component_type="detectors"
         )
 
-        self.alert_aggregator: CoreAlertAggregator | None = ipy.selectComponent(  # type: ignore
+        self.alert_aggregator: CoreAlertAggregator | None = selc.selectComponent(  # type: ignore
             self.config.aggregator, component_type="alert_aggregators"
         ) if self.config.do_aggregation else None
 
