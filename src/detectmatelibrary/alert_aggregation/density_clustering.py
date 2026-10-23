@@ -6,7 +6,7 @@ The module also provides the DensityClusteringAggregationConfig class,
 which defines the configuration for the DensityClusteringAggregation class.
 """
 
-from pydantic import NonNegativeFloat
+from pydantic import Field, NonNegativeFloat
 
 from detectmatelibrary.common.alert_aggregator import (
     CoreAlertAggregator,
@@ -25,10 +25,17 @@ class DensityClusteringAggregationConfig(CoreAlertAggregatorConfig):
         delta (NonNegativeFloat): The threshold for the clustering.
     """
 
-    method_type: str = "density_clustering_aggregator"
-    buffer_size: int = 3
-    buffer_mode: BufferMode = BufferMode.BATCH
-    delta: NonNegativeFloat
+    method_type: str = Field(
+        default="density_clustering_aggregator",
+        description="The kind of aggregation method.",
+    )
+    buffer_size: int = Field(default=3, description="The size of the buffer.")
+    buffer_mode: BufferMode = Field(
+        default=BufferMode.BATCH, description="The mode of the buffer."
+    )
+    delta: NonNegativeFloat = Field(
+        default=0.5, description="The threshold for the clustering."
+    )
 
 
 class DensityClusteringAggregation(CoreAlertAggregator):
