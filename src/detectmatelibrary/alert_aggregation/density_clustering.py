@@ -1,3 +1,11 @@
+"""This module implements alert aggregation by density clustering.
+
+It provides the DensityClusteringAggregation class, which is an abstract class that requires the
+implementation of two methods in subclasses: single_metric or metric, and discard_alert_fn.
+The module also provides the DensityClusteringAggregationConfig class,
+which defines the configuration for the DensityClusteringAggregation class.
+"""
+
 from pydantic import NonNegativeFloat
 
 from detectmatelibrary.common.alert_aggregator import (
@@ -6,11 +14,6 @@ from detectmatelibrary.common.alert_aggregator import (
 )
 from detectmatelibrary.schemas import AggregateSchema, DetectorSchema
 from detectmatelibrary.utils.data_buffer import BufferMode
-
-"""This module implements alert aggregation by density clustering.
-It provides the DensityClusteringAggregation class, which is an abstract class that requires the implementation of two methods in subclasses: single_metric or metric, and discard_alert_fn.
-The module also provides the DensityClusteringAggregationConfig class, which defines the configuration for the DensityClusteringAggregation class.
-"""
 
 
 class DensityClusteringAggregationConfig(CoreAlertAggregatorConfig):
@@ -29,21 +32,39 @@ class DensityClusteringAggregationConfig(CoreAlertAggregatorConfig):
 
 
 class DensityClusteringAggregation(CoreAlertAggregator):
-    """This class implements alert aggregation by density clustering. It is an abstract class that requires the implementation of 2 methods in subclasses:
+    """This class implements alert aggregation by density clustering.
 
-    1. One has to implement either the single_metric or the metric function. The single_metric function computes the distance between 2 alerts, while the metric function computes the distance matrix between a list of alerts. If both functions are implemented, the metric function will be used.
-
-    2. The discard_alert_fn function must be implemented to determine which alerts should no longer be considered for aggregation. To this end, after each aggregation step, the discard_alert_fn function is called with the list of relevant alerts. It should return a list of booleans indicating which alerts should be discarded (True) and which should be kept (False).
-
-    Args:
+    Attributes:
         config (DensityClusteringAggregationConfig): The configuration for the aggregator.
-        name (str): The name of the aggregator.
+        next_group_id (int): The next group ID to be assigned.
+        relevant_alerts (list[DetectorSchema]): The list of alerts currently relevant for aggregation.
+        alert_id_to_group_id (dict[str, int | None]): A mapping from alert IDs to group IDs.
+        active_groups (dict[int, set[int]]): A mapping from group IDs to sets of merged group IDs.
+        message_buffer (list[str]): A buffer for messages to be published in the output schema.
 
-    Methods:
-        single_metric(alert1: DetectorSchema, alert2: DetectorSchema) -> NonNegativeFloat: Computes the distance between 2 alerts. Must be implemented in a subclass.
-        metric(alerts: list[DetectorSchema], return_last_rows: int = 0) -> list[list[NonNegativeFloat]]: Computes the distance matrix between a list of alerts. Can be implemented in a subclass. If both single_metric and metric are implemented, the metric function will be used. The return_last_rows parameter can be used to compute only the last rows of the distance matrix.
-        discard_alert_fn(alerts: list[DetectorSchema]) -> list[bool]: Determines which alerts should no longer be considered for aggregation. Must be implemented in a subclass.
-        aggregate_alerts(input_: list[DetectorSchema], output_: AggregateSchema): Aggregates the input alerts and writes the results to the output.
+    # Implementation Details
+    This abstract class requires the implementation of 2 methods in subclasses:
+
+    1. One has to implement either the single_metric or the metric function.
+    The single_metric function computes the distance between 2 alerts,
+    while the metric function computes the distance matrix between a list of alerts.
+    If both functions are implemented, the metric function will be used.
+
+    2. The discard_alert_fn function must be implemented to determine which alerts
+    should no longer be considered for aggregation.
+    To this end, after each aggregation step, the discard_alert_fn
+    function is called with the list of relevant alerts.
+    It should return a list of booleans indicating which alerts should be discarded (True)
+    and which should be kept (False).
+
+    # Labelling of Alerts
+    The group labels assigned to alerts are published in the output schema as a
+    dictionary mapping alert IDs to group IDs in the "alertsObtain" field.
+    Every alert is assigned a group ID immediately after it is received,
+    but as the aggregation progresses, groups may be merged.
+    This is published in the output schema as a list of messages in the "alertsObtain" field.
+    Likewise, when a group is finished and no longer reachable from any active alert,
+    this is also published in the output schema as a list of messages in the "alertsObtain" field.
     """
 
     def __init__(
@@ -51,6 +72,12 @@ class DensityClusteringAggregation(CoreAlertAggregator):
         config: DensityClusteringAggregationConfig,
         name: str = "DensityClusteringAggregator",
     ) -> None:
+        """Initialize the density clustering aggregator.
+
+        Args:
+            config: The configuration for the aggregator.
+            name: The name of the aggregator.
+        """
         self.buffer_size = config.buffer_size
         self.buffer_mode = config.buffer_mode
         super().__init__(
@@ -59,6 +86,7 @@ class DensityClusteringAggregation(CoreAlertAggregator):
             buffer_size=config.buffer_size,
             buffer_mode=config.buffer_mode,
         )
+        self.config: DensityClusteringAggregationConfig  # ty: ignore[invalid-mutable-override]
         self.next_group_id: int = 0
         self.relevant_alerts: list[DetectorSchema] = []
         self.alert_id_to_group_id: dict[str, int | None] = {}
@@ -69,6 +97,18 @@ class DensityClusteringAggregation(CoreAlertAggregator):
     def single_metric(
         self, alert1: DetectorSchema, alert2: DetectorSchema
     ) -> NonNegativeFloat:
+        """Compute the distance between two alerts.
+
+        Args:
+            alert1: The first alert.
+            alert2: The second alert.
+
+        Returns:
+            The distance between the two alerts.
+
+        Raises:
+            NotImplementedError: If the method is not implemented by a subclass.
+        """
         raise NotImplementedError(
             "The metric function must be implemented in a subclass of DensityClusteringAggregation."
         )
@@ -76,12 +116,40 @@ class DensityClusteringAggregation(CoreAlertAggregator):
     def metric(
         self, alerts: list[DetectorSchema], return_last_rows: int = 0
     ) -> list[list[NonNegativeFloat]]:
+        """Compute the distance matrix between a list of alerts.
+
+        Subclasses can override this method to provide a more efficient
+        implementation. If both this method and ``single_metric`` are
+        implemented, this method is used.
+
+        Args:
+            alerts: The alerts for which to compute distances.
+            return_last_rows: The number of final rows to compute. If zero,
+                compute all rows.
+
+        Returns:
+            The distance matrix between the alerts.
+        """
         return [
             [self.single_metric(alert1, alert2) for alert2 in alerts]
             for alert1 in alerts[-return_last_rows:]
         ]
 
     def discard_alert_fn(self, alerts: list[DetectorSchema]) -> list[bool]:
+        """Determine which alerts should no longer be considered for
+        aggregation.
+
+        Args:
+            alerts: The alerts currently relevant for aggregation.
+
+        Returns:
+            A list of booleans indicating which alerts should be discarded.
+            ``True`` values indicate alerts to discard, and ``False`` values
+            indicate alerts to keep.
+
+        Raises:
+            NotImplementedError: If the method is not implemented by a subclass.
+        """
         raise NotImplementedError(
             "The discard_alert_fn function must be implemented in a subclass of DensityClusteringAggregation."
         )
@@ -89,6 +157,15 @@ class DensityClusteringAggregation(CoreAlertAggregator):
     def aggregate_alerts(
         self, input_: list[DetectorSchema] | DetectorSchema, output_: AggregateSchema
     ) -> bool:
+        """Aggregate input alerts and write the results to the output.
+
+        Args:
+            input_: The alert or alerts to aggregate.
+            output_: The schema to which aggregation results are written.
+
+        Returns:
+            ``True`` after the aggregation results have been written.
+        """
 
         if not isinstance(input_, list):
             input_ = [input_]
@@ -115,6 +192,12 @@ class DensityClusteringAggregation(CoreAlertAggregator):
     def _write_output(
         self, input_: list[DetectorSchema], output_: AggregateSchema
     ) -> None:
+        """Write group assignments and discard completed alerts.
+
+        Args:
+            input_: The alerts whose group assignments should be written.
+            output_: The schema to which aggregation results are written.
+        """
         output_["description"] = self.description
         output_["alertsObtain"].update(
             {
@@ -130,6 +213,14 @@ class DensityClusteringAggregation(CoreAlertAggregator):
         self.message_buffer = []
 
     def _add_new_alerts(self, input_: list[DetectorSchema]) -> list[DetectorSchema]:
+        """Add previously unseen alerts to the relevant-alert collection.
+
+        Args:
+            input_: Alerts received by the aggregator.
+
+        Returns:
+            The subset of input alerts that had not been seen before.
+        """
         new_input = [
             alert
             for alert in input_
@@ -144,12 +235,29 @@ class DensityClusteringAggregation(CoreAlertAggregator):
     def _check_threshold(
         self, distance_matrix: list[list[NonNegativeFloat]]
     ) -> list[list[bool]]:
+        """Convert distances into threshold comparisons.
+
+        Args:
+            distance_matrix: The pairwise alert distance matrix.
+
+        Returns:
+            A matrix indicating whether each distance is within the configured
+            clustering threshold.
+        """
         return [
             [distance <= self.config.delta for distance in row]
             for row in distance_matrix
         ]
 
-    def _new_group(self, alert_id: int) -> int:
+    def _new_group(self, alert_id: str) -> int:
+        """Create a group containing a single alert.
+
+        Args:
+            alert_id: The identifier of the alert to place in the new group.
+
+        Returns:
+            The identifier assigned to the new group.
+        """
         group_id = self.next_group_id
         self.alert_id_to_group_id[alert_id] = group_id
         self.active_groups[group_id] = {group_id}
@@ -157,6 +265,20 @@ class DensityClusteringAggregation(CoreAlertAggregator):
         return group_id
 
     def _check_and_merge_groups(self, close_group_ids: set[int]) -> set[int] | None:
+        """Merge distinct groups associated with nearby alerts.
+
+        Args:
+            close_group_ids: The group identifiers associated with nearby
+                alerts.
+
+        Returns:
+            The merged group when multiple groups were combined, or ``None``
+            when the groups were already merged.
+
+        Raises:
+            Exception: If no active groups can be found for the supplied
+                identifiers.
+        """
         # check if groups are merged already
         groups_to_merge = []
         for group_id in close_group_ids:
@@ -167,7 +289,7 @@ class DensityClusteringAggregation(CoreAlertAggregator):
             raise Exception("An error occurred while merging groups!")
         elif num_groups == 1:
             # all groups are merged already
-            return
+            return None
 
         # merge groups
         new_group = set.union(*groups_to_merge)
@@ -182,6 +304,17 @@ class DensityClusteringAggregation(CoreAlertAggregator):
     def _assign_new_alert_to_group(
         self, new_alert: DetectorSchema, close_relevant_alerts: list[bool]
     ) -> None:
+        """Assign a new alert to a group based on nearby relevant alerts.
+
+        Args:
+            new_alert: The alert that should receive a group assignment.
+            close_relevant_alerts: Flags indicating which relevant alerts are
+                within the clustering threshold.
+
+        Raises:
+            Exception: If the new alert has no close alerts or if close alerts
+                have no group identifiers.
+        """
         close_alerts = [
             relevant_alert
             for relevant_alert, is_close in zip(
@@ -195,7 +328,6 @@ class DensityClusteringAggregation(CoreAlertAggregator):
 
         elif len(close_alerts) == 1:
             # only close alert is itself, create new group
-            assert close_alerts[0]["alertID"] == new_alert["alertID"]
             self._new_group(new_alert["alertID"])
             return
 
@@ -218,18 +350,29 @@ class DensityClusteringAggregation(CoreAlertAggregator):
             return
 
         # unlabelled close alerts can be ignored now, they will be labelled in their own iteration
-        close_group_ids.discard(None)
-        close_group_ids: set[int] = close_group_ids
+        valid_group_ids: set[int] = {
+            group_id for group_id in close_group_ids if group_id is not None
+        }
 
         # close alerts have multiple group_ids, add alert to some group_id
-        for group_id in close_group_ids:
+        for group_id in valid_group_ids:
             self.alert_id_to_group_id[new_alert["alertID"]] = group_id
             break
 
         # merge groups if necessary
-        self._check_and_merge_groups(close_group_ids)
+        self._check_and_merge_groups(valid_group_ids)
 
-    def _discard_alerts(self, keep_buffer: bool = True) -> tuple[list[int], set[int]]:
+    def _discard_alerts(self, keep_buffer: bool = True) -> tuple[list[str], set[int]]:
+        """Discard alerts no longer needed for future aggregation.
+
+        Args:
+            keep_buffer: Whether to retain the most recent window-buffer
+                alerts when using window buffering.
+
+        Returns:
+            A tuple containing discarded alert identifiers and group identifiers
+            affected by the discard operation.
+        """
         alerts_to_discard = self.discard_alert_fn(self.relevant_alerts)
         if keep_buffer and self.buffer_mode == BufferMode.WINDOW:
             # set the last self.buffer_size elements of alerts_to_discard to False
@@ -237,7 +380,7 @@ class DensityClusteringAggregation(CoreAlertAggregator):
                 if i > len(alerts_to_discard):
                     break
                 alerts_to_discard[-i] = False
-        discarded_alert_ids = [
+        discarded_alert_ids: list[str] = [
             alert["alertID"]
             for alert, discard in zip(
                 self.relevant_alerts, alerts_to_discard, strict=True
@@ -246,10 +389,8 @@ class DensityClusteringAggregation(CoreAlertAggregator):
         ]
         affected_group_ids = {
             group_id
-            for group_id in (
-                self.alert_id_to_group_id.pop(alert_id)
-                for alert_id in discarded_alert_ids
-            )
+            for alert_id in discarded_alert_ids
+            if (group_id := self.alert_id_to_group_id.pop(alert_id)) is not None
         }
         self.relevant_alerts = [
             alert
@@ -261,6 +402,11 @@ class DensityClusteringAggregation(CoreAlertAggregator):
         return discarded_alert_ids, affected_group_ids
 
     def _check_and_discard_group_ids(self, group_ids_to_check: set[int]) -> None:
+        """Remove groups that are no longer reachable from active alerts.
+
+        Args:
+            group_ids_to_check: Group identifiers affected by discarded alerts.
+        """
         # remove groups that are unreachable anymore
         group_ids_to_discard = {
             group_id
