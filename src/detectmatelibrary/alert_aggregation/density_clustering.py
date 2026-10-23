@@ -59,12 +59,12 @@ class DensityClusteringAggregation(CoreAlertAggregator):
 
     # Labelling of Alerts
     The group labels assigned to alerts are published in the output schema as a
-    dictionary mapping alert IDs to group IDs in the "alertsObtain" field.
+    dictionary mapping alert IDs to group IDs in the "alertDetails" field.
     Every alert is assigned a group ID immediately after it is received,
     but as the aggregation progresses, groups may be merged.
-    This is published in the output schema as a list of messages in the "alertsObtain" field.
+    This is published in the output schema as a list of messages in the "alertDetails" field.
     Likewise, when a group is finished and no longer reachable from any active alert,
-    this is also published in the output schema as a list of messages in the "alertsObtain" field.
+    this is also published in the output schema as a list of messages in the "alertDetails" field.
     """
 
     def __init__(
@@ -165,6 +165,7 @@ class DensityClusteringAggregation(CoreAlertAggregator):
 
         Returns:
             ``True`` after the aggregation results have been written.
+            ``False`` if no new alerts were aggregated and the output schema was not modified.
         """
 
         if not isinstance(input_, list):
@@ -172,6 +173,9 @@ class DensityClusteringAggregation(CoreAlertAggregator):
 
         # identify new alerts and add them to relevant alerts
         new_alerts = self._add_new_alerts(input_)
+
+        if len(new_alerts) == 0:
+            return False  # no new alerts to aggregate
 
         # check distance of new alerts to relevant alerts
         is_same_group = self._check_threshold(
@@ -199,7 +203,7 @@ class DensityClusteringAggregation(CoreAlertAggregator):
             output_: The schema to which aggregation results are written.
         """
         output_["description"] = self.description
-        output_["alertsObtain"].update(
+        output_["alertDetails"].update(
             {
                 alert["alertID"]: str(self.alert_id_to_group_id[alert["alertID"]])
                 for alert in input_
@@ -209,7 +213,7 @@ class DensityClusteringAggregation(CoreAlertAggregator):
         # discard alerts that are no longer relevant
         _, affected_group_ids = self._discard_alerts()
         self._check_and_discard_group_ids(affected_group_ids)
-        output_["alertsObtain"]["messages"] = "\n".join(self.message_buffer)
+        output_["alertDetails"]["messages"] = "\n".join(self.message_buffer)
         self.message_buffer = []
 
     def _add_new_alerts(self, input_: list[DetectorSchema]) -> list[DetectorSchema]:

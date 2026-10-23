@@ -26,9 +26,7 @@ def make_alert(alert_id: str, score: float) -> DetectorSchema:
 
 
 class ConcreteDensityClusteringAggregation(DensityClusteringAggregation):
-    def single_metric(
-        self, alert1: DetectorSchema, alert2: DetectorSchema
-    ) -> float:
+    def single_metric(self, alert1: DetectorSchema, alert2: DetectorSchema) -> float:
         return abs(alert1["score"] - alert2["score"])
 
     def discard_alert_fn(self, alerts: list[DetectorSchema]) -> list[bool]:
@@ -63,26 +61,26 @@ class TestDensityClusteringAggregation:
         ]
 
     def test_aggregate_assigns_and_merges_groups(self) -> None:
-        aggregator = create_aggregator(delta=10.0)
+        aggregator = create_aggregator(delta=1.0)
         first = make_alert("a", 0.0)
-        second = make_alert("b", 20.0)
-        bridge = make_alert("c", 10.0)
+        second = make_alert("b", 10.0)
+        bridge = make_alert("c", 5.0)
 
         first_output = AggregateSchema()
         assert aggregator.aggregate_alerts(first, first_output)
-        assert first_output["alertsObtain"]["a"] == "0"
+        assert first_output["alertDetails"]["a"] == "0"
 
         second_output = AggregateSchema()
         aggregator.aggregate_alerts(second, second_output)
-        assert second_output["alertsObtain"]["b"] == "1"
+        assert second_output["alertDetails"]["b"] == "1"
 
         bridge_output = AggregateSchema()
         aggregator.config.delta = 6.0
         aggregator.aggregate_alerts(bridge, bridge_output)
 
-        assert bridge_output["alertsObtain"]["c"] == "0"
+        assert bridge_output["alertDetails"]["c"] == "0"
         assert aggregator.active_groups == {0: {0, 1}, 1: {0, 1}}
-        assert "Groups" in bridge_output["alertsObtain"]["messages"]
+        assert "Groups" in bridge_output["alertDetails"]["messages"]
 
     def test_duplicate_alert_is_not_reassigned(self) -> None:
         aggregator = create_aggregator()
@@ -93,7 +91,7 @@ class TestDensityClusteringAggregation:
         duplicate_output = AggregateSchema()
         aggregator.aggregate_alerts(alert, duplicate_output)
 
-        assert duplicate_output["alertsObtain"]["same"] == "0"
+        assert "same" not in duplicate_output["alertDetails"]
         assert aggregator.next_group_id == 1
         assert len(aggregator.relevant_alerts) == 1
 
