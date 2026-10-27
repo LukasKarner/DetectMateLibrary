@@ -1,10 +1,4 @@
-"""This module implements alert aggregation by density clustering.
-
-It provides the DensityClusteringAggregation class, which is an abstract class that requires the
-implementation of two methods in subclasses: single_metric or metric, and discard_alert_fn.
-The module also provides the DensityClusteringAggregationConfig class,
-which defines the configuration for the DensityClusteringAggregation class.
-"""
+from typing import Any
 
 from pydantic import Field, NonNegativeFloat
 
@@ -50,7 +44,7 @@ class DensityClusteringAggregation(CoreAlertAggregator):
         message_buffer (list[str]): A buffer for messages to be published in the output schema.
 
     # Implementation Details
-    This abstract class requires the implementation of 2 methods in subclasses:
+    Creating a custom density clustering aggregator requires the implementation of 2 methods in subclasses:
 
     1. One has to implement either the single_metric or the metric function.
     The single_metric function computes the distance between 2 alerts,
@@ -76,7 +70,7 @@ class DensityClusteringAggregation(CoreAlertAggregator):
 
     def __init__(
         self,
-        config: DensityClusteringAggregationConfig,
+        config: DensityClusteringAggregationConfig | dict[str, Any],
         name: str = "DensityClusteringAggregator",
     ) -> None:
         """Initialize the density clustering aggregator.
@@ -85,6 +79,9 @@ class DensityClusteringAggregation(CoreAlertAggregator):
             config: The configuration for the aggregator.
             name: The name of the aggregator.
         """
+        if isinstance(config, dict):
+            config = DensityClusteringAggregationConfig.from_dict(config, name)
+
         self.buffer_size = config.buffer_size
         self.buffer_mode = config.buffer_mode
         super().__init__(
@@ -104,7 +101,9 @@ class DensityClusteringAggregation(CoreAlertAggregator):
     def single_metric(
         self, alert1: DetectorSchema, alert2: DetectorSchema
     ) -> NonNegativeFloat:
-        """Compute the distance between two alerts.
+        """Compute the distance between two alerts. This placeholder
+        implementation always returns 0.0, indicating that all alerts are
+        considered identical.
 
         Args:
             alert1: The first alert.
@@ -112,13 +111,8 @@ class DensityClusteringAggregation(CoreAlertAggregator):
 
         Returns:
             The distance between the two alerts.
-
-        Raises:
-            NotImplementedError: If the method is not implemented by a subclass.
         """
-        raise NotImplementedError(
-            "The metric function must be implemented in a subclass of DensityClusteringAggregation."
-        )
+        return 0.0
 
     def metric(
         self, alerts: list[DetectorSchema], return_last_rows: int = 0
@@ -144,7 +138,8 @@ class DensityClusteringAggregation(CoreAlertAggregator):
 
     def discard_alert_fn(self, alerts: list[DetectorSchema]) -> list[bool]:
         """Determine which alerts should no longer be considered for
-        aggregation.
+        aggregation. This placeholder implementation always returns a list of
+        ``True`` values, indicating that all alerts should be discarded.
 
         Args:
             alerts: The alerts currently relevant for aggregation.
@@ -153,13 +148,8 @@ class DensityClusteringAggregation(CoreAlertAggregator):
             A list of booleans indicating which alerts should be discarded.
             ``True`` values indicate alerts to discard, and ``False`` values
             indicate alerts to keep.
-
-        Raises:
-            NotImplementedError: If the method is not implemented by a subclass.
         """
-        raise NotImplementedError(
-            "The discard_alert_fn function must be implemented in a subclass of DensityClusteringAggregation."
-        )
+        return [True] * len(alerts)
 
     def aggregate_alerts(
         self, input_: list[DetectorSchema] | DetectorSchema, output_: AggregateSchema

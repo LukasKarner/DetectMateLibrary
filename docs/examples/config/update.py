@@ -282,7 +282,7 @@ AGGREGATOR_DOCS: list[tuple[CoreConfig, type[CoreConfig], str]] = [
     (
       DensityClusteringAggregationConfig(),
       CoreAlertAggregatorConfig,
-      "docs/alert_aggregators/logid_count.md"
+      "docs/alert_aggregators/density_cluster.md"
     ),
 ]
 

@@ -21,7 +21,7 @@ This class implements alert aggregation by density clustering.
 
 ### Implementation Details
 
-This abstract class requires the implementation of 2 methods in subclasses:
+Creating a custom density clustering aggregator requires the implementation of 2 methods in subclasses:
 
 1. One has to implement either the single_metric or the metric function.
 The single_metric function computes the distance between 2 alerts,
