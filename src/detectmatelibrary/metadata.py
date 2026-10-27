@@ -1,5 +1,5 @@
 __authors__ = ["André García Gómez", "Viktor Beck", "Thorina Boenke", "Wolfgang Hotwagner", "Anna Erdi",
-               "Ernst Leierzopf", "Leonhard Kaufmann"]
+               "Ernst Leierzopf", "Leonhard Kaufmann", "Lukas Karner"]
 __contact__ = "aecid@ait.ac.at"
 __copyright__ = "Copyright 2026, AIT Austrian Institute of Technology GmbH"
 __date__ = "2026/05/18"
