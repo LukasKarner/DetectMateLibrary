@@ -39,7 +39,7 @@ class ConcreteDensityClusteringAggregation(DensityClusteringAggregation):
         return [False for alert in alerts]
 
 
-aggregator = DensityClusteringAggregation(config)
+aggregator = ConcreteDensityClusteringAggregation(config)
 first = make_alert("a", 0.0)
 second = make_alert("b", 6.0)
 bridge = make_alert("c", 3.0)

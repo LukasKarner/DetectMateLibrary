@@ -1,5 +1,3 @@
-import pytest
-
 from detectmatelibrary.alert_aggregation.density_clustering import (
     DensityClusteringAggregation,
     DensityClusteringAggregationConfig,
@@ -119,13 +117,11 @@ class TestDensityClusteringAggregation:
             "keep-2",
         ]
 
-    def test_default_hooks_raise_not_implemented(self) -> None:
+    def test_default_hooks_return_dummy_values(self) -> None:
         aggregator = DensityClusteringAggregation(
             config=DensityClusteringAggregationConfig(delta=1.0)
         )
         alert = make_alert("a", 0.0)
 
-        with pytest.raises(NotImplementedError):
-            aggregator.single_metric(alert, alert)
-        with pytest.raises(NotImplementedError):
-            aggregator.discard_alert_fn([alert])
+        assert aggregator.single_metric(alert, alert) == 0.0
+        assert aggregator.discard_alert_fn([alert]) == [True]
