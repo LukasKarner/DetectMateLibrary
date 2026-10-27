@@ -29,6 +29,7 @@ from detectmatelibrary.common.parser import CoreParserConfig
 from detectmatelibrary.common.alert_aggregator import CoreAlertAggregatorConfig
 from detectmatelibrary.alert_aggregation.basic_concat import BasicConcatAggregationConfig
 from detectmatelibrary.alert_aggregation.density_clustering import DensityClusteringAggregationConfig
+from detectmatelibrary.alert_aggregation.time_delta import TimeDeltaAggregationConfig
 from detectmatelibrary.alert_aggregation.logid_count import LogIDCountAggegationConfig
 from detectmatelibrary.base_detectors import TrackerDetectorConfig
 from detectmatelibrary.base_detectors import VariableDetectorConfig
@@ -284,6 +285,11 @@ AGGREGATOR_DOCS: list[tuple[CoreConfig, type[CoreConfig], str]] = [
       CoreAlertAggregatorConfig,
       "docs/alert_aggregators/density_cluster.md"
     ),
+    (
+        TimeDeltaAggregationConfig(),
+        CoreAlertAggregatorConfig,
+        "docs/alert_aggregators/time_delta.md"
+    )
 ]
 
 update_shared_args_detectors("docs/detectors.md")

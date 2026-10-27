@@ -4,12 +4,15 @@ from .density_clustering import (
     DensityClusteringAggregationConfig,
 )
 from .logid_count import LogIDCountAggegation, LogIDCountAggegationConfig
+from .time_delta import TimeDeltaAggregation, TimeDeltaAggregationConfig
 
 __all__ = [
     "BasicConcatAggregation",
     "BasicConcatAggregationConfig",
     "DensityClusteringAggregation",
     "DensityClusteringAggregationConfig",
+    "TimeDeltaAggregation",
+    "TimeDeltaAggregationConfig",
     "LogIDCountAggegation",
     "LogIDCountAggegationConfig",
 ]
