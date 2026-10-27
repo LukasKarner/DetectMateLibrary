@@ -1,7 +1,7 @@
 from collections.abc import Callable
 from typing import Any
 
-from pydantic import NonNegativeFloat
+from pydantic import Field, NonNegativeFloat
 
 from detectmatelibrary.alert_aggregation.density_clustering import (
     DensityClusteringAggregation,
@@ -17,8 +17,13 @@ class TimeDeltaAggregationConfig(DensityClusteringAggregationConfig):
         delta (NonNegativeFloat): The time threshold below which two alerts are allocated to the same group.
     """
 
-    method_type: str = "time_delta_aggregator"
-    delta: NonNegativeFloat = 10.0
+    method_type: str = Field(
+        default="time_delta_aggregator",
+        description="The kind of aggregation method.",
+    )
+    delta: NonNegativeFloat = Field(
+        default=10.0, description="The threshold for the clustering."
+    )
 
 
 class TimeDeltaAggregation(DensityClusteringAggregation):
