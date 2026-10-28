@@ -292,11 +292,6 @@ AGGREGATOR_DOCS: list[tuple[CoreConfig, type[CoreConfig], str]] = [
         "docs/alert_aggregators/logid_count.md"
     ),
     (
-      DensityClusteringAggregationConfig(),
-      CoreAlertAggregatorConfig,
-      "docs/alert_aggregators/density_cluster.md"
-    ),
-    (
         TimeDeltaAggregationConfig(),
         CoreAlertAggregatorConfig,
         "docs/alert_aggregators/time_delta.md"

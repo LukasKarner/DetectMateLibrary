@@ -55,6 +55,7 @@ class TimeDeltaAggregation(DensityClusteringAggregation):
             float(alert["logTimestamps"][-1])
         )
         self.description = "Alert aggregation by the time-delta method."
+        self.last_timestamp: float = 0.0
 
     def aggregate_alerts(
         self, input_: list[DetectorSchema] | DetectorSchema, output_: AggregateSchema
@@ -73,10 +74,10 @@ class TimeDeltaAggregation(DensityClusteringAggregation):
         if not isinstance(input_, list):
             input_ = [input_]
 
-        if self.timestamp_extraction_fn(input_[0]) < self.timestamp_extraction_fn(
-            self.relevant_alerts[-1]
-        ):
+        if self.timestamp_extraction_fn(input_[0]) < self.last_timestamp:
             raise ValueError("Alerts must be aggregated in order of their timestamps!")
+        else:
+            self.last_timestamp = self.timestamp_extraction_fn(input_[-1])
 
         return super().aggregate_alerts(input_, output_)
 
