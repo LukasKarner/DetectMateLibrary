@@ -3,7 +3,7 @@ from typing import Any
 
 from pydantic import Field, NonNegativeFloat
 
-from detectmatelibrary.alert_aggregation.density_clustering import (
+from detectmatelibrary.base_alert_aggregation.density_clustering import (
     DensityClusteringAggregation,
     DensityClusteringAggregationConfig,
 )
@@ -28,13 +28,12 @@ class TimeDeltaAggregationConfig(DensityClusteringAggregationConfig):
 
 class TimeDeltaAggregation(DensityClusteringAggregation):
     """This class implements alert aggregation by the time-delta method introduced by
-    [Landauer et al.](https://dl.acm.org/doi/pdf/10.1145/3510581).
+    [Landauer et al.](https://doi.org/10.1145/3510581).
     Two alerts will be assigned to the same group if the time difference
     between them is below a certain threshold delta.
     The time difference is computed based on the timestamps of the last logs associated
     with each alert as these determine the earliest time at which the alert was detected.
     Important: It is assumed that the alerts arrive in order of their timestamps!
-
     """
 
     def __init__(

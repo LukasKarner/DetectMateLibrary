@@ -42,6 +42,32 @@ class DensityClusteringAggregation(CoreAlertAggregator):
         alert_id_to_group_id (dict[str, int | None]): A mapping from alert IDs to group IDs.
         active_groups (dict[int, set[int]]): A mapping from group IDs to sets of merged group IDs.
         message_buffer (list[str]): A buffer for messages to be published in the output schema.
+
+    # Implementation Details
+
+    Creating a custom density clustering aggregator requires the implementation of 2 methods in subclasses:
+
+    1. One has to implement either the single_metric or the metric function.
+    The single_metric function computes the distance between 2 alerts,
+    while the metric function computes the distance matrix between a list of alerts.
+    If both functions are implemented, the metric function will be used.
+
+    2. The discard_alert_fn function must be implemented to determine which alerts
+    should no longer be considered for aggregation.
+    To this end, after each aggregation step, the discard_alert_fn
+    function is called with the list of relevant alerts.
+    It should return a list of booleans indicating which alerts should be discarded (True)
+    and which should be kept (False).
+
+    # Labelling of Alerts
+
+    The group labels assigned to alerts are published in the output schema as a
+    dictionary mapping alert IDs to group IDs in the "alertDetails" field.
+    Every alert is assigned a group ID immediately after it is received,
+    but as the aggregation progresses, groups may be merged.
+    This is published in the output schema as a list of messages in the "alertDetails" field.
+    Likewise, when a group is finished and no longer reachable from any active alert,
+    this is also published in the output schema as a list of messages in the "alertDetails" field.
     """
 
     def __init__(

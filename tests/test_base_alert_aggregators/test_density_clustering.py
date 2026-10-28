@@ -1,4 +1,4 @@
-from detectmatelibrary.alert_aggregation.density_clustering import (
+from detectmatelibrary.base_alert_aggregation.density_clustering import (
     DensityClusteringAggregation,
     DensityClusteringAggregationConfig,
 )

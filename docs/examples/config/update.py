@@ -27,8 +27,8 @@ from detectmatelibrary.common.core import CoreConfig
 from detectmatelibrary.common.detector import CoreDetectorConfig
 from detectmatelibrary.common.parser import CoreParserConfig
 from detectmatelibrary.common.alert_aggregator import CoreAlertAggregatorConfig
+from detectmatelibrary.base_alert_aggregation.density_clustering import DensityClusteringAggregationConfig
 from detectmatelibrary.alert_aggregation.basic_concat import BasicConcatAggregationConfig
-from detectmatelibrary.alert_aggregation.density_clustering import DensityClusteringAggregationConfig
 from detectmatelibrary.alert_aggregation.time_delta import TimeDeltaAggregationConfig
 from detectmatelibrary.alert_aggregation.logid_count import LogIDCountAggegationConfig
 from detectmatelibrary.base_detectors import TrackerDetectorConfig
@@ -202,6 +202,17 @@ def update_shared_args_aggregation(doc_path: str) -> None:
             start_cmd="<!-- Start common_arguments -->\n",
             end_cmd="<!-- End common_arguments -->\n",
             add=get_arguments(CoreAlertAggregatorConfig().get_docs(), with_scope=False),
+        )
+        docs = append_docs(
+            docs=docs,
+            start_cmd="<!-- Start density_clustering_arguments -->\n",
+            end_cmd="<!-- End density_clustering_arguments -->\n",
+            add=get_arguments(
+                _family_rows(
+                    DensityClusteringAggregationConfig(), base=CoreAlertAggregatorConfig
+                ),
+                with_scope=False,
+            ),
         )
         with open(doc_path, "w") as f:
             f.writelines(docs)
