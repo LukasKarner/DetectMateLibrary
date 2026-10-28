@@ -1,6 +1,6 @@
-# Density Cluster Alert Aggregation
+# Time Delta Alert Aggregation
 
-The density-clustering-based alert aggregator is a base class to implement alert aggregation by clustering alerts according a given distance function of alerts.
+The time-delta alert aggregator implements alert aggregation by grouping alerts according their time-difference as proposed by [Landauer et al.](https://dl.acm.org/doi/pdf/10.1145/3510581).
 
 ## In/out
 
@@ -17,38 +17,16 @@ The density-clustering-based alert aggregator is a base class to implement alert
 
 ## Description
 
-This class implements alert aggregation by density clustering.
+This class implements alert aggregation by considering the differences between the timestamps of alerts.
 
-### Implementation Details
-
-Creating a custom density clustering aggregator requires the implementation of 2 methods in subclasses:
-
-1. One has to implement either the single_metric or the metric function.
-The single_metric function computes the distance between 2 alerts,
-while the metric function computes the distance matrix between a list of alerts.
-If both functions are implemented, the metric function will be used.
-
-2. The discard_alert_fn function must be implemented to determine which alerts
-should no longer be considered for aggregation.
-To this end, after each aggregation step, the discard_alert_fn
-function is called with the list of relevant alerts.
-It should return a list of booleans indicating which alerts should be discarded (True)
-and which should be kept (False).
-
-### Labelling of Alerts
-
-The group labels assigned to alerts are published in the output schema as a
-dictionary mapping alert IDs to group IDs in the "alertDetails" field.
-Every alert is assigned a group ID immediately after it is received,
-but as the aggregation progresses, groups may be merged.
-This is published in the output schema as a list of messages in the "alertDetails" field.
-Likewise, when a group is finished and no longer reachable from any active alert,
-this is also published in the output schema as a list of messages in the "alertDetails" field.
+Two alerts will be assigned to the same group if the time difference between them is below a certain threshold delta.
+The time difference is computed based on the timestamps of the last logs associated with each alert as these determine the earliest time at which the alert was detected.
+Important: It is assumed that the alerts arrive in order of their timestamps!
 
 ## Example
 
 ```python
---8<-- "docs/examples/alert_aggregators/density_cluster.py:example_1"
+--8<-- "docs/examples/alert_aggregators/time_delta.py:example_1"
 ```
 
 ## Configuration file
@@ -56,7 +34,7 @@ this is also published in the output schema as a list of messages in the "alertD
 The configuration used by the example above. It sets only what this use case needs; every other parameter keeps its default (see [Configuration arguments](#configuration-arguments)).
 
 ```yaml
---8<-- "docs/examples/alert_aggregators/density_cluster.yaml"
+--8<-- "docs/examples/alert_aggregators/time_delta.yaml"
 ```
 
 Load it with `yaml.safe_load` and pass the dict as `config=`, as in the example. The key under `alert_aggregators:` must match the aggregator's `name`.
