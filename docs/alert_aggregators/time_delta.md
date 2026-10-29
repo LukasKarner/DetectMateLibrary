@@ -48,7 +48,7 @@ All parameters this alert aggregator accepts, grouped by the YAML block they go 
 
     | Field | Type | Default | Scope | Description |
     |---|---|---|---|---|
-    | `method_type` | string | density_clustering_aggregator | shared | The kind of aggregation method. |
+    | `method_type` | string | time_delta_aggregator | shared | The kind of aggregation method. |
     | `auto_config` | boolean | False | shared | Runs the configuration step before the training process. |
 
 ???+ note "params"
@@ -57,7 +57,7 @@ All parameters this alert aggregator accepts, grouped by the YAML block they go 
     |---|---|---|---|---|
     | `buffer_size` | integer | 3 | specific | The size of the buffer. |
     | `buffer_mode` | object | BufferMode.BATCH | specific | The mode of the buffer. |
-    | `delta` | number | 0.5 | specific | The threshold for the clustering. |
+    | `delta` | number | 10.0 | specific | The threshold for the clustering. |
     | `start_id` | integer | 10 | shared | Number used to start the unique ID generator. |
     | `data_use_training` | integer, null | None | shared | Number of logs used for training. None skips training. |
     | `data_use_configure` | integer, null | None | shared | Number of logs used for the configuration step. None skips it. |
